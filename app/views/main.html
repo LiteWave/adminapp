@@ -1,0 +1,266 @@
+			<div>
+				<h4 class="heading-inline">Event Controller</h4>
+
+				<div class="btn-group ">
+				  <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+					<i class="fa fa-clock-o"></i>  &nbsp;
+				    Select Event <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu">
+		         <li data-ng-repeat="lw_event in lw_events"><a ng-click="changeEvent(lw_event)" href="javascript:;">{{lw_event.name}}</a></li>
+		      </ul>
+
+				</div>
+
+			</div>
+
+			<br />
+
+
+			<div class="row">
+
+				<div class="col-md-3 col-sm-6">
+
+					<a href="javascript:;" class="dashboard-stat primary">
+						<div class="visual">
+							<i class="fa fa-star"></i>
+						</div> <!-- /.visual -->
+
+						<div class="details">
+							<span class="content">Event</span>
+							<span class="eventvalue">{{currentLWEvent.name}}</span>
+						</div> <!-- /.details -->
+
+						<i class="fa fa-play-circle more"></i>
+
+					</a> <!-- /.dashboard-stat -->
+
+				</div> <!-- /.col-md-3 -->
+
+				<div class="col-md-3 col-sm-6">
+
+					<a href="javascript:;" class="dashboard-stat secondary">
+						<div class="visual">
+							<i class="fa fa-shopping-cart"></i>
+						</div> <!-- /.visual -->
+
+						<div class="details">
+							<span class="content">Event Date</span>
+							<span class="value">{{currentLWEvent.eventAt | date : 'shortDate' }}</span>
+						</div> <!-- /.details -->
+
+						<i class="fa fa-play-circle more"></i>
+
+					</a> <!-- /.dashboard-stat -->
+
+				</div> <!-- /.col-md-3 -->
+
+				<div class="col-md-3 col-sm-6">
+
+					<a href="javascript:;" class="dashboard-stat tertiary">
+						<div class="visual">
+							<i class="fa fa-clock-o"></i>
+						</div> <!-- /.visual -->
+
+						<div class="details">
+							<span class="content">Active Users</span>
+							<span class="value">{{activeUsers}}</span>
+						</div> <!-- /.details -->
+
+						<i class="fa fa-play-circle more"></i>
+
+					</a> <!-- /.dashboard-stat -->
+
+				</div> <!-- /.col-md-3 -->
+
+
+
+
+			</div> <!-- /.row -->
+
+
+
+
+			<div class="row">
+
+				<div class="col-md-9">
+
+					<div class="portlet">
+
+						<div class="portlet-header">
+
+							<h3>
+								<i class="fa fa-bar-chart-o"></i>
+								Lite Show Control Panel
+							</h3>
+
+						</div> <!-- /.portlet-header -->
+
+						<div class="portlet-content">
+
+							<div class="pull-left">
+
+								  <div class="btn-group">
+								    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+								      Start LiteShow in Seconds
+								      <span class="caret"></span>
+								    </button>
+								    <ul class="dropdown-menu">
+                      <li><a href="javascript:;" ng-click="startShow(10)">10 seconds</a></li>
+								      <li><a href="javascript:;" ng-click="startShow(30)">30 seconds</a></li>
+								      <li><a href="javascript:;" ng-click="startShow(60)">60 seconds</a></li>
+								    </ul>
+								  </div>
+								
+							</div>
+
+							<div class="pull-right">
+								<div class="btn-group">
+								  <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+								    <i class="fa fa-cog"></i> &nbsp;&nbsp;<span class="caret"></span>
+								  </button>
+								  <ul class="dropdown-menu pull-right" role="menu">
+								    <li><a href="javascript:;">Action</a></li>
+								    <li><a href="javascript:;">Another action</a></li>
+								    <li><a href="javascript:;">Something else here</a></li>
+								    <li class="divider"></li>
+								    <li><a href="javascript:;">Separated link</a></li>
+								  </ul>
+								</div>
+							</div>
+
+							<div class="clear"></div>
+							<hr />
+
+							<div class="progress-stat" ng-show="winnerSeat ===''">
+							
+								<div class="stat-header">
+									
+									<div class="stat-label">
+										<span ng-show="percentTimeToStart < 100">Time to Start</span>
+                    <span ng-show="percentTimeToStart > 100">Lite Show In Progress</span>
+									</div> <!-- /.stat-label -->
+									
+									<div class="stat-value">
+										{{current_time | date:'HH:mm:ss'}} ({{currentEventLiteShow.start_at | date:'HH:mm:ss'}}) 
+									</div> <!-- /.stat-value -->
+									
+								</div> <!-- /stat-header -->
+								
+								<div class="progress progress-striped active">
+								  <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="{{percentTimeToStart}}" aria-valuemin="0" aria-valuemax="100" style="width: {{percentTimeToStart}}%">
+								  </div>
+								</div> <!-- /.progress -->
+								
+							</div> <!-- /.progress-stat -->
+              
+              <h1 ng-show="winnerSeat != ''">Winner: {{winnerSeat}}</h1>
+
+						</div> <!-- /.portlet-content -->
+
+					</div> <!-- /.portlet -->
+
+
+
+				</div> <!-- /.col-md-9 -->
+
+
+
+
+				<div class="col-md-3">
+
+
+					<div class="portlet">
+
+						<div class="portlet-header">
+
+							<h3>
+								<i class="fa fa-compass"></i>
+								Traffic Overview
+							</h3>
+
+						</div> <!-- /.portlet-header -->
+
+						<div class="portlet-content">
+
+
+							<div class="progress-stat">
+							
+								<div class="stat-header">
+									
+									<div class="stat-label">
+										% Stadium Coverage
+									</div> <!-- /.stat-label -->
+									
+									<div class="stat-value">
+										77.7%
+									</div> <!-- /.stat-value -->
+									
+								</div> <!-- /stat-header -->
+								
+								<div class="progress progress-striped active">
+								  <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="77" aria-valuemin="0" aria-valuemax="100" style="width: 77%">
+								    <span class="sr-only">77.74% Visit Rate</span>
+								  </div>
+								</div> <!-- /.progress -->
+								
+							</div> <!-- /.progress-stat -->
+
+							<div class="progress-stat">
+							
+								<div class="stat-header">
+									
+									<div class="stat-label">
+										% iPhone Visitors
+									</div> <!-- /.stat-label -->
+									
+									<div class="stat-value">
+										87.5%
+									</div> <!-- /.stat-value -->
+									
+								</div> <!-- /stat-header -->
+								
+								<div class="progress progress-striped active">
+								  <div class="progress-bar progress-bar-tertiary" role="progressbar" aria-valuenow="77" aria-valuemin="0" aria-valuemax="100" style="width: 87%">
+								    <span class="sr-only">87% iPhone Visitors</span>
+								  </div>
+								</div> <!-- /.progress -->
+								
+							</div> <!-- /.progress-stat -->
+
+							<div class="progress-stat">
+							
+								<div class="stat-header">
+									
+									<div class="stat-label">
+										% Android Users
+									</div> <!-- /.stat-label -->
+									
+									<div class="stat-value">
+										12.5%
+									</div> <!-- /.stat-value -->
+									
+								</div> <!-- /stat-header -->
+								
+								<div class="progress progress-striped active">
+								  <div class="progress-bar progress-bar-secondary" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="100" style="width: 12%">
+								    <span class="sr-only">12.5% Android</span>
+								  </div>
+								</div> <!-- /.progress -->
+								
+							</div> <!-- /.progress-stat -->
+
+							<br />						
+
+						</div> <!-- /.portlet-content -->
+
+					</div> <!-- /.portlet -->
+
+
+
+
+	
+
+				</div> <!-- /.col -->
+
+			</div> <!-- /.row -->
