@@ -64,7 +64,7 @@ module.exports = function(app, passport, auth) {
     app.get('/api/lw_events/:lw_eventId/user_locations', user_locations.all);
     app.post('/api/lw_events/:lw_eventId/user_locations', user_locations.create);
     app.get('/api/user_locations/:user_locationId', user_locations.show);
-    app.put('/api/user_locations/:user_locationId', user_locations.update);
+    app.post('/api/user_locations/:user_locationId', user_locations.update);
     app.del('/api/user_locations/:user_locationId', user_locations.destroy);
     app.param('user_locationId', user_locations.user_location);
     
@@ -81,7 +81,7 @@ module.exports = function(app, passport, auth) {
     app.get('/api/lw_events/:lw_eventId/event_liteshows', event_liteshows.all);
     app.get('/api/lw_events/:lw_eventId/event_liteshows/:event_liteshowId', event_liteshows.show);
     app.get('/api/event_liteshows/:event_liteshowId/user_locations/:user_locationId/liteshow', event_liteshows.user_liteshow);
-    app.put('/api/lw_events/:lw_eventId/event_liteshows/:event_liteshowId', event_liteshows.update);
+    app.post('/api/lw_events/:lw_eventId/event_liteshows/:event_liteshowId', event_liteshows.update);
     
     app.param('event_liteshowId', event_liteshows.event_liteshow);
     
