@@ -49,6 +49,17 @@ services.factory("Clients", ['$resource', function($resource) {
     });
 }]);
 
+// UserLocations service used for client REST endpoint.
+services.factory('UserLocations', ['$resource', function ($resource) {
+    return $resource('/api/lw_events/:lw_eventId/user_locations', {
+        lw_eventId: '@_id'
+    }, {
+        update: {
+            method: 'PUT'
+        }
+    });
+}]);
+
 // service used for LWEvents REST endpoint
 services.factory("LWEvents", ['$resource', function($resource) {
     return $resource('/api/clients/:clientId/lw_events/:lw_eventId', {
