@@ -54,7 +54,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
     
     // update list of lw_events when the client changes
     $scope.$watch('currentClient', function(newVal, oldVal) {
-      if(newVal) {
+        if (newVal) {
         LWEvents.query({clientId: newVal._id}, function(lw_events) {
           $scope.lw_events = lw_events;
           $scope.liteshows = null;
@@ -65,7 +65,8 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
     
     // update list of lite_shows when the lw_event changes
     $scope.$watch('currentLWEvent', function(newVal, oldVal) {
-      if(newVal) {
+        if (newVal) {
+            $scope.cleanUpAfterShow();
         EventLiteShows.query({lw_eventId: newVal._id}, function(liteshows) {
           $scope.liteshows = liteshows;
           $scope.currentEventLiteShow = liteshows[0];
@@ -95,23 +96,29 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
         // stop checking for any new users:
         if ($scope.userCheckPromise != null) {
             $interval.cancel($scope.userCheckPromise);
+            $scope.userCheckPromise = null;
         }
 
         $timeout.cancel($scope.promise_clock);
       
         $scope.currentEventLiteShow.start_at = new Date((Math.ceil(Date.now() / 1000) * 1000) + (seconds * 1000));
-        $scope.winner = $scope.userLocations[3];
-        $scope.currentEventLiteShow._winnerId = $scope.winner._id;
-        
-        //    EventJoins.query({
-        //     event_liteshowId: $routeParams.event_liteshowId
-        //   }, function(event_joins) {
-        //     $scope.event_joins = event_joins;
-        //   });
 
+        // only picking between 1 and 10. Need better algo. pick random winner from list of current users
+        var ranNum = Math.floor((Math.random() * 10) + 1);
+        if (ranNum <= $scope.userLocations.length) {
+            $scope.winner = $scope.userLocations[ranNum];
+        }
+        else {
+            ranNum = Math.floor((Math.random() * 10) + 1);
+            if (ranNum <= $scope.userLocations.length) {
+                $scope.winner = $scope.userLocations[3];
+            }
+        }
+        
+        $scope.currentEventLiteShow._winnerId = $scope.winner._id;
         $scope.currentEventLiteShow.$update();
 
-        // Not included yet. How to call\include separate Controller?
+        // Not included yet. How to call\include separate Controller? or do we need to?
         // EventLiteShows.$setStartTime();
 
         $scope.percentTimeToStart = 0;
@@ -130,7 +137,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
         }
     };
     
-    $scope.showStarted = function() {
+    $scope.showStarted = function () {
         if ($scope.current_time > $scope.currentEventLiteShow.start_at) {
         return true;
       } else {
@@ -147,6 +154,12 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
         // stupid. Need to add string.format
         $scope.winnerSeat = "Section " + $scope.winner.user_seat.section + ", Row " + $scope.winner.user_seat.row + ", Seat " + $scope.winner.user_seat.seat_number;
     };
+
+    $scope.cleanUpAfterShow = function () {
+        $scope.percentTimeToStart = 0;
+        $scope.winnerSeat = "";
+        $scope.winner = null;
+    }
     
     $scope.$on('$locationChangeStart', function() {
       $timeout.cancel($scope.promise_clock);

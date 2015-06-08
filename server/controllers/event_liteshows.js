@@ -102,8 +102,6 @@ exports.user_liteshow = function (req, res) {
   var white_length = 10000;
   var red_length = 10000;  // 12 seconds (10 seconds around, then hold for 2 seconds, then contest)
 
-  console.log('got the data');
-
   var wait_time = (col-1) * col_delay;   // when to start the white
   //var total_white = white_length - start_time;
   
@@ -125,10 +123,7 @@ exports.user_liteshow = function (req, res) {
     seq.commands[6] = {"pif":"w", "pt":"win", "v":true,"pl1":10000};
   }
 
-  res.jsonp(seq);
-
-  console.log('returning, but what?');
-  
+  res.jsonp(seq);  
 };
 /*
  * calculates the array of commands for a light show for this user

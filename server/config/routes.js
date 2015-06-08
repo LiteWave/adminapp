@@ -81,6 +81,7 @@ module.exports = function(app, passport, auth) {
     app.get('/api/lw_events/:lw_eventId/event_liteshows', event_liteshows.all);
     app.get('/api/lw_events/:lw_eventId/event_liteshows/:event_liteshowId', event_liteshows.show);
     app.get('/api/event_liteshows/:event_liteshowId/user_locations/:user_locationId/liteshow', event_liteshows.user_liteshow);
+    app.get('/api/event_liteshows/:event_liteshowId/user_locations/:user_locationId/liteshow2', event_liteshows.user_liteshow2);
     app.put('/api/lw_events/:lw_eventId/event_liteshows/:event_liteshowId', event_liteshows.update);
     
     app.param('event_liteshowId', event_liteshows.event_liteshow);

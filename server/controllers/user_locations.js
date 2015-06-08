@@ -23,43 +23,66 @@ exports.user_location = function(req, res, next, id) {
  * 
  */
 exports.create = function(req, res) {
-    console.log('here' + UserLocation.config);
-    console.log('event id=' + req.params.lw_eventId + 'user_key:' + req.body.user_key);
-
-    //var existing = UserLocation.find({ user_key: '111phoneipAndGUID987' }, function (err, user_location) {
-    var existing = UserLocation.find({ _lw_eventId: req.params.lw_eventId, user_key: req.body.user_key }, function (err, user_location) {
+    console.log('event id=' + req.params.lw_eventId + '. user_key:' + req.body.user_key);
     
-        console.log('inside of find');
+    UserLocation.findOne({ _lw_eventId: req.params.lw_eventId, user_key: req.body.user_key }).exec(function (err, user_location) {
+        console.log(user_location);
+
         if (err) {
             console.log('some kind of error on find');
             return res.status(500).jsonp(err);
         }
-        else if (user_location.count > 0) {
-            console.log('UL found, call update and return.' + user_location.count);
-            //return res.status(200).jsonp('Updated');
-            console.log('UPDATED user_location: ' + user_location.user_seat.section); // + res.jsonp(user_location));
-            //UserLocation.update(req, res);
-            //res.render('User location already found', {
-            //status: 500
+
+        if (user_location != null) {
+            // for now, we error. If we don't, need to update and not error. user_location.updateLogicalSeat();
+            console.log('Error: Only one userLocation allowed for now.');
+            return res.status(500).jsonp(err);
         }
 
         console.log('nothing found, creating new UL with ' + req.body.user_key);
+
         var user_location = new UserLocation(req.body);
         user_location._lw_eventId = req.params.lw_eventId;
 
+        // For DEMO START: hardcode different logical columns based on input section.
+        switch (user_location.user_seat.section)
+        {
+            case '101':
+                user_location.logical_row = 1;
+                user_location.logical_col = 1;
+                break;
+            case '102':
+                user_location.logical_row = 1;
+                user_location.logical_col = 2;
+                break;
+            case '103':
+                user_location.logical_row = 1;
+                user_location.logical_col = 3;
+                break;
+            case '104':
+                user_location.logical_row = 1;
+                user_location.logical_col = 4;
+                break;
+            case '105':
+                user_location.logical_row = 1;
+                user_location.logical_col = 5;
+                break;
+            default:
+                user_location.logical_row = 1;
+                user_location.logical_col = 1;
+                break;
+        }
+        console.log('user_location.logical_row=' + user_location.logical_row + 'logical_col=' + user_location.logical_col); // + res.jsonp(user_location));
+        // For DEMO END
+
         user_location.save(function (err, user_location) {
-            console.log('inside of save');
             if (err) {
-                console.log('some kind of error on save');
                 return res.status(500).jsonp(err);
             } else {
-                console.log('user_location: ' + user_location.user_seat.section); // + res.jsonp(user_location));
                 res.jsonp(user_location);
             }
         });
     });
-    
-    //user_location.updateLogicalSeat();
 };
 
 /**
