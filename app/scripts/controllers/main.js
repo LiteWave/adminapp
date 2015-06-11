@@ -88,7 +88,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
 
     $scope.startShow = function (seconds) {
 
-        if ($scope.userLocations.length < 4) {
+        if ($scope.userLocations.length < 1) {
             alert("Sorry, not enough users have joined this event. Cancelling show.");
             return;
         }
