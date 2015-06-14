@@ -5,6 +5,8 @@ angular.module('liteWaveApp')
 function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, LWEvents, EventLiteShows, UserLocations) {
 
     $rootScope.currentArea = "main";
+    // DEMO ONLY, hardcode winner.
+    $scope.demowinner = 1;
     $scope.winnerSeat = "";
     $scope.winner = null;
     $scope.activeUsers = 0;
@@ -104,16 +106,18 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
         $scope.currentEventLiteShow.start_at = new Date((Math.ceil(Date.now() / 1000) * 1000) + (seconds * 1000));
 
         // only picking between 1 and 10. Need better algo. pick random winner from list of current users
-        var ranNum = Math.floor((Math.random() * 10) + 1);
+        // For easier debugging, making first user the winner.
+        $scope.winner = $scope.userLocations[$scope.demowinner];
+        /*var ranNum = Math.floor((Math.random() * 10) + 1);
         if (ranNum <= $scope.userLocations.length) {
             $scope.winner = $scope.userLocations[ranNum];
         }
         else {
             ranNum = Math.floor((Math.random() * 10) + 1);
             if (ranNum <= $scope.userLocations.length) {
-                $scope.winner = $scope.userLocations[3];
+                $scope.winner = $scope.userLocations[$scope.demowinner];
             }
-        }
+        }*/
         
         $scope.currentEventLiteShow._winnerId = $scope.winner._id;
         $scope.currentEventLiteShow.$update();
