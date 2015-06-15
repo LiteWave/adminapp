@@ -111,6 +111,10 @@
 								      <li><a href="javascript:;" ng-click="startShow(60)">60 seconds</a></li>
 								    </ul>
 								  </div>
+                                  <p></p>
+                                  <div>
+                                    <span>Run Show for </span><input size="2" /><span> seconds.</span>
+                                  </div>
 								
 							</div>
 
@@ -137,12 +141,12 @@
 								<div class="stat-header">
 									
 									<div class="stat-label">
-										<span ng-show="percentTimeToStart < 100">Time to Start</span>
-                    <span ng-show="percentTimeToStart > 100">Lite Show In Progress</span>
+										<span ng-show="percentTimeToStart < 1">Time to Start</span>
+                                        <span ng-show="percentTimeToStart > 1 && percentTimeToStart < 100">Lite Show In Progress</span>
 									</div> <!-- /.stat-label -->
 									
 									<div class="stat-value">
-										{{current_time | date:'HH:mm:ss'}} ({{currentEventLiteShow.start_at | date:'HH:mm:ss'}}) 
+										Current Time: {{current_time | date:'HH:mm:ss'}} (Show Start: {{currentEventLiteShow.start_at | date:'HH:mm:ss'}}) 
 									</div> <!-- /.stat-value -->
 									
 								</div> <!-- /stat-header -->

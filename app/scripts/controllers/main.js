@@ -7,6 +7,9 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
     $rootScope.currentArea = "main";
     // DEMO ONLY, hardcode winner.
     $scope.demowinner = 1;
+    $scope.showLength = 20;
+    $scope.showStartTime = null;
+    $scope.stopTime = null;
     $scope.winnerSeat = "";
     $scope.winner = null;
     $scope.activeUsers = 0;
@@ -102,8 +105,15 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
         }
 
         $timeout.cancel($scope.promise_clock);
-      
-        $scope.currentEventLiteShow.start_at = new Date((Math.ceil(Date.now() / 1000) * 1000) + (seconds * 1000));
+
+        var now = Date.now();
+        var nowDate = new Date(now);
+        var startTime = now + (1000 * seconds);
+        var stopTime = startTime + (1000 * $scope.showLength);
+
+        // Set showStartTime for UI. Different format than just getting Date.now()
+        $scope.currentEventLiteShow.start_at = $scope.showStartTime = new Date(startTime);        
+        $scope.stopTime = new Date(stopTime);
 
         // only picking between 1 and 10. Need better algo. pick random winner from list of current users
         // For easier debugging, making first user the winner.
@@ -132,22 +142,39 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
 
     $scope.updateClock = function() {
         $scope.current_time = new Date(Date.now());
+
+        console.log('UpdateCLock: current time = ' + $scope.current_time.toString() + '. showStartTime' + $scope.showStartTime.toString());
+
+        if ($scope.current_time < $scope.showStartTime) {
+            //$scope.promise_clock = $timeout($scope.updateClock,$scope.updateTime);
+            $scope.promise_clock = $timeout($scope.updateClock, 100);
+        } else {
+            $timeout($scope.updateShowClock, 100);
+        }
+    };
+
+    $scope.updateShowClock = function () {
+        $scope.current_time = new Date(Date.now());
+
+        // TODO figure out what to add by deviding length of show by 100?
         $scope.percentTimeToStart += 1;
 
-        if ($scope.current_time < $scope.currentEventLiteShow.start_at) {
-            $scope.promise_clock = $timeout($scope.updateClock,$scope.updateTime);
+        console.log('UpdateShowCLock: current time = ' + $scope.current_time.toString() + ' . start_at time = ' + $scope.stopTime.toString());
+
+        if ($scope.current_time < $scope.stopTime) {
+            $scope.promise_clock = $timeout($scope.updateShowClock, 1000);
         } else {
-            $timeout($scope.showIsOver, 10000);
+            $timeout($scope.showIsOver, 100);
         }
     };
     
-    $scope.showStarted = function () {
+    /*$scope.showStarted = function () {
         if ($scope.current_time > $scope.currentEventLiteShow.start_at) {
         return true;
       } else {
         return false;
       }
-    }
+    }*/
     
     $scope.showIsOver = function () {
         if ($scope.winner == null) {
