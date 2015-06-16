@@ -6,7 +6,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
 
     $rootScope.currentArea = "main";
     // DEMO ONLY, hardcode winner.
-    $scope.demowinner = 1;
+    $scope.demowinner = 0;
     $scope.showLength = 20;
     $scope.showStartTime = null;
     $scope.stopTime = null;
