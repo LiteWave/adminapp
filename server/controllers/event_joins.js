@@ -78,9 +78,9 @@ exports.create = function(req, res) {
               event_join._user_locationId = req.user_location._id;
               event_join._event_liteshowId = event_liteshow._id;
               
-              UserLocation.find({ _lw_eventId: req.user_location._lw_eventId }).exec(function (err, user_locations) {
-			event_join._winner_user_locationId = user_locations[0];
-		}
+              //UserLocation.find({ _lw_eventId: req.user_location._lw_eventId }).exec(function (err, user_locations) {
+		//	event_join._winner_user_locationId = user_locations[0];
+		//}
           
   //            if( Math.floor((Math.random()*10)+1) >= 5 )       // for now, 1/2 the joins will be winners
                 //event_join._winner_user_locationId = req.user_location._id;
