@@ -79,7 +79,7 @@ exports.create = function(req, res) {
               event_join._event_liteshowId = event_liteshow._id;
           
   //            if( Math.floor((Math.random()*10)+1) >= 5 )       // for now, 1/2 the joins will be winners
-  //              event_join._winner_user_locationId = req.user_location._id;
+                event_join._winner_user_locationId = req.user_location._id;
   //            else
                 // for now, the 2nd one to join will be the winner
               
