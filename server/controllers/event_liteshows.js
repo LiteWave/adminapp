@@ -107,7 +107,7 @@ exports.user_liteshow = function (req, res) {
   
   var seq = {"title": "Pilot Contest", "show_type":"contest", "commands": []};
   
-  if( wait_time == 0 ) {
+  //if( wait_time == 0 ) {
     seq.commands[0] = {"c": "255,255,255", "pl1": white_length};
     seq.commands[1] = {"c": "216,19,37","pl1":red_length};
     seq.commands[2] = {"pif":"w", "c":"216,19,37","pl1":1000};
@@ -118,15 +118,15 @@ exports.user_liteshow = function (req, res) {
     seq.commands[7] = {"pif":"w", "c":"255,255,255","pl1":1000};
     seq.commands[8] = {"pif":"l", "pt":"r", "c":"216,19,37","pl1":1000, "strobe":1};
     seq.commands[9] = {"pif":"w", "pt":"win", "v":true,"pl1":1000};
-  } else {
-    seq.commands[0] = {"pt":"w","pl1": wait_time };
-    seq.commands[1] = {"c": "255,255,255", "pl1": white_length - wait_time};
-    seq.commands[2] = {"pt":"w","pl1": wait_time };
-    seq.commands[3] = {"c": "216,19,37", "pl1": red_length - wait_time};
-    seq.commands[4] = {"pif":"w", "c":"216,19,37","pl1":9000, "strobe":1};
-    seq.commands[5] = {"pif":"l", "pt":"r", "c":"216,19,37","pl1":3000, "pl2":9000, "strobe":1};
-    seq.commands[6] = {"pif":"w", "pt":"win", "v":true,"pl1":10000};
-  }
+  //} else {
+//    seq.commands[0] = {"pt":"w","pl1": wait_time };
+  //  seq.commands[1] = {"c": "255,255,255", "pl1": white_length - wait_time};
+    //seq.commands[2] = {"pt":"w","pl1": wait_time };
+    //seq.commands[3] = {"c": "216,19,37", "pl1": red_length - wait_time};
+    //seq.commands[4] = {"pif":"w", "c":"216,19,37","pl1":9000, "strobe":1};
+    //seq.commands[5] = {"pif":"l", "pt":"r", "c":"216,19,37","pl1":3000, "pl2":9000, "strobe":1};
+    //seq.commands[6] = {"pif":"w", "pt":"win", "v":true,"pl1":10000};
+  //}
 
   res.jsonp(seq);  
 };
