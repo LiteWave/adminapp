@@ -99,8 +99,8 @@ exports.user_liteshow = function (req, res) {
   var col = u.logical_col;
   var e = req.event_liteshow;
   var col_delay = 300;  // 1/3 a second
-  var white_length = 10000;
-  var red_length = 10000;  // 12 seconds (10 seconds around, then hold for 2 seconds, then contest)
+  var white_length = 1000;
+  var red_length = 1000;  // 12 seconds (10 seconds around, then hold for 2 seconds, then contest)
 
   var wait_time = (col-1) * col_delay;   // when to start the white
   //var total_white = white_length - start_time;
@@ -110,9 +110,14 @@ exports.user_liteshow = function (req, res) {
   if( wait_time == 0 ) {
     seq.commands[0] = {"c": "255,255,255", "pl1": white_length};
     seq.commands[1] = {"c": "216,19,37","pl1":red_length};
-    seq.commands[2] = {"pif":"w", "c":"216,19,37","pl1":9000,"strobe":1};
-    seq.commands[3] = {"pif":"l", "pt":"r", "c":"216,19,37","pl1":3000, "pl2":9000, "strobe":1};
-    seq.commands[4] = {"pif":"w", "pt":"win", "v":true,"pl1":10000};
+    seq.commands[2] = {"pif":"w", "c":"216,19,37","pl1":1000};
+    seq.commands[2] = {"pif":"w", "c":"255,255,255","pl1":1000};
+    seq.commands[2] = {"pif":"w", "c":"216,19,37","pl1":1000};
+    seq.commands[2] = {"pif":"w", "c":"255,255,255","pl1":1000};
+    seq.commands[2] = {"pif":"w", "c":"216,19,37","pl1":1000};
+    seq.commands[2] = {"pif":"w", "c":"255,255,255","pl1":1000};
+    seq.commands[3] = {"pif":"l", "pt":"r", "c":"216,19,37","pl1":1000, "strobe":1};
+    seq.commands[4] = {"pif":"w", "pt":"win", "v":true,"pl1":1000};
   } else {
     seq.commands[0] = {"pt":"w","pl1": wait_time };
     seq.commands[1] = {"c": "255,255,255", "pl1": white_length - wait_time};
