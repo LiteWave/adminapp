@@ -99,43 +99,51 @@ exports.user_liteshow = function (req, res) {
   var col = u.logical_col;
   var e = req.event_liteshow;
   var col_delay = 300;  // 1/3 a second
-  var white_length = 1000;
-  var red_length = 1000;  // 12 seconds (10 seconds around, then hold for 2 seconds, then contest)
+  var first_length = 1000;  // 1 second
+  var second_length = 750;  // 750 ms
+  var third_length = 500;  // 500 ms
+  var fourth_length = 250;  // 250 ms
+  var black = "0,0,0";
+  var red = "216,19,37";
+  var white = "255,255,255";
 
-  var wait_time = (col-1) * col_delay;   // when to start the white
+  //var wait_time = (col - 1) * col_delay;   // when to start the white
   //var total_white = white_length - start_time;
   
   var seq = {"title": "Pilot Contest", "show_type":"contest", "commands": []};
   
-  //if( wait_time == 0 ) {
-    seq.commands[0] = {"c": "255,255,255", "pl1": white_length};
-    seq.commands[1] = {"c": "216,19,37","pl1":red_length};
-    seq.commands[2] = {"pif":"w", "c":"216,19,37","pl1":1000};
-    seq.commands[3] = {"pif":"w", "c":"255,255,255","pl1":1000};
-    seq.commands[4] = {"pif":"w", "c":"0,0,0","pl1":1000};
-    seq.commands[5] = {"pif":"w", "c":"255,255,255","pl1":750};
-    seq.commands[6] = {"pif":"w", "c":"0,0,0","pl1":750};
-    seq.commands[7] = {"pif":"w", "c":"255,255,255","pl1":750};
-    seq.commands[8] = {"pif":"w", "c":"0,0,0","pl1":500};
-    seq.commands[9] = {"pif":"w", "c":"255,255,255","pl1":500};
-    seq.commands[10] = {"pif":"w", "c":"0,0,0","pl1":500};
-    seq.commands[11] = {"pif":"w", "c":"255,255,255","pl1":250};
-    seq.commands[12] = {"pif":"w", "c":"0,0,0","pl1":250};
-    seq.commands[13] = {"pif":"w", "c":"255,255,255","pl1":250};
-    seq.commands[14] = {"pif":"w", "c":"0,0,0","pl1":250};
-    seq.commands[15] = {"pif":"w", "c":"255,255,255","pl1":250};
-    seq.commands[16] = {"pif":"w", "c":"255,255,255","pl1":250};
-    seq.commands[17] = {"pif":"l", "pt":"r", "c":"216,19,37","pl1":1000, "strobe":1};
-    seq.commands[18] = {"pif":"w", "pt":"win", "v":true,"pl1":1000};
-  //} else {
-//    seq.commands[0] = {"pt":"w","pl1": wait_time };
-  //  seq.commands[1] = {"c": "255,255,255", "pl1": white_length - wait_time};
-    //seq.commands[2] = {"pt":"w","pl1": wait_time };
-    //seq.commands[3] = {"c": "216,19,37", "pl1": red_length - wait_time};
-    //seq.commands[4] = {"pif":"w", "c":"216,19,37","pl1":9000, "strobe":1};
-    //seq.commands[5] = {"pif":"l", "pt":"r", "c":"216,19,37","pl1":3000, "pl2":9000, "strobe":1};
-    //seq.commands[6] = {"pif":"w", "pt":"win", "v":true,"pl1":10000};
-  //}
+  seq.commands.push({ "c": black, "pl1": first_length });
+  seq.commands.push({ "c": white, "pl1": first_length });
+  seq.commands.push({ "c": red, "pl1": first_length, "v": true });
+  seq.commands.push({ "c": black, "pl1": first_length });
+  seq.commands.push({ "c": white, "pl1": first_length });
+  seq.commands.push({ "c": red, "pl1": first_length, "v": true });
+
+  seq.commands.push({ "c": black, "pl1": second_length });
+  seq.commands.push({ "c": white, "pl1": second_length });
+  seq.commands.push({ "c": red, "pl1": second_length, "v": true });
+  seq.commands.push({ "c": black, "pl1": second_length });
+  seq.commands.push({ "c": white, "pl1": second_length });
+  seq.commands.push({ "c": red, "pl1": second_length, "v": true });
+
+  seq.commands.push({ "c": black, "pl1": third_length });
+  seq.commands.push({ "c": white, "pl1": third_length });
+  seq.commands.push({ "c": red, "pl1": third_length, "v": true });
+  seq.commands.push({ "c": black, "pl1": third_length });
+  seq.commands.push({ "c": white, "pl1": third_length });
+  seq.commands.push({ "c": red, "pl1": third_length, "v": true });
+
+  seq.commands.push({ "c": black, "pl1": fourth_length });
+  seq.commands.push({ "c": white, "pl1": fourth_length });
+  seq.commands.push({ "c": red, "pl1": fourth_length, "v": true });
+  seq.commands.push({ "c": black, "pl1": fourth_length });
+  seq.commands.push({ "c": white, "pl1": fourth_length });
+  seq.commands.push({ "c": red, "pl1": fourth_length, "v": true });
+
+  seq.commands.push({ "c": red, "pl1": fourth_length, "v": true, "strobe": 1 });
+
+  seq.commands.push({ "pif": "w", "pt": "f", "c": "216,19,37", "pl1": 1000, "strobe": 1, "v": true });
+  seq.commands.push({ "pif": "l", "c": black, "pl1": 1000 });
 
   res.jsonp(seq);  
 };
