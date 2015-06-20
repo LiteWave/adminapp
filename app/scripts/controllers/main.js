@@ -7,7 +7,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
     $rootScope.currentArea = "main";
     // DEMO ONLY, hardcode winner.
     $scope.demowinner = 0;
-    $scope.showLength = 20;
+    $scope.showLength = 15;
     $scope.showStartTime = null;
     $scope.stopTime = null;
     $scope.winnerSeat = "";
@@ -18,6 +18,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
     $scope.stadiumCoverage = 0;
     $scope.stadiumSize = 20;
     $scope.userCheckPromise = null;
+    $scope.userPollTime = 3000;
     
     Clients.query({}, function(clients) {
         $rootScope.clients = clients;
@@ -54,7 +55,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
     }
 
     if ($scope.userCheckPromise == null) {
-        $scope.userCheckPromise = $interval($scope.checkUsers, 2000);
+        $scope.userCheckPromise = $interval($scope.checkUsers, $scope.userPollTime);
     }
     
     // update list of lw_events when the client changes
@@ -80,7 +81,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
 
           // Start checking for new users
           if ($scope.userCheckPromise == null) {
-              $scope.userCheckPromise = $interval($scope.checkUsers, 1000);
+              $scope.userCheckPromise = $interval($scope.checkUsers, $scope.userPollTime);
           }
         });
       }
@@ -107,13 +108,12 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
         $timeout.cancel($scope.promise_clock);
 
         var now = Date.now();
-        var nowDate = new Date(now);
         var startTime = now + (1000 * seconds);
         var stopTime = startTime + (1000 * $scope.showLength);
 
         // Set showStartTime for UI. Different format than just getting Date.now()
-        $scope.currentEventLiteShow.start_at = $scope.showStartTime = new Date(startTime);        
-        $scope.stopTime = new Date(stopTime);
+        $scope.currentEventLiteShow.start_at = $scope.showStartTime = new Date(startTime).toISOString();
+        $scope.stopTime = new Date(stopTime).toISOString();
 
         // only picking between 1 and 10. Need better algo. pick random winner from list of current users
         // For easier debugging, making first user the winner.
@@ -141,7 +141,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
     };
 
     $scope.updateClock = function() {
-        $scope.current_time = new Date(Date.now());
+        $scope.current_time = new Date(Date.now()).toISOString();
 
         console.log('UpdateCLock: current time = ' + $scope.current_time.toString() + '. showStartTime' + $scope.showStartTime.toString());
 
@@ -154,7 +154,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
     };
 
     $scope.updateShowClock = function () {
-        $scope.current_time = new Date(Date.now());
+        $scope.current_time = new Date(Date.now()).toISOString();
 
         // TODO figure out what to add by deviding length of show by 100?
         $scope.percentTimeToStart += 1;
