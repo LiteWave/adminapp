@@ -97,7 +97,8 @@ exports.create = function(req, res) {
                     console.log('Err in find UL to set Winner. err=' + err);
                     return;
                   }
-                  else if (count <= 1)
+                  
+		  if (count < 1)
                   {
                     event_join._winner_user_locationId = req.user_location._id;
                   }
