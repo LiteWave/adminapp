@@ -98,7 +98,7 @@ exports.create = function(req, res) {
                     return;
                   }
                   
-		  if (count < 1)
+		  if (count <= 1)
                   {
                     event_join._winner_user_locationId = req.user_location._id;
                   }
