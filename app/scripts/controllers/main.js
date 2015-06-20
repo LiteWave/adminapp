@@ -13,7 +13,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
     $scope.winnerSeat = "";
     $scope.winner = null;
     $scope.activeUsers = 0;
-    $scope.iPhoneUsers = 20;
+    $scope.iPhoneUsers = 0;
     $scope.androidUsers = 0;
     $scope.stadiumCoverage = 0;
     $scope.stadiumSize = 20;
@@ -157,7 +157,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
         $scope.current_time = new Date(Date.now()).toISOString();
 
         // TODO figure out what to add by deviding length of show by 100?
-        $scope.percentTimeToStart += 1;
+        $scope.percentTimeToStart += 6.66;
 
         console.log('UpdateShowCLock: current time = ' + $scope.current_time.toString() + ' . start_at time = ' + $scope.stopTime.toString());
 
