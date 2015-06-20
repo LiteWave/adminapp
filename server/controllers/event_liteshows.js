@@ -105,7 +105,7 @@ exports.user_liteshow = function (req, res) {
   var fourth_length = 250;  // 250 ms
   var black = "0,0,0";
   var red = "216,19,37";
-  var white = "255,255,255";
+  var white = "162,157,176";
 
   //var wait_time = (col - 1) * col_delay;   // when to start the white
   //var total_white = white_length - start_time;
@@ -142,8 +142,8 @@ exports.user_liteshow = function (req, res) {
 
   seq.commands.push({ "c": red, "pl1": fourth_length, "v": true, "strobe": 1 });
 
-  seq.commands.push({ "pif": "w", "pt": "f", "c": "216,19,37", "pl1": 1000, "strobe": 1, "v": true });
-  seq.commands.push({ "pif": "l", "c": black, "pl1": 1000 });
+  seq.commands.push({ "pif": "w", "pt": "win", "c": "216,19,37", "pl1": 5000, "strobe": 1, "v": true });
+  seq.commands.push({ "pif": "l", "c": black, "pl1": 5000 });
 
   res.jsonp(seq);  
 };
