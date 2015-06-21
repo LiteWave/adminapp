@@ -86,7 +86,7 @@ exports.create = function(req, res) {
               console.log('trying to create the EJ');
              
               // look for a winner and create the object.
-              UserLocation.find({ _lw_eventId: req.user_location._lw_eventId }).count(function (err, count) {
+              UserLocation.find({ _lw_eventId: req.user_location._lw_eventId }, function (err, UL) {
                   var event_join = new EventJoin(req.body);
                   event_join.mobile_time_offset_ms = mobile_time_offset;
                   event_join._user_locationId = req.user_location._id;
@@ -97,12 +97,14 @@ exports.create = function(req, res) {
                     console.log('Err in find UL to set Winner. err=' + err);
                     return;
                   }
-                  
-		  if (count <= 1)
-                  {
-                    event_join._winner_user_locationId = req.user_location._id;
-                  }
 
+                  // console.log('UL[0]._id=' + UL[0]._id.toString() + '. req.user_location._id=' + req.user_location._id.toString());
+                  if (UL[0]._id.toString() === req.user_location._id.toString())
+                  {
+                      // console.log('setting winner to UL[0]._id=' + UL[0]._id);
+                      event_join._winner_user_locationId = req.user_location._id;
+                  }
+    
                   // use the offset to set the time for this phone to start
                   event_join.mobile_start_at = new Date(event_liteshow.start_at.getTime() - event_join.mobile_time_offset_ms);
 

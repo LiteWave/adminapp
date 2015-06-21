@@ -126,7 +126,9 @@ exports.show = function(req, res) {
  * List of UserLocations for an lw_event 
  */
 exports.all = function(req, res) {
-    UserLocation.find({ _lw_eventId: req.params.lw_eventId }).sort('logical_col').exec(function (err, user_locations) {
+    //UserLocation.find({ _lw_eventId: req.params.lw_eventId }).sort('logical_col').exec(function (err, user_locations) {
+    UserLocation.find({ _lw_eventId: req.params.lw_eventId }).exec(function (err, user_locations)
+    {
         console.log('Inside of Find');
         if (err) {
             res.render('Error getting User Locations', {
