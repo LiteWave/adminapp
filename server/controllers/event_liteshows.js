@@ -142,7 +142,7 @@ exports.user_liteshow = function (req, res) {
 
   seq.commands.push({ "c": red, "pl1": fourth_length, "v": true, "strobe": 1 });
 
-  seq.commands.push({ "pif": "w", "pt": "win", "c": "216,19,37", "pl1": 500 });
+  seq.commands.push({ "pif": "w", "pt": "win", "c": "216,19,37", "pl1": 5000 });
   seq.commands.push({ "pif": "l", "c": black, "pl1": 500 });
 
   res.jsonp(seq);  
