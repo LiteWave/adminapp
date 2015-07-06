@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
  * UserLocation Schema - a location is a seat/location at an event at a stadium
  */
 var UserLocationSchema = new Schema({
-	_lw_eventId: { type: Schema.ObjectId, ref: 'LW_Event'},
+	_eventId: { type: Schema.ObjectId, ref: 'Event'},
 	user_key: String,
 	user_seat: {
 		section: String,
@@ -41,7 +41,7 @@ UserLocationSchema.methods = {
     updateLogicalSeat: function() {
 
         // this needs to map the stadium's layout to a logical row/col
-        //stadium = this.lw_event._stadiumId;
+        //stadium = this.event._stadiumId;
         //stadium = "54c85973953b659f88276c13";
         
         // first loop through sections from stadium.sections[i].name == this.user_seat.section

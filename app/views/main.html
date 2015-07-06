@@ -7,7 +7,7 @@
 				    Select Event <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu">
-		         <li data-ng-repeat="lw_event in lw_events"><a ng-click="changeEvent(lw_event)" href="javascript:;">{{lw_event.name}}</a></li>
+		         <li data-ng-repeat="event in events"><a ng-click="changeEvent(event)" href="javascript:;">{{event.name}}</a></li>
 		      </ul>
 
 				</div>
@@ -28,7 +28,7 @@
 
 						<div class="details">
 							<span class="content">Event</span>
-							<span class="eventvalue">{{currentLWEvent.name}}</span>
+							<span class="eventvalue">{{currentEvent.name}}</span>
 						</div> <!-- /.details -->
 
 						<i class="fa fa-play-circle more"></i>
@@ -46,7 +46,7 @@
 
 						<div class="details">
 							<span class="content">Event Date</span>
-							<span class="value">{{currentLWEvent.eventAt | date : 'shortDate' }}</span>
+							<span class="value">{{currentEvent.date | date : 'shortDate' }}</span>
 						</div> <!-- /.details -->
 
 						<i class="fa fa-play-circle more"></i>
@@ -146,7 +146,7 @@
 									</div> <!-- /.stat-label -->
 									
 									<div class="stat-value">
-										Current Time: {{current_time | date:'HH:mm:ss'}} (Show Start: {{currentEventLiteShow.start_at | date:'HH:mm:ss'}}) 
+										Current Time: {{current_time | date:'HH:mm:ss'}} (Show Start: {{currentEventLiteShow.date | date:'HH:mm:ss'}}) 
 									</div> <!-- /.stat-value -->
 									
 								</div> <!-- /stat-header -->

@@ -8,13 +8,13 @@ var mongoose = require('mongoose'),
 /**
  * Event Schema - an event is at a specific stadium
  */
-var LWEventSchema = new Schema({
+var EventSchema = new Schema({
     name: {
         type: String,
         default: '',
         trim: true
     },
-	event_at: Date,
+	date: Date,
 	_stadiumId: { type: Schema.ObjectId, ref: 'Stadium'},
 	_clientId: { type: Schema.ObjectId, ref: 'Client'}
 });
@@ -23,7 +23,7 @@ var LWEventSchema = new Schema({
 /**
  * Statics
  */
-LWEventSchema.statics = {
+EventSchema.statics = {
     load: function(id, cb) {
         this.findOne({
             _id: id
@@ -31,5 +31,4 @@ LWEventSchema.statics = {
     }
 };
 
-
-mongoose.model('LW_Event', LWEventSchema);
+mongoose.model('Event', EventSchema);

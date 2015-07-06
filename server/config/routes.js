@@ -52,43 +52,43 @@ module.exports = function(app, passport, auth) {
     // this will turn the clientId in the url paramenter into a client object in the req object (req.client)
     app.param('clientId', clients.client);   
     
-    // LWEvent Routes
-    var lw_events = require('../controllers/lw_events');
-    app.get('/api/clients/:clientId/lw_events', lw_events.all);
-    app.post('/api/clients/:clientId/lw_events', lw_events.create);
-    app.get('/api/clients/:clientId/lw_events/:lw_eventId', lw_events.show);
-    app.get('/api/lw_events/:lw_eventId', lw_events.show);
+    // Event Routes
+    var events = require('../controllers/events');
+    app.get('/api/clients/:clientId/events', events.all);
+    app.post('/api/clients/:clientId/events', events.create);
+    app.get('/api/clients/:clientId/events/:eventId', events.show);
+    app.get('/api/events/:eventId', events.show);
    
     // UserLocation Routes
     var user_locations = require('../controllers/user_locations');
-    app.get('/api/lw_events/:lw_eventId/user_locations', user_locations.all);
-    app.post('/api/lw_events/:lw_eventId/user_locations', user_locations.create);
+    app.get('/api/events/:eventId/user_locations', user_locations.all);
+    app.post('/api/events/:eventId/user_locations', user_locations.create);
     app.get('/api/user_locations/:user_locationId', user_locations.show);
     app.put('/api/user_locations/:user_locationId', user_locations.update);
     app.del('/api/user_locations/:user_locationId', user_locations.destroy);
     app.param('user_locationId', user_locations.user_location);
     
-    app.param('lw_eventId', lw_events.lw_event);
+    app.param('eventId', events.event);
 
     //LiteShow Routes
-    var liteshows = require('../controllers/liteshows');
-    app.get('/api/liteshows', liteshows.all);
-    app.get('/api/liteshows/:liteshowId', liteshows.show);
-    app.param('liteshowId', liteshows.liteshow);
+    //var liteshows = require('../controllers/liteshows');
+    //app.get('/api/liteshows', liteshows.all);
+    //app.get('/api/liteshows/:liteshowId', liteshows.show);
+    //app.param('liteshowId', liteshows.liteshow);
     
-    //EventLiteShow Routes
-    var event_liteshows = require('../controllers/event_liteshows');
-    app.get('/api/lw_events/:lw_eventId/event_liteshows', event_liteshows.all);
-    app.get('/api/lw_events/:lw_eventId/event_liteshows/:event_liteshowId', event_liteshows.show);
-    app.get('/api/event_liteshows/:event_liteshowId/user_locations/:user_locationId/liteshow', event_liteshows.user_liteshow);
-    app.get('/api/event_liteshows/:event_liteshowId/user_locations/:user_locationId/liteshow2', event_liteshows.user_liteshow2);
-    app.put('/api/lw_events/:lw_eventId/event_liteshows/:event_liteshowId', event_liteshows.update);
+    // Shows Routes
+    var shows = require('../controllers/shows');
+    app.get('/api/events/:eventId/shows', shows.all);
+    app.get('/api/events/:eventId/shows/:showId', shows.show);
+    app.get('/api/shows/:showId/user_locations/:user_locationId/liteshow', shows.user_liteshow);
+    app.get('/api/shows/:showId/user_locations/:user_locationId/liteshow2', shows.user_liteshow2);
+    app.put('/api/events/:eventId/shows/:showId', shows.update);
     
-    app.param('event_liteshowId', event_liteshows.event_liteshow);
+    app.param('showId', shows.show);
     
     //EventJoin Routes
     var event_joins = require('../controllers/event_joins');
-    app.get('/api/event_liteshows/:event_liteshowId/event_joins', event_joins.all);
+    app.get('/api/shows/:showId/event_joins', event_joins.all);
     app.post('/api/user_locations/:user_locationId/event_joins', event_joins.create);
     app.get('/api/event_joins/:event_joinId', event_joins.show);
     app.put('/api/event_joins/:event_joinId', event_joins.update);

@@ -3,39 +3,39 @@
  */
 var mongoose = require('mongoose'),
     async = require('async'),
-    LWEvent = mongoose.model('LW_Event'),
+    Event = mongoose.model('Event'),
     _ = require('underscore');
 
 
 /**
- * Find lw_event by id
+ * Find event by id
  */
-exports.lw_event = function(req, res, next, id) {
-    LWEvent.load(id, function(err, lw_event) {
+exports.event = function(req, res, next, id) {
+    Event.load(id, function(err, event) {
         if (err) return next(err);
-        if (!lw_event) return next(new Error('Failed to load lw_event ' + id));
-        req.lw_event = lw_event;
+        if (!event) return next(new Error('Failed to load event ' + id));
+        req.event = event;
         next();
     });
 };
 
 
  /*
- * Create an lw_event
+ * Create an event
  */
 exports.create = function(req, res) {
     var clientId = req.params.clientId;
-    var lw_event = new LWEvent(req.body);
-    lw_event.clientId = clientId;
+    var event = new Event(req.body);
+    event.clientId = clientId;
     
-    lw_event.save(function(err) {
+    event.save(function(err) {
         if (err) {
             return res.send('clients/', {
                 errors: err.errors,
                 client: client
             });
         } else {
-            res.jsonp(lw_event);
+            res.jsonp(event);
         }
     });
 };
@@ -45,20 +45,20 @@ exports.create = function(req, res) {
  * Show an event
  */
 exports.show = function(req, res) {
-    res.jsonp(req.lw_event);
+    res.jsonp(req.event);
 };
 
 /**
  * List of Events for a client
  */
 exports.all = function(req, res) {
-    LWEvent.find({_clientId: req.client._id}).sort('name').exec(function(err, lwevents) {
+    Event.find({_clientId: req.client._id}).sort('name').exec(function(err, events) {
         if (err) {
             res.render('Could not find events', {
                 status: 500
             });
         } else {
-            res.jsonp(lwevents);
+            res.jsonp(events);
         }
     });
 };

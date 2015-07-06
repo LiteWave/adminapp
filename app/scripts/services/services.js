@@ -51,8 +51,8 @@ services.factory("Clients", ['$resource', function($resource) {
 
 // UserLocations service used for client REST endpoint.
 services.factory('UserLocations', ['$resource', function ($resource) {
-    return $resource('/api/lw_events/:lw_eventId/user_locations', {
-        lw_eventId: '@_id'
+    return $resource('/api/events/:eventId/user_locations', {
+        eventId: '@_id'
     }, {
         update: {
             method: 'PUT'
@@ -60,25 +60,25 @@ services.factory('UserLocations', ['$resource', function ($resource) {
     });
 }]);
 
-// service used for LWEvents REST endpoint
-services.factory("LWEvents", ['$resource', function($resource) {
-    return $resource('/api/clients/:clientId/lw_events/:lw_eventId', {
-      clientId: '@_clientId', lw_eventId: '@_id'
+// service used for Events REST endpoint
+services.factory("Events", ['$resource', function($resource) {
+    return $resource('/api/clients/:clientId/events/:eventId', {
+      clientId: '@_clientId', eventId: '@_id'
     }, {
         update: {
             method: 'PUT'
         },
         get: {
           method: 'GET',
-          url: '/api/lw_events/:lw_eventId'
+          url: '/api/events/:eventId'
         }
     });
 }]);
 
-// service used for event_liteshows REST endpoint
-services.factory("EventLiteShows", ['$resource', function($resource) {
-    return $resource('/api/lw_events/:lw_eventId/event_liteshows/:event_liteshowId', {
-        lw_eventId: '@_lw_eventId', event_liteshowId: '@_id'
+// service used for Shows REST endpoint
+services.factory("Shows", ['$resource', function($resource) {
+    return $resource('/api/events/:eventId/shows/:showId', {
+        eventId: '@_eventId', showId: '@_id'
     }, {
         update: {
             method: 'PUT'

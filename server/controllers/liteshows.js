@@ -3,15 +3,15 @@
  */
 var mongoose = require('mongoose'),
     async = require('async'),
-    LiteShow = mongoose.model('LiteShow'),
+    Command = mongoose.model('Command'),
     _ = require('underscore');
  
 
 /**
  * Find liteshow by id
  */
-exports.liteshow = function(req, res, next, id) {
-    LiteShow.load(id, function(err, liteshow) {
+exports.command = function(req, res, next, id) {
+  Command.load(id, function (err, liteshow) {
         if (err) return next(err);
         if (!liteshow) return next(new Error('Failed to load liteshow ' + id));
         req.liteshow = liteshow;

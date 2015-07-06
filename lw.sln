@@ -21,10 +21,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "models", "models", "{10E40785-8B85-42B5-8F17-F27264553B5A}"
 	ProjectSection(SolutionItems) = preProject
 		server\models\client.js = server\models\client.js
+		server\models\event.js = server\models\event.js
 		server\models\event_join.js = server\models\event_join.js
-		server\models\event_liteshow.js = server\models\event_liteshow.js
 		server\models\liteshow.js = server\models\liteshow.js
-		server\models\lw_event.js = server\models\lw_event.js
+		server\models\show.js = server\models\show.js
 		server\models\stadium.js = server\models\stadium.js
 		server\models\user.js = server\models\user.js
 		server\models\user_location.js = server\models\user_location.js
@@ -36,10 +36,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "controllers", "controllers"
 	ProjectSection(SolutionItems) = preProject
 		server\controllers\clients.js = server\controllers\clients.js
 		server\controllers\event_joins.js = server\controllers\event_joins.js
-		server\controllers\event_liteshows.js = server\controllers\event_liteshows.js
+		server\controllers\events.js = server\controllers\events.js
+		server\controllers\shows.js = server\controllers\shows.js
 		server\controllers\index.js = server\controllers\index.js
 		server\controllers\liteshows.js = server\controllers\liteshows.js
-		server\controllers\lw_events.js = server\controllers\lw_events.js
 		server\controllers\stadiums.js = server\controllers\stadiums.js
 		server\controllers\user_locations.js = server\controllers\user_locations.js
 		server\controllers\users.js = server\controllers\users.js
@@ -78,6 +78,90 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "middlewares", "middlewares"
 		server\config\middlewares\authorization.js = server\config\middlewares\authorization.js
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{BCF8A7D2-0F1F-4330-8979-CFE57AC90BBC}"
+	ProjectSection(SolutionItems) = preProject
+		app\index.html = app\index.html
+		app\index_back.html = app\index_back.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "views", "views", "{BD3212E6-9B55-42CE-8307-C6000535E1FF}"
+	ProjectSection(SolutionItems) = preProject
+		app\views\login.html = app\views\login.html
+		app\views\main.html = app\views\main.html
+		app\views\main_sample.html = app\views\main_sample.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "styles", "styles", "{6A750903-4A39-4778-ADE6-60E686CFC610}"
+	ProjectSection(SolutionItems) = preProject
+		app\styles\App.css = app\styles\App.css
+		app\styles\bootstrap-responsive.min.css = app\styles\bootstrap-responsive.min.css
+		app\styles\bootstrap.css = app\styles\bootstrap.css
+		app\styles\custom.css = app\styles\custom.css
+		app\styles\font-awesome.min.css = app\styles\font-awesome.min.css
+		app\styles\ng-grid.css = app\styles\ng-grid.css
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{0E28F8FA-C51B-4763-AA16-67A5D615D9AF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{0374B108-FA71-4E39-B80F-6AA4148C89BC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fonts", "fonts", "{79941F2B-D084-461F-B6AE-21135AA6B270}"
+	ProjectSection(SolutionItems) = preProject
+		app\fonts\fontawesome-webfont.eot = app\fonts\fontawesome-webfont.eot
+		app\fonts\fontawesome-webfont.svg = app\fonts\fontawesome-webfont.svg
+		app\fonts\fontawesome-webfont.ttf = app\fonts\fontawesome-webfont.ttf
+		app\fonts\fontawesome-webfont.woff = app\fonts\fontawesome-webfont.woff
+		app\fonts\FontAwesome.otf = app\fonts\FontAwesome.otf
+		app\fonts\glyphicons-halflings-regular 2.eot = app\fonts\glyphicons-halflings-regular 2.eot
+		app\fonts\glyphicons-halflings-regular 2.svg = app\fonts\glyphicons-halflings-regular 2.svg
+		app\fonts\glyphicons-halflings-regular 2.ttf = app\fonts\glyphicons-halflings-regular 2.ttf
+		app\fonts\glyphicons-halflings-regular 2.woff = app\fonts\glyphicons-halflings-regular 2.woff
+		app\fonts\glyphicons-halflings-regular.eot = app\fonts\glyphicons-halflings-regular.eot
+		app\fonts\glyphicons-halflings-regular.svg = app\fonts\glyphicons-halflings-regular.svg
+		app\fonts\glyphicons-halflings-regular.ttf = app\fonts\glyphicons-halflings-regular.ttf
+		app\fonts\glyphicons-halflings-regular.woff = app\fonts\glyphicons-halflings-regular.woff
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "browser_components", "browser_components", "{3980DBCC-387C-4BC8-951B-B156B41F8E10}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "controllers", "controllers", "{6F8B0F2A-151C-42AC-9E29-EC284AD62395}"
+	ProjectSection(SolutionItems) = preProject
+		app\scripts\controllers\event_liteshows.js = app\scripts\controllers\event_liteshows.js
+		app\scripts\controllers\logins.js = app\scripts\controllers\logins.js
+		app\scripts\controllers\main.js = app\scripts\controllers\main.js
+		app\scripts\controllers\stadiums.js = app\scripts\controllers\stadiums.js
+		app\scripts\controllers\users.js = app\scripts\controllers\users.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "directives", "directives", "{BFAC34FB-6D85-480A-8121-35C203A75B65}"
+	ProjectSection(SolutionItems) = preProject
+		app\scripts\directives\directives.js = app\scripts\directives\directives.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{4975BE1C-2F0E-4C53-861F-A1979DC74270}"
+	ProjectSection(SolutionItems) = preProject
+		app\scripts\js\App.js = app\scripts\js\App.js
+		app\scripts\js\bootstrap.min.js = app\scripts\js\bootstrap.min.js
+		app\scripts\js\jquery-ui-1.9.2.custom.min.js = app\scripts\js\jquery-ui-1.9.2.custom.min.js
+		app\scripts\js\raphael-2.1.2.min.js = app\scripts\js\raphael-2.1.2.min.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{2028502C-BFB3-407F-A775-E0428575E0C9}"
+	ProjectSection(SolutionItems) = preProject
+		app\scripts\services\services.js = app\scripts\services\services.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "users", "users", "{275C1478-C78C-4ADA-B6E6-C673462C7E63}"
+	ProjectSection(SolutionItems) = preProject
+		app\views\users\list.html = app\views\users\list.html
+		app\views\users\userForm.html = app\views\users\userForm.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "stadiums", "stadiums", "{C8464FF6-1853-4A63-8B4A-9087B1409082}"
+	ProjectSection(SolutionItems) = preProject
+		app\views\stadiums\create.html = app\views\stadiums\create.html
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,5 +176,17 @@ Global
 		{BAE79D7C-2684-4D8C-91E6-33C5D0380268} = {4249F4D7-AD2E-4337-BEA9-06EA6C69ED7D}
 		{05CF9818-4BF3-4855-ADF8-3D1CA695E0C4} = {4249F4D7-AD2E-4337-BEA9-06EA6C69ED7D}
 		{54BB600B-22AC-42A6-AD8D-A0AA0DB9F159} = {4249F4D7-AD2E-4337-BEA9-06EA6C69ED7D}
+		{BD3212E6-9B55-42CE-8307-C6000535E1FF} = {BCF8A7D2-0F1F-4330-8979-CFE57AC90BBC}
+		{6A750903-4A39-4778-ADE6-60E686CFC610} = {BCF8A7D2-0F1F-4330-8979-CFE57AC90BBC}
+		{0E28F8FA-C51B-4763-AA16-67A5D615D9AF} = {BCF8A7D2-0F1F-4330-8979-CFE57AC90BBC}
+		{0374B108-FA71-4E39-B80F-6AA4148C89BC} = {BCF8A7D2-0F1F-4330-8979-CFE57AC90BBC}
+		{79941F2B-D084-461F-B6AE-21135AA6B270} = {BCF8A7D2-0F1F-4330-8979-CFE57AC90BBC}
+		{3980DBCC-387C-4BC8-951B-B156B41F8E10} = {BCF8A7D2-0F1F-4330-8979-CFE57AC90BBC}
+		{6F8B0F2A-151C-42AC-9E29-EC284AD62395} = {0E28F8FA-C51B-4763-AA16-67A5D615D9AF}
+		{BFAC34FB-6D85-480A-8121-35C203A75B65} = {0E28F8FA-C51B-4763-AA16-67A5D615D9AF}
+		{4975BE1C-2F0E-4C53-861F-A1979DC74270} = {0E28F8FA-C51B-4763-AA16-67A5D615D9AF}
+		{2028502C-BFB3-407F-A775-E0428575E0C9} = {0E28F8FA-C51B-4763-AA16-67A5D615D9AF}
+		{275C1478-C78C-4ADA-B6E6-C673462C7E63} = {BD3212E6-9B55-42CE-8307-C6000535E1FF}
+		{C8464FF6-1853-4A63-8B4A-9087B1409082} = {BD3212E6-9B55-42CE-8307-C6000535E1FF}
 	EndGlobalSection
 EndGlobal

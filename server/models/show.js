@@ -6,32 +6,34 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 /**
- * EventLiteShow Schema - 
+ * Show Schema - 
  */
 
-var EventLiteShowSchema = new Schema({
-	_lw_eventId: { type: Schema.ObjectId, ref: 'LW_Event'},
-	_liteshowId: { type: Schema.ObjectId, ref: 'LiteShow'},
+var ShowSchema = new Schema({
+	_eventId: { type: Schema.ObjectId, ref: 'Event'},
+	_liteshowId: { type: Schema.ObjectId, ref: 'LiteShow' },
+	_winnerId: {type: Schema.ObjectId, ref: 'User_Location'},  // set if this show is a contest.
 	start_at: Date,  // exact time to start show - normally set dynamically during the event since the start time might not be known ahead of time
-	_winnerId: {type: Schema.ObjectId, ref: 'User_Location'}  // set if this show is a contest.
+	type: Number,   // type of show: liteshow, liteshow + contest, contest	
+	winnerSections: [{ name: { type: String, trim: true } }]
 });
 
 /**
  * Statics
  */
-EventLiteShowSchema.statics = {
+ShowSchema.statics = {
     load: function(id, cb) {
         this.findOne({
             _id: id
-        }).populate('_lw_eventId').populate('_liteshowId').exec(cb);
+        }).populate('_eventId').populate('_liteshowId').exec(cb);
     },
     // looks for an eventLiteShow that has a start_at that is after now
-    find_active: function(lw_event_id, cb) {
+    find_active: function(event_id, cb) {
       var utc = new Date().toISOString();
       var curDateUTC = new Date(utc);
       
       this
-      .findOne({ _lw_eventId: lw_event_id})
+      .findOne({ _eventId: event_id})
       .where('start_at').gt(utc)
       .exec(cb);
     }
@@ -40,7 +42,7 @@ EventLiteShowSchema.statics = {
 /**
  * Methods
  */
-EventLiteShowSchema.methods = {
+ShowSchema.methods = {
 
     getUserCommands: function(user_location_id) {
       // return a LiteShow object that contains just the commands for this user's seat
@@ -51,5 +53,5 @@ EventLiteShowSchema.methods = {
         return 'ok';
     }
 };
-mongoose.model('Event_LiteShow', EventLiteShowSchema);
+mongoose.model('Show', ShowSchema);
 

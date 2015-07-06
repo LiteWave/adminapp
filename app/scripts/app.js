@@ -30,6 +30,7 @@ var app = angular.module('liteWaveApp', [
           $rootScope.loggedInUser = user;
           $rootScope.isTeamUser = (user.user_type == 'Team');
           $rootScope.isAdminUser = (user.user_type == 'Admin');
+
           $timeout(deferred.resolve, 0);
         }
         // Not Authenticated
@@ -86,6 +87,13 @@ var app = angular.module('liteWaveApp', [
       .when('/', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl',
+        resolve: {
+          loggedin: checkLoggedin
+        }
+      })
+      .when('/events', {
+        templateUrl: 'views/events/events.html',
+        controller: 'EventsController',
         resolve: {
           loggedin: checkLoggedin
         }

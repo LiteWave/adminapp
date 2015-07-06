@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liteWaveApp')
-.controller('MainCtrl', ['$rootScope', '$scope', '$http', '$timeout','$interval','FeedService','Clients','LWEvents', 'EventLiteShows', 'UserLocations',
-function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, LWEvents, EventLiteShows, UserLocations) {
+.controller('MainCtrl', ['$rootScope', '$scope', '$timeout','$interval','Clients','Events', 'Shows', 'UserLocations',
+function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserLocations) {
 
     $rootScope.currentArea = "main";
     // DEMO ONLY, hardcode winner.
@@ -23,66 +23,56 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
     Clients.query({}, function(clients) {
         $rootScope.clients = clients;
         $rootScope.currentClient = clients[0];
+        $rootScope.setClient($rootScope.currentClient);
     });
-    
-    $scope.feedSrc = 'http://www.nba.com/blazers/news/rss.html';
-    FeedService.parseFeed($scope.feedSrc).then(function(res){
-       // $scope.feedText=angular.element(e.target).text();
-    //    $scope.feeds=res.data.responseData.feed.entries;
-    });
-    
-    $scope.loadFeed=function() {        
-        FeedService.parseFeed($scope.feedSrc).then(function(res){
-           // $scope.feedText=angular.element(e.target).text();
-            $scope.feeds=res.data.responseData.feed.entries;
-        });
-    };
-    
+       
     $scope.changeEvent = function(event) {
-      $scope.currentLWEvent = event;
+      $scope.currentEvent = event;
     };
 
     // check for new users every second.
     $scope.checkUsers = function () {
-        UserLocations.query({ lw_eventId: $scope.currentEventLiteShow._lw_eventId }, function (userLocations) {
-            $scope.userLocations = userLocations;
-            $scope.activeUsers = userLocations.length;
-            //if ($scope.activeUsers > 0) {
-                $scope.stadiumCoverage = Math.round($scope.activeUsers / $scope.stadiumSize * 100);
-                $scope.iPhoneUsers = Math.round($scope.activeUsers / $scope.stadiumSize * 100);
-            //}
+      if ($scope.currentShow) {
+        UserLocations.query({ eventId: $scope.currentShow._eventId }, function (userLocations) {
+          $scope.userLocations = userLocations;
+          $scope.activeUsers = userLocations.length;
+          $scope.stadiumCoverage = Math.round($scope.activeUsers / $scope.stadiumSize * 100);
+          $scope.iPhoneUsers = Math.round($scope.activeUsers / $scope.stadiumSize * 100);
         });
+      }
     }
 
     if ($scope.userCheckPromise == null) {
         $scope.userCheckPromise = $interval($scope.checkUsers, $scope.userPollTime);
     }
     
-    // update list of lw_events when the client changes
+    // update list of events when the client changes
     $scope.$watch('currentClient', function(newVal, oldVal) {
         if (newVal) {
-        LWEvents.query({clientId: newVal._id}, function(lw_events) {
-          $scope.lw_events = lw_events;
-          $scope.liteshows = null;
-          $scope.currentLWEvent = lw_events[0];
+        Events.query({clientId: newVal._id}, function(events) {
+          if (events && events.length) {
+            $scope.events = events;
+            $scope.liteshows = null;
+            $scope.currentEvent = events[0];
+          }
         });
       }
     });
     
-    // update list of lite_shows when the lw_event changes
-    $scope.$watch('currentLWEvent', function(newVal, oldVal) {
+    // update list of lite_shows when the event changes
+    $scope.$watch('currentEvent', function(newVal, oldVal) {
         if (newVal) {
             $scope.cleanUpAfterShow();
-        EventLiteShows.query({lw_eventId: newVal._id}, function(liteshows) {
-          $scope.liteshows = liteshows;
-          $scope.currentEventLiteShow = liteshows[0];
+        Shows.query({eventId: newVal._id}, function(liteshows) {
+            if (liteshows && liteshows.length) {
+              $scope.liteshows = liteshows;
+              $scope.currentShow = liteshows[0];
 
-          // Reset winners
-
-          // Start checking for new users
-          if ($scope.userCheckPromise == null) {
-              $scope.userCheckPromise = $interval($scope.checkUsers, $scope.userPollTime);
-          }
+              // Start checking for new users
+              if ($scope.userCheckPromise == null) {
+                $scope.userCheckPromise = $interval($scope.checkUsers, $scope.userPollTime);
+              }
+            }
         });
       }
     });
@@ -112,7 +102,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
         var stopTime = startTime + (1000 * $scope.showLength);
 
         // Set showStartTime for UI. Different format than just getting Date.now()
-        $scope.currentEventLiteShow.start_at = $scope.showStartTime = new Date(startTime).toISOString();
+        $scope.currentShow.start_at = $scope.showStartTime = new Date(startTime).toISOString();
         $scope.stopTime = new Date(stopTime).toISOString();
 
         // only picking between 1 and 10. Need better algo. pick random winner from list of current users
@@ -129,11 +119,11 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
             }
         }*/
         
-        $scope.currentEventLiteShow._winnerId = $scope.winner._id;
-        $scope.currentEventLiteShow.$update();
+        $scope.currentShow._winnerId = $scope.winner._id;
+        $scope.currentShow.$update();
 
         // Not included yet. How to call\include separate Controller? or do we need to?
-        // EventLiteShows.$setStartTime();
+        // Shows.$setStartTime();
 
         $scope.percentTimeToStart = 0;
         $scope.updateTime = seconds * 10;
@@ -169,7 +159,7 @@ function ($rootScope, $scope, $http, $timeout, $interval, FeedService, Clients, 
     };
     
     /*$scope.showStarted = function () {
-        if ($scope.current_time > $scope.currentEventLiteShow.start_at) {
+        if ($scope.current_time > $scope.currentShow.start_at) {
         return true;
       } else {
         return false;

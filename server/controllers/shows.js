@@ -3,18 +3,18 @@
  */
 var mongoose = require('mongoose'),
     async = require('async'),
-    EventLiteShow = mongoose.model('Event_LiteShow'),
+    Show = mongoose.model('Show'),
     _ = require('underscore');
 
 
 /**
- * Find event_liteshow by id
+ * Find show by id
  */
-exports.event_liteshow = function(req, res, next, id) {
-    EventLiteShow.load(id, function(err, event_liteshow) {
+exports.show = function(req, res, next, id) {
+    Show.load(id, function(err, show) {
         if (err) return next(err);
-        if (!event_liteshow) return next(new Error('Failed to load event_liteshow ' + id));
-        req.event_liteshow = event_liteshow;
+        if (!show) return next(new Error('Failed to load show ' + id));
+        req.show = liteshow;
         next();
     });
 };
@@ -23,67 +23,67 @@ exports.event_liteshow = function(req, res, next, id) {
  * 
  */
 exports.create = function(req, res) {
-    var event_liteshow = new EventLiteShow(req.body);
-    event_liteshow._lw_eventId = req.params.lw_eventId;
-    event_liteshow.save(function(err) {
+    var show = new Show(req.body);
+    show._eventId = req.params.eventId;
+    show.save(function(err) {
         if (err) {
-            return res.send('event_liteshows/', {
+            return res.send('shows/', {
                 errors: err.errors,
-                event_liteshow: event_liteshow
+                show: show
             });
         } else {
-            res.jsonp(event_liteshow);
+            res.jsonp(show);
         }
     });
 };
 
 /**
- * Update a event_liteshow
+ * Update a show
  */
 exports.update = function(req, res) {
-    var event_liteshow = req.event_liteshow;
-    event_liteshow = _.extend(event_liteshow, req.body);
-    event_liteshow.save(function(err) {
-        res.jsonp(event_liteshow);
+    var show = req.show;
+    show = _.extend(show, req.body);
+    show.save(function(err) {
+        res.jsonp(show);
     });
 };
 
 
 /**
- * Delete an event_liteshow
+ * Delete an show
  */
 exports.destroy = function(req, res) {
-    var event_liteshow = req.event_liteshow;
+    var show = req.show;
 
-    event_liteshow.remove(function(err) {
+    show.remove(function(err) {
         if (err) {
             res.render('error', {
                 status: 500
             });
         } else {
-            res.jsonp(event_liteshow);
+            res.jsonp(show);
         }
     });
 };
 
 /**
- * Show a event_liteshow
+ * Show a show
  */
 exports.show = function(req, res) {
-    res.jsonp(req.event_liteshow);
+    res.jsonp(req.show);
 };
 
 /**
- * List of EventLiteShows for an lw_event 
+ * List of Shows for an Event 
  */
 exports.all = function(req, res) {
-    EventLiteShow.find({_lw_eventId: req.lw_event._id}).exec(function(err, event_liteshows) {
+    Show.find({_eventId: req.event._id}).exec(function(err, shows) {
         if (err) {
             res.render('error', {
                 status: 500
             });
         } else {
-            res.jsonp(event_liteshows);
+            res.jsonp(shows);
         }
     });
 };
@@ -97,7 +97,7 @@ exports.user_liteshow = function (req, res) {
     console.log('here in user_liteshow controller');
   var u = req.user_location;
   var col = u.logical_col;
-  var e = req.event_liteshow;
+  var e = req.show;
   var col_delay = 300;  // 1/3 a second
   var first_length = 1000;  // 1 second
   var second_length = 750;  // 750 ms
@@ -153,7 +153,7 @@ exports.user_liteshow = function (req, res) {
 exports.user_liteshow2 = function(req, res) {
   var u = req.user_location;
   var section = u.user_seat.section;
-  var e = req.event_liteshow;
+  var e = req.show;
   
   // fake shows to do a circle through 3 phones
   //  section 101 -  

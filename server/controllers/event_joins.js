@@ -3,7 +3,7 @@
  */
 var mongoose = require('mongoose'),
     async = require('async'),
-    EventLiteShow = mongoose.model('Event_LiteShow'),
+    Show = mongoose.model('Show'),
     EventJoin = mongoose.model('Event_Join'),
     UserLocation = mongoose.model('User_Location'),
     _ = require('underscore');
@@ -62,23 +62,23 @@ exports.create = function(req, res) {
   //  }
  // });
     
-      // see if there's an active event_liteshow object before going any further
-    EventLiteShow.find_active(req.user_location._lw_eventId, 
-      function(err, event_liteshow) {
+      // see if there's an active show object before going any further
+    Show.find_active(req.user_location._eventId, 
+      function(err, show) {
         if (err)
         {
-            res.render('No active event_liteshow error', {
+            res.render('No active show error', {
             status: 500
           });
         }
         else
         {
-            console.log('Something WAS FOUND. req.user_location._lw_eventId is ' + req.user_location._lw_eventId);
-            if (!event_liteshow) {
+            console.log('Something WAS FOUND. req.user_location._eventId is ' + req.user_location._eventId);
+            if (!show) {
                 console.log('error, event liteshow is null');
                 console.log(err);
                 res.status(404);
-                res.send({error: 'event_liteshow not available'});
+                res.send({ error: 'show not available' });
                 return;
             }
             else
@@ -86,11 +86,11 @@ exports.create = function(req, res) {
               console.log('trying to create the EJ');
              
               // look for a winner and create the object.
-              UserLocation.find({ _lw_eventId: req.user_location._lw_eventId }, function (err, UL) {
+              UserLocation.find({ _eventId: req.user_location._eventId }, function (err, UL) {
                   var event_join = new EventJoin(req.body);
                   event_join.mobile_time_offset_ms = mobile_time_offset;
                   event_join._user_locationId = req.user_location._id;
-                  event_join._event_liteshowId = event_liteshow._id;
+                  event_join._showId = show._id;
 
                   if (err)
                   {
@@ -106,7 +106,7 @@ exports.create = function(req, res) {
                   }
     
                   // use the offset to set the time for this phone to start
-                  event_join.mobile_start_at = new Date(event_liteshow.start_at.getTime() - event_join.mobile_time_offset_ms);
+                  event_join.mobile_start_at = new Date(show.start_at.getTime() - event_join.mobile_time_offset_ms);
 
                   event_join.save(function (err) {
                       if (err) {
@@ -126,8 +126,8 @@ exports.create = function(req, res) {
                 // for now, the 2nd one to join will be the winner
               
               //event_join._winner_user_locationId = req.user_location._id;
-              //event_liteshow._winner_user_locationId = req.user_location._id;
-              //EventLiteShow
+              //show._winner_user_locationId = req.user_location._id;
+              //Show
 
             } // end else
           } // end else
@@ -171,10 +171,10 @@ exports.show = function(req, res) {
 };
 
 /**
- * List of EventJoins for an event_liteshow - should be thousands
+ * List of EventJoins for an show - should be thousands
  */
 exports.all = function(req, res) {
-    EventJoin.find({_lw_eventId: req.params.lw_eventId})
+    EventJoin.find({_eventId: req.params.eventId})
     .sort('logical_col')
     .populate('_user_locationId')
     .exec(function(err, event_joins) {
