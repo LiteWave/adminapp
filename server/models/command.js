@@ -16,7 +16,7 @@ var mongoose = require('mongoose'),
  *              for seat, the specified seat in param1=row, param2=col
  *              for all, all devices.
  */
-var LiteShowCommandSchema = new Schema({
+var LiteShowCommandSchema_old = new Schema({
   loc_t: String,  // location type:  col, row, seat, all, winner (specific winner's phone only) (not used by mobile app)
   lp1: Number,    // location parameter 1  (not used by mobile app)
   lp2: Number,   // only used if it's a seat and this is the column  (not used by mobile app)
@@ -37,7 +37,7 @@ var LiteShowCommandSchema = new Schema({
 var CommandSchema = new Schema({
 	title: String,
 	show_type: String,   // contest or liteshow
-	commands: [LiteShowCommandSchema]
+	commands: [LiteShowCommandSchema_old]
 });
 
 /**

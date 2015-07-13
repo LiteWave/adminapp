@@ -55,8 +55,10 @@ module.exports = function(app, passport, auth) {
     // Event Routes
     var events = require('../controllers/events');
     app.get('/api/clients/:clientId/events', events.all);
+          //app.get('/api/clients/:clientId/events/active', events.active);   // returns only events that have a start time set?
     app.post('/api/clients/:clientId/events', events.create);
     app.get('/api/clients/:clientId/events/:eventId', events.show);
+    app.del('/api/clients/:clientId/events/:eventId', events.destroy);
     app.get('/api/events/:eventId', events.show);
    
     // UserLocation Routes
@@ -79,10 +81,11 @@ module.exports = function(app, passport, auth) {
     // Shows Routes
     var shows = require('../controllers/shows');
     app.get('/api/events/:eventId/shows', shows.all);
+    app.post('/api/events/:eventId/shows', shows.create);
     app.get('/api/events/:eventId/shows/:showId', shows.show);
     app.get('/api/shows/:showId/user_locations/:user_locationId/liteshow', shows.user_liteshow);
     app.get('/api/shows/:showId/user_locations/:user_locationId/liteshow2', shows.user_liteshow2);
-    app.put('/api/events/:eventId/shows/:showId', shows.update);
+    app.put('/api/events/:eventId/shows/:showId', shows.update);    
     
     app.param('showId', shows.show);
     

@@ -19,15 +19,84 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     $scope.stadiumSize = 20;
     $scope.userCheckPromise = null;
     $scope.userPollTime = 3000;
+    $scope.currentShowType = 0;
     
     Clients.query({}, function(clients) {
         $rootScope.clients = clients;
         $rootScope.currentClient = clients[0];
         $rootScope.setClient($rootScope.currentClient);
     });
+
+    $scope.setShowType = function (type) {
+      $scope.currentShowType = type;
+    };
+
+    $scope.createShow = function () {
+      if (!$scope.currentEvent || !$scope.currentEvent.logicalLayout || !$scope.currentEvent.logicalLayout.columns || !$scope.currentEvent.logicalLayout.columns.length) {
+        alert("Please select an Event");
+        return;
+      }
+
+      if (!$scope.currentEvent.logicalLayout || !$scope.currentEvent.logicalLayout.columns || !$scope.currentEvent.logicalLayout.columns.length) {
+        alert("Current Event has no logical columns. Please create an Event with logical columns.");
+        return;
+      }
+
+      // $scope.currentShowType;
+      // for show Create commands 
+      /* commands: [{
+        logicalCol: Number,
+        commands: [LiteShowCommandSchema]
+      }],*/
+
+      var first_length = 1000;  // 1 second
+      var second_length = 750;  // 750 ms
+      var third_length = 500;  // 500 ms
+      var fourth_length = 250;  // 250 ms
+      var black = "0,0,0";
+      var red = "216,19,37";
+      var white = "162,157,176";
+
+      // for each logical column, create commands
+      // $$$ this is simple logic. Need to account for logical rows and seats.
+      // var seq = {"title": "Pilot Contest", "show_type":"contest", "commands": []};
+      var logicalCol = 0;
+      var columnLength = $scope.currentEvent.logicalLayout.columns.length;
+      var cmds = [];
+      // cmds.commands = [];
+      while (logicalCol < columnLength) {
+        //cmds = [{ "logicalCol": logicalCol, "commands": [{ "c": black, "pl1": first_length }] }];
+        // cmds.commands[0] = {"pt":"w","pl1": (random time)};  // wait X ms, max delay 250ms
+        //cmds.push({ "c": black, "pl1": first_length });
+        cmds.push({ "c": white, "pl1": first_length });
+        //cmds.commands.push({ "c": red, "pl1": first_length });
+        //cmds.commands.push({ "c": black, "pl1": first_length });
+        //cmds.commands.push({ "c": white, "pl1": first_length });
+        //cmds.commands.push({ "c": red, "pl1": first_length, "v": true });
+        logicalCol++;
+
+        //cmds.push({ "logicalCol": logicalCol, "commands": [] });
+      }
+      
+      var show = new Shows({
+        _eventId: $scope.currentEvent._id,
+        commands: cmds,
+        type: $scope.currentShowType
+      });
+      show.$save(function (response) {
+        console.log(response);
+        //$location.path("event/" + response._id);
+      });
+    };
        
     $scope.changeEvent = function(event) {
       $scope.currentEvent = event;
+    };
+
+    $scope.deleteEvent = function () {
+      if ($scope.currentEvent) {
+        $scope.currentEvent.$delete();
+      }      
     };
 
     // check for new users every second.

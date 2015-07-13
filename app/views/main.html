@@ -1,21 +1,19 @@
 			<div>
 				<h4 class="heading-inline">Event Controller</h4>
 
-				<div class="btn-group ">
+				<div class="btn-group">
 				  <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
 					<i class="fa fa-clock-o"></i>  &nbsp;
 				    Select Event <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu">
-		         <li data-ng-repeat="event in events"><a ng-click="changeEvent(event)" href="javascript:;">{{event.name}}</a></li>
-		      </ul>
-
+		            <li data-ng-repeat="event in events"><a ng-click="changeEvent(event)" href="javascript:;">{{event.name}}</a></li>
+		          </ul>
+                  <button type="button" ng-click="deleteEvent()" >Delete Event</button>
 				</div>
-
 			</div>
 
 			<br />
-
 
 			<div class="row">
 
@@ -99,6 +97,22 @@
 						<div class="portlet-content">
 
 							<div class="pull-left">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                        Type of Show
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="javascript:;" ng-click="setShowType(0)">LiteShow</a></li>
+                                        <li><a href="javascript:;" ng-click="setShowType(1)">LiteShow + Contest</a></li>
+                                        <li><a href="javascript:;" ng-click="setShowType(2)">Pick a Winning Section</a></li>
+                                        <li><a href="javascript:;" ng-click="setShowType(3)">Pick a Winner</a></li>
+                                    </ul>
+
+                                    <button type="button" ng-click="createShow()">Create LiteShow</button>
+                                </div>
+                                
+                                <br/>
 
 								  <div class="btn-group">
 								    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">

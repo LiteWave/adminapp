@@ -81,7 +81,7 @@ services.factory("Shows", ['$resource', function($resource) {
         eventId: '@_eventId', showId: '@_id'
     }, {
         update: {
-            method: 'PUT'
+          method: 'PUT'
         }
     });
 }]);

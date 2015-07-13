@@ -22,9 +22,11 @@ exports.show = function(req, res, next, id) {
 /**
  * 
  */
-exports.create = function(req, res) {
+exports.create = function (req, res) {
     var show = new Show(req.body);
     show._eventId = req.params.eventId;
+    console.log('SHOW:Create:clientId=' + show._eventId);
+    console.log('SHOW:Create:req.body=' + req.body);
     show.save(function(err) {
         if (err) {
             return res.send('shows/', {

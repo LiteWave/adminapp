@@ -24,12 +24,14 @@ exports.event = function(req, res, next, id) {
  * Create an event
  */
 exports.create = function(req, res) {
-    var clientId = req.params.clientId;
+  var clientId = req.params.clientId;
+  console.log('Event:Create:clientId=' + clientId);
+  console.log('Event:Create:req.body=' + req.body.logicalLayout.columns[0].sectionList[0]);
     var event = new Event(req.body);
     event.clientId = clientId;
     
     event.save(function(err) {
-        if (err) {
+      if (err) {
             return res.send('clients/', {
                 errors: err.errors,
                 client: client
@@ -38,6 +40,23 @@ exports.create = function(req, res) {
             res.jsonp(event);
         }
     });
+};
+
+/**
+ * Delete an evemt
+ */
+exports.destroy = function (req, res) {
+  var event = req.event;
+
+  event.remove(function (err) {
+    if (err) {
+      res.render('Error deleting Event', {
+        status: 500
+      });
+    } else {
+      res.jsonp(event);
+    }
+  });
 };
 
 
