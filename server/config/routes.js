@@ -82,7 +82,7 @@ module.exports = function(app, passport, auth) {
     var shows = require('../controllers/shows');
     app.get('/api/events/:eventId/shows', shows.all);
     app.post('/api/events/:eventId/shows', shows.create);
-    app.get('/api/events/:eventId/shows/:showId', shows.show);
+    app.get('/api/events/:eventId/shows/:showId', shows.getshow);
     app.get('/api/shows/:showId/user_locations/:user_locationId/liteshow', shows.user_liteshow);
     app.get('/api/shows/:showId/user_locations/:user_locationId/liteshow2', shows.user_liteshow2);
     app.put('/api/events/:eventId/shows/:showId', shows.update);    

@@ -98,12 +98,14 @@ exports.create = function(req, res) {
                     return;
                   }
 
+                  // $$$ Get the commands for this Show and return them for the given user_location
+
                   // console.log('UL[0]._id=' + UL[0]._id.toString() + '. req.user_location._id=' + req.user_location._id.toString());
-                  if (UL[0]._id.toString() === req.user_location._id.toString())
+                  /*if (UL[0]._id.toString() === req.user_location._id.toString())
                   {
                       // console.log('setting winner to UL[0]._id=' + UL[0]._id);
                       event_join._winner_user_locationId = req.user_location._id;
-                  }
+                  }*/
     
                   // use the offset to set the time for this phone to start
                   event_join.mobile_start_at = new Date(show.start_at.getTime() - event_join.mobile_time_offset_ms);

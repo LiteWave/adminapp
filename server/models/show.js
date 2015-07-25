@@ -29,7 +29,7 @@ var LiteShowCommandSchema = new Schema({
 
 var ShowSchema = new Schema({
 	_eventId: { type: Schema.ObjectId, ref: 'Event'},
-	_liteshowId: { type: Schema.ObjectId, ref: 'LiteShow' },
+	//_liteshowId: { type: Schema.ObjectId, ref: 'LiteShow' },
 	_winnerId: { type: Schema.ObjectId, ref: 'User_Location' },  // set if this show is a contest.
   commands: [LiteShowCommandSchema],
 	start_at: Date,  // exact time to start show - normally set dynamically during the event since the start time might not be known ahead of time

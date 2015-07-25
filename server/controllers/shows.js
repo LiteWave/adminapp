@@ -10,11 +10,12 @@ var mongoose = require('mongoose'),
 /**
  * Find show by id
  */
-exports.show = function(req, res, next, id) {
+exports.show = function (req, res, next, id) {
+  console.log('SHOW:Show:id=' + id);
     Show.load(id, function(err, show) {
         if (err) return next(err);
         if (!show) return next(new Error('Failed to load show ' + id));
-        req.show = liteshow;
+        req.show = show;
         next();
     });
 };
@@ -42,7 +43,8 @@ exports.create = function (req, res) {
 /**
  * Update a show
  */
-exports.update = function(req, res) {
+exports.update = function (req, res) {
+  console.log('SHOW:Update:req=' + req);
     var show = req.show;
     show = _.extend(show, req.body);
     show.save(function(err) {
@@ -69,10 +71,12 @@ exports.destroy = function(req, res) {
 };
 
 /**
- * Show a show
+ * Show a specific show
  */
-exports.show = function(req, res) {
-    res.jsonp(req.show);
+exports.getshow = function (req, res) {
+  // $$$ Add a new API to only get the show. Not the Event which contains the Logical Seats, or the Commands for the Show.
+  console.log('SHOW:GetShow:req.params.showId=');
+  res.jsonp(req.show);
 };
 
 /**
