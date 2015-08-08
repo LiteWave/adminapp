@@ -3,6 +3,7 @@
  */
 var mongoose = require('mongoose'),
     async = require('async'),
+    Event = mongoose.model('Event'),
     UserLocation = mongoose.model('User_Location'),
     _ = require('underscore');
 
@@ -23,10 +24,10 @@ exports.user_location = function(req, res, next, id) {
  * 
  */
 exports.create = function(req, res) {
-    console.log('event id=' + req.params.eventId + '. user_key:' + req.body.user_key);
+    console.log('UL:Create:event id=' + req.params.eventId + '. user_key:' + req.body.user_key);
     
     UserLocation.findOne({ _eventId: req.params.eventId, user_key: req.body.user_key }).exec(function (err, user_location) {
-        console.log(user_location);
+        // console.log(user_location);
 
         if (err) {
             console.log('some kind of error on find');
@@ -43,6 +44,8 @@ exports.create = function(req, res) {
 
         var user_location = new UserLocation(req.body);
         user_location._eventId = req.params.eventId;
+
+      // $$$ call updateLogicalSeat, see logic there.
 
         // For DEMO START: hardcode different logical columns based on input section.
         switch (user_location.user_seat.section)
@@ -72,7 +75,7 @@ exports.create = function(req, res) {
                 user_location.logical_col = 1;
                 break;
         }
-        console.log('user_location.logical_row=' + user_location.logical_row + 'logical_col=' + user_location.logical_col); // + res.jsonp(user_location));
+        //console.log('user_location.logical_row=' + user_location.logical_row + 'logical_col=' + user_location.logical_col); // + res.jsonp(user_location));
         // For DEMO END
 
         user_location.save(function (err, user_location) {

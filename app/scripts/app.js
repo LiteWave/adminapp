@@ -98,6 +98,13 @@ var app = angular.module('liteWaveApp', [
           loggedin: checkLoggedin
         }
       })
+      .when('/stadiums', {
+        templateUrl: 'views/stadiums/stadiums.html',
+        controller: 'StadiumsController',
+        resolve: {
+          loggedin: checkLoggedin
+        }
+      })
       .when('/login', {
         templateUrl: 'views/login.html',
         controller: 'LoginCtrl'

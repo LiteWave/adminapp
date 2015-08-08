@@ -37,9 +37,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "controllers", "controllers"
 		server\controllers\clients.js = server\controllers\clients.js
 		server\controllers\event_joins.js = server\controllers\event_joins.js
 		server\controllers\events.js = server\controllers\events.js
-		server\controllers\shows.js = server\controllers\shows.js
 		server\controllers\index.js = server\controllers\index.js
 		server\controllers\liteshows.js = server\controllers\liteshows.js
+		server\controllers\shows.js = server\controllers\shows.js
 		server\controllers\stadiums.js = server\controllers\stadiums.js
 		server\controllers\user_locations.js = server\controllers\user_locations.js
 		server\controllers\users.js = server\controllers\users.js
@@ -161,6 +161,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "stadiums", "stadiums", "{C8464FF6-1853-4A63-8B4A-9087B1409082}"
 	ProjectSection(SolutionItems) = preProject
 		app\views\stadiums\create.html = app\views\stadiums\create.html
+		app\views\stadiums\stadiums.html = app\views\stadiums\stadiums.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "events", "events", "{F3D8AC24-C7C2-4312-B9C0-73F89B4DB6FA}"

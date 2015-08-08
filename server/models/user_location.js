@@ -48,9 +48,6 @@ UserLocationSchema.methods = {
         //  then loop through rows, find row:  sections.rows[x].name == this.user_seat.row
         //   then find seat:  row.seats[i].name == this.seat.seat_number
         //  now this.logical_col = seat.virtual_col
-        
-        this.logical_row = 99;
-        this.logical_col = 32;   // temporary
         return 'ok';
     }
 };

@@ -60,6 +60,20 @@ services.factory('UserLocations', ['$resource', function ($resource) {
     });
 }]);
 
+// service used for Stadiums REST endpoint
+services.factory("Stadiums", ['$resource', function ($resource)
+{
+  return $resource('/api/stadiums', {}, {
+    update: {
+      method: 'PUT'
+    },
+    get: {
+      method: 'GET',
+      url: '/api/stadiums/'
+    }
+  });
+}]);
+
 // service used for Events REST endpoint
 services.factory("Events", ['$resource', function($resource) {
     return $resource('/api/clients/:clientId/events/:eventId', {

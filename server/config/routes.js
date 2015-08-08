@@ -103,6 +103,7 @@ module.exports = function(app, passport, auth) {
     app.get('/api/stadiums', stadiums.all);
     app.post('/api/stadiums', stadiums.create);
     app.get('/api/stadiums/:stadiumId', stadiums.show);
+    app.get('/api/stadiums/client/:clientId', stadiums.showbyclient);
     app.put('/api/stadiums/:stadiumId', stadiums.update);
     
     app.param('stadiumId', stadiums.stadium);

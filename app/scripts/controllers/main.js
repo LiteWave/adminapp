@@ -31,6 +31,48 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       $scope.currentShowType = type;
     };
 
+    $scope.addCommonCommands = function (cmds)
+    {
+      // $$$ how to store these more efficiently, eventually.
+
+      // COMMON COMMANDS START:
+      seq.commands.push({ "c": black, "pl1": first_length });
+      seq.commands.push({ "c": white, "pl1": first_length });
+      seq.commands.push({ "c": red, "pl1": first_length });
+      seq.commands.push({ "c": black, "pl1": first_length });
+      seq.commands.push({ "c": white, "pl1": first_length });
+      seq.commands.push({ "c": red, "pl1": first_length, "v": true });
+
+      seq.commands.push({ "c": black, "pl1": second_length });
+      seq.commands.push({ "c": white, "pl1": second_length });
+      seq.commands.push({ "pif": "w", "c": red, "pl1": second_length });
+      seq.commands.push({ "c": black, "pl1": second_length });
+      seq.commands.push({ "pif": "w", "c": white, "pl1": second_length });
+      seq.commands.push({ "c": red, "pl1": second_length, "v": true });
+
+      seq.commands.push({ "c": black, "pl1": third_length });
+      seq.commands.push({ "c": white, "pl1": third_length });
+      seq.commands.push({ "pif": "w", "c": red, "pl1": third_length });
+      seq.commands.push({ "c": black, "pl1": third_length });
+      seq.commands.push({ "pif": "w", "c": white, "pl1": third_length });
+      seq.commands.push({ "c": red, "pl1": third_length });
+      // COMMON COMMANDS END
+
+      // Additional commands for winning section
+      seq.commands.push({ "c": black, "pl1": fourth_length });
+      seq.commands.push({ "c": white, "pl1": fourth_length });
+      seq.commands.push({ "c": red, "pl1": fourth_length });
+      seq.commands.push({ "c": black, "pl1": fourth_length });
+      seq.commands.push({ "c": white, "pl1": fourth_length });
+      seq.commands.push({ "c": red, "pl1": fourth_length, "v": true });
+      // end commands, no winner.
+
+      // last command just for winner!
+      seq.commands.push({ "pif": "w", "pt": "win", "c": "216,19,37", "pl1": 20000 });
+
+
+    }
+
     $scope.createShow = function () {
       if (!$scope.currentEvent || !$scope.currentEvent.logicalLayout || !$scope.currentEvent.logicalLayout.columns || !$scope.currentEvent.logicalLayout.columns.length) {
         alert("Please select an Event");
@@ -49,33 +91,44 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         commands: [LiteShowCommandSchema]
       }],*/
 
-      var first_length = 1000;  // 1 second
-      var second_length = 750;  // 750 ms
-      var third_length = 500;  // 500 ms
-      var fourth_length = 250;  // 250 ms
+      var first_length = 500;  // 500 ms
+      var second_length = 250;  // 250 ms
       var black = "0,0,0";
       var red = "216,19,37";
       var white = "162,157,176";
 
       // for each logical column, create commands
-      // $$$ this is simple logic. Need to account for logical rows and seats.
-      // var seq = {"title": "Pilot Contest", "show_type":"contest", "commands": []};
-      var logicalCol = 0;
+      // $$$ this is simple logic. Need to account for logical rows and seats.  22
+      var logicalCol = 1;
       var columnLength = $scope.currentEvent.logicalLayout.columns.length;
+      var colLengthMS = columnLength * 1000;  // 22000
       var cmds = [];
-      // cmds.commands = [];
-      while (logicalCol < columnLength) {
-        //cmds = [{ "logicalCol": logicalCol, "commands": [{ "c": black, "pl1": first_length }] }];
-        // cmds.commands[0] = {"pt":"w","pl1": (random time)};  // wait X ms, max delay 250ms
-        //cmds.push({ "c": black, "pl1": first_length });
-        cmds.push({ "c": white, "pl1": first_length });
-        //cmds.commands.push({ "c": red, "pl1": first_length });
-        //cmds.commands.push({ "c": black, "pl1": first_length });
-        //cmds.commands.push({ "c": white, "pl1": first_length });
-        //cmds.commands.push({ "c": red, "pl1": first_length, "v": true });
-        logicalCol++;
+      while (logicalCol <= columnLength)
+      {
+        // Wave 1.
+        if (logicalCol > 1)
+        {
+          // first section doesn't need to wait.
+          cmds.push({ "pt": "w", "pl1": first_length * (logicalCol - 1) });
+        }
+        cmds.push({ "c": red, "pl1": first_length, "v": true });             // display 500 ms and vibrate
+        cmds.push({ "pt": "w", "pl1": colLengthMS - (first_length * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
 
-        //cmds.push({ "logicalCol": logicalCol, "commands": [] });
+        // Wave 2.
+        if (logicalCol > 1)
+        {
+          // first section doesn't need to wait.
+          cmds.push({ "pt": "w", "pl1": second_length * (logicalCol - 1) });
+        }
+        cmds.push({ "c": red, "pl1": second_length, "v": true }); // display and vibrate.
+        cmds.push({ "pt": "w", "pl1": colLengthMS - (second_length * logicalCol) }); // pause 21.750 seconds, 21.5. 21.25, 21
+
+        // $$$ pick winner, display, add pick new winner button.
+        // $$$ need to set the winner's section or be able to look it up.
+
+        // contest - cmds.commands[0] = {"pt":"w","pl1": (random time)};  // wait X ms, max delay 250ms
+
+        logicalCol++;
       }
       
       var show = new Shows({
@@ -83,10 +136,12 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         commands: cmds,
         type: $scope.currentShowType
       });
-      show.$save(function (response) {
-        console.log(response);
+      //show.$save(function (response) {
+        //console.log(response);
         //$location.path("event/" + response._id);
-      });
+      //});
+
+      // $$$ what do we do once the Show and Event are over?  Need to store winners\events\etc?
     };
        
     $scope.changeEvent = function(event) {
@@ -174,7 +229,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         $scope.currentShow.start_at = $scope.showStartTime = new Date(startTime).toISOString();
         $scope.stopTime = new Date(stopTime).toISOString();
 
-        // only picking between 1 and 10. Need better algo. pick random winner from list of current users
+        // $$$ only picking between 1 and 10. Need better algo. pick random winner from list of current users
         // For easier debugging, making first user the winner.
         $scope.winner = $scope.userLocations[$scope.demowinner];
         /*var ranNum = Math.floor((Math.random() * 10) + 1);

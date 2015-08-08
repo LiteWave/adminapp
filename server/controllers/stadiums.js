@@ -75,6 +75,25 @@ exports.show = function(req, res) {
 };
 
 /**
+ * Show a stadium by client id
+ */
+exports.showbyclient = function (req, res)
+{
+  Stadium.find({ _clientId: req.client._id }).exec(function (err, stadiums)
+  {
+    if (err)
+    {
+      res.render('error', {
+        status: 500
+      });
+    } else
+    {
+      res.jsonp(stadiums);
+    }
+  });
+};
+
+/**
  * List of Stadiums 
  */
 exports.all = function(req, res) {

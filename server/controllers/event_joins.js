@@ -27,8 +27,9 @@ exports.event_join = function(req, res, next, id) {
 /**
  * 
  */
-exports.create = function(req, res) {
-  
+exports.create = function (req, res)
+{
+  var requestUserLocationId = req.user_location._id;
   curTime = new Date().getTime();
   curTime = curTime - (new Date().getTimezoneOffset() * 60000);  // convert to GMT time offset
   
@@ -38,23 +39,28 @@ exports.create = function(req, res) {
   //    accomplish here is to take into account phones that are in different time zones, so if the calculated offset is less than 1 
   //    second, we set the offset to 0.  If some day we have a better way to deal with these offsets, then we can do it here.
   //
-  //    
-  if( req.body.mobile_time) {
+  //    $$$ test this
+  if (req.body.mobile_time)
+  {
     mobile_date = new Date(req.body.mobile_time);
     mobile_timezone_offset = mobile_date.getTimezoneOffset() * 60000;
     mobile_time_offset = (mobile_date.getTime() - mobile_timezone_offset) - curTime;
-    if (mobile_time_offset < 1000 ) {  
+    if (mobile_time_offset < 1000)
+    {
       mobile_time_offset = 0;
     }
-  } else {
+  }
+  else
+  {
     mobile_time_offset = 0;  // if no time is passed from the phone, then assume it's the same as server.
   }
 
   // I'm thinking that if they already joined, then we delete the first join and create the new one.  That will help me out
   //  in testing, too, because we'll be deleting old data that we're not using any more.
   
-// HCSNOTE:  need to check to see if the user already joined this event and if they did, then return an error.
-  //EventJoin.find({_user_locationId: req.user_location._id}, function(err, event_joins) {
+  // ???? need to check to see if the user already joined this event and if they did, then return an error.
+  // $$$ instead of an error just return the EJ for this user?
+  //EventJoin.find({_user_locationId: requestUserLocationId}, function(err, event_joins) {
   //  if (err || event_joins.count > 0) {
   //    res.render('error', {
   //      status: 500
@@ -63,8 +69,7 @@ exports.create = function(req, res) {
  // });
     
       // see if there's an active show object before going any further
-    Show.find_active(req.user_location._eventId, 
-      function(err, show) {
+    Show.find_active(req.user_location._eventId, function(err, show) {
         if (err)
         {
             res.render('No active show error', {
@@ -73,7 +78,7 @@ exports.create = function(req, res) {
         }
         else
         {
-            console.log('Something WAS FOUND. req.user_location._eventId is ' + req.user_location._eventId);
+            //console.log('Something WAS FOUND. req.user_location._eventId is ' + req.user_location._eventId);
             if (!show) {
                 console.log('error, event liteshow is null');
                 console.log(err);
@@ -85,8 +90,8 @@ exports.create = function(req, res) {
             {
               console.log('trying to create the EJ');
              
-              // look for a winner and create the object.
-              UserLocation.find({ _eventId: req.user_location._eventId }, function (err, UL) {
+              UserLocation.find({ _eventId: req.user_location._eventId, _id: requestUserLocationId }, function (err, UL)
+              {
                   var event_join = new EventJoin(req.body);
                   event_join.mobile_time_offset_ms = mobile_time_offset;
                   event_join._user_locationId = req.user_location._id;
@@ -98,14 +103,27 @@ exports.create = function(req, res) {
                     return;
                   }
 
-                  // $$$ Get the commands for this Show and return them for the given user_location
-
-                  // console.log('UL[0]._id=' + UL[0]._id.toString() + '. req.user_location._id=' + req.user_location._id.toString());
-                  /*if (UL[0]._id.toString() === req.user_location._id.toString())
+                  if (!UL)
                   {
-                      // console.log('setting winner to UL[0]._id=' + UL[0]._id);
-                      event_join._winner_user_locationId = req.user_location._id;
-                  }*/
+                    console.log('No UL.');
+                    return;
+                  }
+
+                  //console.log('EJ:Create:Trying to get commands:UL' + UL);
+
+                  // retrieve the commands for this user based on their logical row or col. Only col for now.
+                  event_join.commands = show.commands[UL.logical_col];
+                  // add common contest commands
+                  // if in winning section, add those commands
+                  // if winner, add that command
+
+                  // Is this user the winner?
+                  if (requestUserLocationId.toString() === show._winnerId.toString())
+                  {
+                    event_join._winner_user_locationId = show._winnerId;
+                  }
+
+                  //console.log('EJ:Create::event_join._winner_user_locationId=' + event_join._winner_user_locationId);
     
                   // use the offset to set the time for this phone to start
                   event_join.mobile_start_at = new Date(show.start_at.getTime() - event_join.mobile_time_offset_ms);
@@ -120,17 +138,6 @@ exports.create = function(req, res) {
                       }
                   });
               });
-
-         
-  //            if( Math.floor((Math.random()*10)+1) >= 5 )       // for now, 1/2 the joins will be winners
-                //event_join._winner_user_locationId = req.user_location._id;
-  //            else
-                // for now, the 2nd one to join will be the winner
-              
-              //event_join._winner_user_locationId = req.user_location._id;
-              //show._winner_user_locationId = req.user_location._id;
-              //Show
-
             } // end else
           } // end else
       });  // end call back function for find_active
