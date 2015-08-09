@@ -38,14 +38,14 @@ angular.module('liteWaveApp')
     $scope.saveStadium = function ()
     {
       var index = 0;
-      var sections = $scope.sections; // how best to create\upload this?
+      var levels = $scope.levels; // how best to create\upload this?
       // $$$ How to upload this?
-      var sections = [{ "name": "301", "rows": [{ "name": "A", "seats": [{ "name": "1", }] }] }];
+      var levels = [{ "name": "floor", "sections" : [{ "name": "301", "rows": [{ "name": "A", "seats": [{ "name": "1", }] }] }] }];
 
       var stadium = new Stadiums({
         name: $scope.name,
         _clientId: $rootScope.currentClient._id,
-        sections: sections,
+        levels: levels,
       });
       stadium.$save(function (response)
       {

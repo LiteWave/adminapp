@@ -14,8 +14,11 @@ var StadiumSchema = new Schema({
     required: true,
     trim: true
   },
-  sections: [
-    {
+  levels: [ // Every stadium needs at least one level even if it is just flat.
+  {
+    name: { type: String, required: true, trim: true, unique: true },  // e.g. 100, 200, etc. has to be unique
+    sort_index: Number,  // used for the drop downs when user selects a section
+    sections: [{
       name: { type: String, required: true, trim: true, unique: true },  // e.g. 301 has to be unique
       sort_index: Number,  // used for the drop downs when user selects a section
       rows: [{
@@ -27,6 +30,7 @@ var StadiumSchema = new Schema({
         }]
       }]
     }]
+  }]
   
 }, {collection: 'stadiums'});
 
