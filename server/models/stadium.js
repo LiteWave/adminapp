@@ -5,6 +5,33 @@ var mongoose = require('mongoose'),
     config = require('../config/config'),
     Schema = mongoose.Schema;
 
+var SeatSchema = new Schema({
+  _id: false,
+  name: { type: String, trim: true, unique: true },  // e.g. 100, 200, etc. has to be unique
+  sort_index: Number  // used for the drop downs when user selects a section
+});
+
+var RowSchema = new Schema({
+  _id: false,
+  name: { type: String, trim: true, unique: true },  // e.g. 100, 200, etc. has to be unique
+  sort_index: Number,  // used for the drop downs when user selects a section
+  seats: [SeatSchema]
+});
+
+var SectionSchema = new Schema({
+  _id: false,
+  name: { type: String, trim: true, unique: true },  // e.g. 100, 200, etc. has to be unique
+  sort_index: Number,  // used for the drop downs when user selects a section
+  rows: [RowSchema]
+});
+
+var LevelSchema = new Schema({
+  _id: false,
+  name: { type: String, trim: true, unique: true },  // e.g. 100, 200, etc. has to be unique
+  sort_index: Number,  // used for the drop downs when user selects a section
+  sections: [SectionSchema]
+});
+
 /**
  * Stadium Schema - 
  */
@@ -14,25 +41,8 @@ var StadiumSchema = new Schema({
     required: true,
     trim: true
   },
-  levels: [ // Every stadium needs at least one level even if it is just flat.
-  {
-    name: { type: String, required: true, trim: true, unique: true },  // e.g. 100, 200, etc. has to be unique
-    sort_index: Number,  // used for the drop downs when user selects a section
-    sections: [{
-      name: { type: String, required: true, trim: true, unique: true },  // e.g. 301 has to be unique
-      sort_index: Number,  // used for the drop downs when user selects a section
-      rows: [{
-        name: { type: String, required: true, trim: true },
-        sort_index: Number,  // used for the drop downs when user selects a row after selecting a section
-        seats: [{
-          name: { type: String, required: true, trim: true },
-          sort_index: Number,    // used for ordering the seat selection drop down
-        }]
-      }]
-    }]
-  }]
-  
-}, {collection: 'stadiums'});
+  levels: [LevelSchema] // Every stadium needs at least one level even if it is just flat.  
+});
 
  
 /**

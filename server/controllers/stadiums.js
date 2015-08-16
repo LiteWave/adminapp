@@ -23,18 +23,23 @@ exports.stadium = function(req, res, next, id) {
  * 
  */
 exports.create = function(req, res) {
-    
   var stadium = new Stadium(req.body);
+  console.log('Stadium:Create:stadium.name=' + stadium.name);
 
-  stadium.save(function(err) {
-      if (err) {
-          return res.send('stadiums', {
-              errors: err.errors,
-              stadium: stadium
-          });
-      } else {
-          res.jsonp(stadium);
-      }
+  stadium.save(function (err)
+  {
+    console.log('Stadium:Create:err=' + err);
+    if (err)
+    {
+      return res.send('stadiums', {
+          errors: err.errors,
+          stadium: stadium
+      });
+    }
+    else
+    {
+      res.jsonp(stadium);
+    }
   });
 };
 
