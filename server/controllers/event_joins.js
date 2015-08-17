@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
     Show = mongoose.model('Show'),
     EventJoin = mongoose.model('Event_Join'),
     UserLocation = mongoose.model('User_Location'),
+    ShowCommand = mongoose.model('ShowCommand'),
     _ = require('underscore');
 
 /**
@@ -14,7 +15,7 @@ var mongoose = require('mongoose'),
 exports.event_join = function(req, res, next, id) {
     EventJoin.load(id, function(err, event_join) {
         console.log('in event_join constr');
-    // don't know WTF this is doing.
+    // don't know this was doing.
     //EventJoin.findOne({ _id: req.params.event_joinId }).populate('_user_locationId').exec(function (err, event_joint) {
         //console.log(err);
         if (err) return next(err);
@@ -88,9 +89,9 @@ exports.create = function (req, res)
             }
             else
             {
-              console.log('trying to create the EJ');
+              console.log('EJ:trying to create the EJ');
              
-              UserLocation.find({ _eventId: req.user_location._eventId, _id: requestUserLocationId }, function (err, UL)
+              UserLocation.findOne({ _eventId: req.user_location._eventId, _id: requestUserLocationId }, function (err, UL)
               {
                   var event_join = new EventJoin(req.body);
                   event_join.mobile_time_offset_ms = mobile_time_offset;
@@ -100,44 +101,69 @@ exports.create = function (req, res)
                   if (err)
                   {
                     console.log('Err in find UL to set Winner. err=' + err);
+                    res.status(404);
+                    res.send({ error: 'show not available' });
                     return;
                   }
 
                   if (!UL)
                   {
                     console.log('No UL.');
+                    res.status(404);
+                    res.send({ error: 'show not available' });
                     return;
                   }
 
-                  //console.log('EJ:Create:Trying to get commands:UL' + UL);
-
-                  // retrieve the commands for this user based on their logical row or col. Only col for now.
-                  event_join.commands = show.commands[UL.logical_col];
-                  // add common contest commands
-                  // if in winning section, add those commands
-                  // if winner, add that command
-
-                  // Is this user the winner?
-                  if (requestUserLocationId.toString() === show._winnerId.toString())
+                  ShowCommand.findOne({ _id: show._showCommandId }, function (err, showCommand)
                   {
+                    if (err)
+                    {
+                      console.log('Err in find SC. err=' + err);
+                      res.status(404);
+                      res.send({ error: 'Show Command not available' });
+                      return;
+                    }
+
+                    if (!showCommand)
+                    {
+                      console.log('Show Command not available.');
+                      res.status(404);
+                      res.send({ error: 'Show Command not available' });
+                      return;
+                    }
+
+                    var logicalCmd = showCommand.commands[UL.logical_col];
+                    if (!logicalCmd || !logicalCmd.commandList)
+                    {
+                      console.log('Commands for this logical column are not available.');
+                      res.status(404);
+                      res.send({ error: 'Commands for this logical column are not available' });
+                      return;
+                    }
+
+                    //console.log('EJ:Create:Commands:showCommand:showCommand[0].commands[0]');
+                    //console.log('EJ:Create:' + showCommand.commands[0].commandList);
+
+                    // retrieve the commands for this user based on their logical row or col. Only col for now.
+                    event_join.commands = logicalCmd.commandList;
                     event_join._winner_user_locationId = show._winnerId;
-                  }
 
-                  //console.log('EJ:Create::event_join._winner_user_locationId=' + event_join._winner_user_locationId);
+                    console.log('EJ:Create::event_join._winner_user_locationId=' + event_join._winner_user_locationId);
     
-                  // use the offset to set the time for this phone to start
-                  event_join.mobile_start_at = new Date(show.start_at.getTime() - event_join.mobile_time_offset_ms);
+                    // use the offset to set the time for this phone to start
+                    event_join.mobile_start_at = new Date(show.start_at.getTime() - event_join.mobile_time_offset_ms);
 
-                  event_join.save(function (err) {
+                    event_join.save(function (err) {
                       if (err) {
-                          res.render('error', {
-                              status: 500
-                          });
+                        res.render('error', {
+                          status: 500
+                        });
                       } else {
-                          res.jsonp(event_join);
+                        res.jsonp(event_join);
                       }
-                  });
-              });
+                    });
+                  }); // end ShowCommand
+              }); // end UL
             } // end else
           } // end else
       });  // end call back function for find_active

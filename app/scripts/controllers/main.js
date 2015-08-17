@@ -1,16 +1,16 @@
 'use strict';
 
 angular.module('liteWaveApp')
-.controller('MainCtrl', ['$rootScope', '$scope', '$timeout','$interval','Clients','Events', 'Shows', 'UserLocations',
-function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserLocations) {
+.controller('MainCtrl', ['$rootScope', '$scope', '$timeout','$interval','Clients','Events', 'Shows', 'UserLocations', 'ShowCommands',
+function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserLocations, ShowCommands) {
 
     $rootScope.currentArea = "main";
     // DEMO ONLY, hardcode winner.
-    $scope.demowinner = 0;
     $scope.showLength = 15;
     $scope.showStartTime = null;
     $scope.stopTime = null;
     $scope.winnerSeat = "";
+    $scope.winnerSection = [];
     $scope.winner = null;
     $scope.activeUsers = 0;
     $scope.iPhoneUsers = 0;
@@ -31,46 +31,9 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       $scope.currentShowType = type;
     };
 
-    $scope.addCommonCommands = function (cmds)
+    $scope.getRandomNumber = function (userCount)
     {
-      // $$$ how to store these more efficiently, eventually.
-
-      // COMMON COMMANDS START:
-      seq.commands.push({ "c": black, "pl1": first_length });
-      seq.commands.push({ "c": white, "pl1": first_length });
-      seq.commands.push({ "c": red, "pl1": first_length });
-      seq.commands.push({ "c": black, "pl1": first_length });
-      seq.commands.push({ "c": white, "pl1": first_length });
-      seq.commands.push({ "c": red, "pl1": first_length, "v": true });
-
-      seq.commands.push({ "c": black, "pl1": second_length });
-      seq.commands.push({ "c": white, "pl1": second_length });
-      seq.commands.push({ "pif": "w", "c": red, "pl1": second_length });
-      seq.commands.push({ "c": black, "pl1": second_length });
-      seq.commands.push({ "pif": "w", "c": white, "pl1": second_length });
-      seq.commands.push({ "c": red, "pl1": second_length, "v": true });
-
-      seq.commands.push({ "c": black, "pl1": third_length });
-      seq.commands.push({ "c": white, "pl1": third_length });
-      seq.commands.push({ "pif": "w", "c": red, "pl1": third_length });
-      seq.commands.push({ "c": black, "pl1": third_length });
-      seq.commands.push({ "pif": "w", "c": white, "pl1": third_length });
-      seq.commands.push({ "c": red, "pl1": third_length });
-      // COMMON COMMANDS END
-
-      // Additional commands for winning section
-      seq.commands.push({ "c": black, "pl1": fourth_length });
-      seq.commands.push({ "c": white, "pl1": fourth_length });
-      seq.commands.push({ "c": red, "pl1": fourth_length });
-      seq.commands.push({ "c": black, "pl1": fourth_length });
-      seq.commands.push({ "c": white, "pl1": fourth_length });
-      seq.commands.push({ "c": red, "pl1": fourth_length, "v": true });
-      // end commands, no winner.
-
-      // last command just for winner!
-      seq.commands.push({ "pif": "w", "pt": "win", "c": "216,19,37", "pl1": 20000 });
-
-
+      return Math.floor(Math.random() * userCount);
     }
 
     $scope.createShow = function () {
@@ -84,64 +47,180 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         return;
       }
 
-      // $scope.currentShowType;
-      // for show Create commands 
-      /* commands: [{
-        logicalCol: Number,
-        commands: [LiteShowCommandSchema]
-      }],*/
+      if (!$scope.userLocations || $scope.userLocations.length < 1)
+      {
+        alert("Sorry, not enough users have joined this event. Cancelling show.");
+        return;
+      }
+
+      var userCount = $scope.userLocations.length;
+      var randomNum;
+      var retries = 0;
+      do
+      {
+        randomNum = $scope.getRandomNumber(userCount);
+        $scope.winner = $scope.userLocations[randomNum];
+        retries++;
+      } while (!$scope.winner && retries < 10)
+      
+      if (!$scope.winner)
+      {
+        $scope.winner = $scope.userLocations[5];
+      }
+
+      $scope.winnerSection = [];
+      $scope.winnerSection.push($scope.winner.user_seat.section);
 
       var first_length = 500;  // 500 ms
       var second_length = 250;  // 250 ms
+      var third_length = 250;  // 250 ms
+      var fourth_length = 250;  // 250 ms
       var black = "0,0,0";
       var red = "216,19,37";
       var white = "162,157,176";
 
       // for each logical column, create commands
-      // $$$ this is simple logic. Need to account for logical rows and seats.  22
+      // NOTE:this is simple logic. Need to account for logical rows and seats.  22
       var logicalCol = 1;
       var columnLength = $scope.currentEvent.logicalLayout.columns.length;
+      var currentSection;
       var colLengthMS = columnLength * 1000;  // 22000
+      var cmdList = [];
       var cmds = [];
+      var onWinnerSection = false;
+      var randomDelay;
       while (logicalCol <= columnLength)
       {
+        currentSection = $scope.currentEvent.logicalLayout.columns[logicalCol - 1].sectionList;
+        // $$$ Need to handle multiple winning sections with a loop.
+        onWinnerSection = (currentSection.indexOf($scope.winnerSection.toString()) > -1);
+
         // Wave 1.
         if (logicalCol > 1)
         {
           // first section doesn't need to wait.
-          cmds.push({ "pt": "w", "pl1": first_length * (logicalCol - 1) });
+          cmdList.push({ "pt": "w", "pl1": first_length * (logicalCol - 1) });
         }
-        cmds.push({ "c": red, "pl1": first_length, "v": true });             // display 500 ms and vibrate
-        cmds.push({ "pt": "w", "pl1": colLengthMS - (first_length * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
+        cmdList.push({ "c": red, "pl1": first_length, "v": true });             // display 500 ms and vibrate
+        cmdList.push({ "pt": "w", "pl1": colLengthMS - (first_length * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
 
         // Wave 2.
         if (logicalCol > 1)
         {
           // first section doesn't need to wait.
-          cmds.push({ "pt": "w", "pl1": second_length * (logicalCol - 1) });
+          cmdList.push({ "pt": "w", "pl1": second_length * (logicalCol - 1) });
         }
-        cmds.push({ "c": red, "pl1": second_length, "v": true }); // display and vibrate.
-        cmds.push({ "pt": "w", "pl1": colLengthMS - (second_length * logicalCol) }); // pause 21.750 seconds, 21.5. 21.25, 21
+        cmdList.push({ "c": red, "pl1": second_length, "v": true }); // display and vibrate.
+        cmdList.push({ "pt": "w", "pl1": colLengthMS - (second_length * logicalCol) }); // pause 21.750 seconds, 21.5. 21.25, 21
 
-        // $$$ pick winner, display, add pick new winner button.
-        // $$$ need to set the winner's section or be able to look it up.
+        // Common Contest Commands
+        // Generate random delay time between 0 and 100 ms for each logical column.
+        // NOTE: must be small to prevent winning phone to go off too soon.
+        randomDelay = $scope.getRandomNumber(100);
+        cmdList.push({ "pt": "w", "pl1": randomDelay} );  // wait X ms, max delay 250ms        
+        cmdList.push({ "c": black, "pl1": first_length });
+        cmdList.push({ "c": white, "pl1": first_length });
+        cmdList.push({ "c": red, "pl1": first_length });
+        cmdList.push({ "c": black, "pl1": first_length });
+        cmdList.push({ "c": white, "pl1": first_length });
+        cmdList.push({ "c": red, "pl1": first_length, "v": true });
 
-        // contest - cmds.commands[0] = {"pt":"w","pl1": (random time)};  // wait X ms, max delay 250ms
+        cmdList.push({ "c": black, "pl1": second_length });
+        cmdList.push({ "c": white, "pl1": second_length });
+
+        // Take out a few commands from non-winner sections
+        if (onWinnerSection)
+        {
+          cmdList.push({ "c": red, "pl1": second_length });
+        }
+        cmdList.push({ "c": black, "pl1": second_length });
+
+        if (onWinnerSection)
+        {
+          cmdList.push({ "c": white, "pl1": second_length });
+        }
+        cmdList.push({ "c": red, "pl1": second_length, "v": true });
+
+        cmdList.push({ "c": black, "pl1": third_length });
+        cmdList.push({ "c": white, "pl1": third_length });
+
+        if (onWinnerSection)
+        {
+          cmdList.push({ "c": red, "pl1": third_length });
+        }
+        cmdList.push({ "c": black, "pl1": third_length });
+
+        if (onWinnerSection)
+        {
+          cmdList.push({ "c": white, "pl1": third_length });
+        }
+        cmdList.push({ "c": red, "pl1": third_length });
+
+        // Commands for winning section
+        // $$$ test this with index.
+        if (onWinnerSection)
+        {
+          cmdList.push({ "pif": "w", "c": black, "pl1": fourth_length });
+          cmdList.push({ "c": white, "pl1": fourth_length });
+          cmdList.push({ "pif": "w", "c": red, "pl1": fourth_length });
+          cmdList.push({ "c": black, "pl1": fourth_length });
+          cmdList.push({ "c": white, "pl1": fourth_length });
+          cmdList.push({ "pif": "w", "c": red, "pl1": fourth_length, "v": true });
+
+          // push winning command to winner inside of winning section.
+          cmdList.push({ "pif": "w", "pt": "win", "c": "216,19,37", "pl1": 60000 });
+        }       
+
+        // Add this set of commands to the overall list
+        cmds.push({ "id": logicalCol - 1, "commandList": cmdList.slice(0) });
+
+        // clear out commands.
+        cmdList = [];
 
         logicalCol++;
       }
-      
+
+      // $$$ move all this to the server
+
       var show = new Shows({
         _eventId: $scope.currentEvent._id,
-        commands: cmds,
-        type: $scope.currentShowType
+        type: $scope.currentShowType,
+        _winnerId: $scope.winner._id,
+        winnerSections: $scope.winnerSection
       });
-      //show.$save(function (response) {
-        //console.log(response);
-        //$location.path("event/" + response._id);
-      //});
+
+      $scope.currentShow = show;
+
+      // First, save the Show.
+      show.$save(function (response)
+      {
+        console.log(response);
+
+        if (response._id)
+        {
+          var showCommands = new ShowCommands({
+            _showId: response._id,
+            commands: cmds,
+            type: $scope.currentShowType
+          });
+
+          // Second, save the ShowCommands.
+          showCommands.$save(function (response)
+          {
+            console.log(response);
+
+            if (response._id)
+            {
+              // Lastly, save the ShowCommandId on the Show.
+              show._showCommandId = response._id;
+              show.$update();
+            }
+          });
+        }
+      });
 
       // $$$ what do we do once the Show and Event are over?  Need to store winners\events\etc?
+// $$$ display winning section\seat to Admin.
     };
        
     $scope.changeEvent = function(event) {
@@ -183,7 +262,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       }
     });
     
-    // update list of lite_shows when the event changes
+  // update list of lite_shows when the event changes
+// $$$ Update with new names, show, not liteshow.
     $scope.$watch('currentEvent', function(newVal, oldVal) {
         if (newVal) {
             $scope.cleanUpAfterShow();
@@ -206,52 +286,37 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         $scope.winner = null;
     }
 
-    $scope.startShow = function (seconds) {
+    $scope.startShow = function (seconds)
+    {
+      if ($scope.userLocations.length < 1)
+      {
+        alert("Sorry, not enough users have joined this event. Cancelling show.");
+        return;
+      }
 
-        if ($scope.userLocations.length < 1) {
-            alert("Sorry, not enough users have joined this event. Cancelling show.");
-            return;
-        }
+      // stop checking for any new users:
+      if ($scope.userCheckPromise != null)
+      {
+        $interval.cancel($scope.userCheckPromise);
+        $scope.userCheckPromise = null;
+      }
 
-        // stop checking for any new users:
-        if ($scope.userCheckPromise != null) {
-            $interval.cancel($scope.userCheckPromise);
-            $scope.userCheckPromise = null;
-        }
+      $timeout.cancel($scope.promise_clock);
 
-        $timeout.cancel($scope.promise_clock);
+      var now = Date.now();
+      var startTime = now + (1000 * seconds);
+      var stopTime = startTime + (1000 * $scope.showLength);
 
-        var now = Date.now();
-        var startTime = now + (1000 * seconds);
-        var stopTime = startTime + (1000 * $scope.showLength);
+      // Set showStartTime for UI. Different format than just getting Date.now()
+      $scope.currentShow.start_at = $scope.showStartTime = new Date(startTime).toISOString();
+      $scope.stopTime = new Date(stopTime).toISOString();
 
-        // Set showStartTime for UI. Different format than just getting Date.now()
-        $scope.currentShow.start_at = $scope.showStartTime = new Date(startTime).toISOString();
-        $scope.stopTime = new Date(stopTime).toISOString();
+      // Set the start time. Already have a winner.
+      $scope.currentShow.$update();
 
-        // $$$ only picking between 1 and 10. Need better algo. pick random winner from list of current users
-        // For easier debugging, making first user the winner.
-        $scope.winner = $scope.userLocations[$scope.demowinner];
-        /*var ranNum = Math.floor((Math.random() * 10) + 1);
-        if (ranNum <= $scope.userLocations.length) {
-            $scope.winner = $scope.userLocations[ranNum];
-        }
-        else {
-            ranNum = Math.floor((Math.random() * 10) + 1);
-            if (ranNum <= $scope.userLocations.length) {
-                $scope.winner = $scope.userLocations[$scope.demowinner];
-            }
-        }*/
-        
-        $scope.currentShow._winnerId = $scope.winner._id;
-        $scope.currentShow.$update();
-
-        // Not included yet. How to call\include separate Controller? or do we need to?
-        // Shows.$setStartTime();
-
-        $scope.percentTimeToStart = 0;
-        $scope.updateTime = seconds * 10;
-        $scope.updateClock();
+      $scope.percentTimeToStart = 0;
+      $scope.updateTime = seconds * 10;
+      $scope.updateClock();
     };
 
     $scope.updateClock = function() {
@@ -304,6 +369,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         $scope.percentTimeToStart = 0;
         $scope.winnerSeat = "";
         $scope.winner = null;
+        $scope.winnerSection = [];
     }
     
     $scope.$on('$locationChangeStart', function() {

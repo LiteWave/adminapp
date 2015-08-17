@@ -10,13 +10,12 @@ var mongoose = require('mongoose'),
  */
 
 var ShowSchema = new Schema({
-	_eventId: { type: Schema.ObjectId, ref: 'Event'},
-	//_liteshowId: { type: Schema.ObjectId, ref: 'LiteShow' },
+  _eventId: { type: Schema.ObjectId, ref: 'Event' },
+  _showCommandId: { type: Schema.ObjectId, ref: 'ShowCommand' },  // The id of the list of Show Commands
 	_winnerId: { type: Schema.ObjectId, ref: 'User_Location' },  // set if this show is a contest.
-	commands: [mongoose.CommandSchema],
 	start_at: Date,  // exact time to start show - normally set dynamically during the event since the start time might not be known ahead of time
 	type: Number,   // type of show: liteshow, liteshow + contest, contest	
-	winnerSections: [{ name: { type: String, trim: true } }],
+	winnerSections: [ { type: String, trim: true } ], // list of winning sections. Could be a single section.
 	winner_url: String  // URL to go to if they are the winner.
 });
 
@@ -27,7 +26,7 @@ ShowSchema.statics = {
     load: function(id, cb) {
         this.findOne({
             _id: id
-        }).populate('_eventId').populate('_liteshowId').exec(cb);
+        }).populate('_eventId').populate('_showCommandId').exec(cb);
     },
     // looks for an eventLiteShow that has a start_at that is after now
     find_active: function(event_id, cb) {

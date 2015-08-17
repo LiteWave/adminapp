@@ -100,6 +100,17 @@ services.factory("Shows", ['$resource', function($resource) {
     });
 }]);
 
+// ShowCommands service used for showcommands REST endpoint
+services.factory("ShowCommands", ['$resource', function ($resource) {
+  return $resource('/api/shows/:showId/showcommands/:showCommandId', {
+    showId: '@_showId', showCommandId: '@_id'
+  }, {
+    update: {
+      method: 'PUT'
+    }
+  });
+}]);
+
 services.factory('FeedService',['$http',function($http){
     return {
         parseFeed : function(url){

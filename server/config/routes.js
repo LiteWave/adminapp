@@ -1,8 +1,6 @@
 var async = require('async');
 
 module.exports = function(app, passport, auth) {
-
-
     //User Routes
     var users = require('../controllers/users');
     app.get('/signin', users.signin);
@@ -49,7 +47,7 @@ module.exports = function(app, passport, auth) {
     app.get('/api/clients/:clientId', clients.show);
     app.put('/api/clients/:clientId', auth.requiresLogin, clients.update);
 
-    // this will turn the clientId in the url paramenter into a client object in the req object (req.client)
+    // this will turn the clientId in the url parameter into a client object in the req object (req.client)
     app.param('clientId', clients.client);   
     
     // Event Routes
@@ -72,23 +70,25 @@ module.exports = function(app, passport, auth) {
     
     app.param('eventId', events.event);
 
-    //LiteShow Routes
-    //var liteshows = require('../controllers/liteshows');
-    //app.get('/api/liteshows', liteshows.all);
-    //app.get('/api/liteshows/:liteshowId', liteshows.show);
-    //app.param('liteshowId', liteshows.liteshow);
-    
     // Shows Routes
     var shows = require('../controllers/shows');
     app.get('/api/events/:eventId/shows', shows.all);
     app.post('/api/events/:eventId/shows', shows.create);
     app.get('/api/events/:eventId/shows/:showId', shows.getshow);
-    app.get('/api/shows/:showId/user_locations/:user_locationId/liteshow', shows.user_liteshow);
-    app.get('/api/shows/:showId/user_locations/:user_locationId/liteshow2', shows.user_liteshow2);
     app.put('/api/events/:eventId/shows/:showId', shows.update);    
     
     app.param('showId', shows.show);
-    
+
+    // ShowCommands Routes
+    var showcommands = require('../controllers/showcommands');
+    app.get('/api/shows/:showId/showcommands', showcommands.all);
+    app.post('/api/shows/:showId/showcommands', showcommands.create);
+    app.get('/api/shows/:showId/showcommands/:showCommandId', showcommands.show);
+    app.put('/api/shows/:showId/showcommands/:showCommandId', showcommands.update);
+    app.del('/api/shows/:showId/showcommands/:showCommandId', showcommands.destroy);
+
+    app.param('showCommandId', showcommands.showcommand);
+
     //EventJoin Routes
     var event_joins = require('../controllers/event_joins');
     app.get('/api/shows/:showId/event_joins', event_joins.all);
@@ -106,11 +106,9 @@ module.exports = function(app, passport, auth) {
     app.get('/api/stadiums/client/:clientId', stadiums.showbyclient);
     app.put('/api/stadiums/:stadiumId', stadiums.update);
     
-    app.param('stadiumId', stadiums.stadium);
-    
+    app.param('stadiumId', stadiums.stadium);    
   
     //Home route
     var index = require('../controllers/index');
     app.get('/', index.render);
-
 };

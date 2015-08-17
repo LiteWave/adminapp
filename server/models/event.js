@@ -16,10 +16,12 @@ var EventSchema = new Schema({
   {
     id: Number, // id for this layout?
     columns: [{   // the length of this equals the number of logical columns
+      _id: false,
       id: Number, // logical column id
       sectionList: [{ type: String, trim: true }],  // array of sections that make up this logical column.
     }],
     rows: [{      // the length of this equals the number of logical rows
+      _id: false,
       id: Number, // logical row id
       sectionList: { type: String, trim: true },  // array of sections that make up this logical row.
     }]
