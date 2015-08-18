@@ -12,6 +12,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     $scope.winnerSeat = "";
     $scope.winnerSection = [];
     $scope.winner = null;
+    $scope.contesturl = "";
     $scope.activeUsers = 0;
     $scope.iPhoneUsers = 0;
     $scope.androidUsers = 0;
@@ -180,13 +181,14 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         logicalCol++;
       }
 
-      // $$$ move all this to the server
+      // $$$ move some or all of this to the server
 
       var show = new Shows({
         _eventId: $scope.currentEvent._id,
         type: $scope.currentShowType,
         _winnerId: $scope.winner._id,
-        winnerSections: $scope.winnerSection
+        winnerSections: $scope.winnerSection,
+        winner_url: $scope.contesturl ? $scope.contesturl : null
       });
 
       $scope.currentShow = show;

@@ -97,20 +97,28 @@
 						<div class="portlet-content">
 
 							<div class="pull-left">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
-                                        Type of Show
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="javascript:;" ng-click="setShowType(0)">LiteShow</a></li>
-                                        <li><a href="javascript:;" ng-click="setShowType(1)">LiteShow + Contest</a></li>
-                                        <li><a href="javascript:;" ng-click="setShowType(2)">Pick a Winning Section</a></li>
-                                        <li><a href="javascript:;" ng-click="setShowType(3)">Pick a Winner</a></li>
-                                    </ul>
+                                <form name="contestUrlForm" class="form-horizontal" role="form" ng-submit="createShow()">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                            Type of Show
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="javascript:;" ng-click="setShowType(0)">Show</a></li>
+                                            <li><a href="javascript:;" ng-click="setShowType(1)">Show + Contest</a></li>
+                                            <li><a href="javascript:;" ng-click="setShowType(2)">Pick a Winning Section</a></li>
+                                            <li><a href="javascript:;" ng-click="setShowType(3)">Pick a Winner</a></li>
+                                        </ul>
 
-                                    <button type="button" ng-click="createShow()">Create LiteShow</button>
-                                </div>
+                                        <label class="col-md-3 control-label" for="contesturl">Url for winner</label>
+                                        <div class="col-md-3">
+                                            <input type="url" class="form-control" ng-model="contesturl" id="contesturl" ng-minlength="10" > <!-- required -->
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-primary" type="submit" ng-disabled="contestUrlForm.$invalid">Create Show</button>
+                                        </div>
+                                    </div>
+                                </form>
                                 
                                 <br/>
 
@@ -120,7 +128,7 @@
 								      <span class="caret"></span>
 								    </button>
 								    <ul class="dropdown-menu">
-                      <li><a href="javascript:;" ng-click="startShow(10)">10 seconds</a></li>
+                                      <li><a href="javascript:;" ng-click="startShow(10)">10 seconds</a></li>
 								      <li><a href="javascript:;" ng-click="startShow(30)">30 seconds</a></li>
 								      <li><a href="javascript:;" ng-click="startShow(60)">60 seconds</a></li>
 								    </ul>
