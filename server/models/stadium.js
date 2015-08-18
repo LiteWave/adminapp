@@ -37,23 +37,25 @@ var LevelSchema = new Schema({
  */
 var StadiumSchema = new Schema({
   _clientId: { type: Schema.ObjectId, ref: 'Client' },  // The client associated with this Stadium.
-  name: { type: String,
+  name: {
+    type: String,
     required: true,
     trim: true
   },
   levels: [LevelSchema] // Every stadium needs at least one level even if it is just flat.  
 });
 
- 
+
 /**
  * Statics
  */
 StadiumSchema.statics = {
-    load: function(id, cb) {
-        this.findOne({
-            _id: id
-        }).exec(cb);
-    }
-}; 
+  load: function (id, cb)
+  {
+    this.findOne({
+      _id: id
+    }).exec(cb);
+  }
+};
 
 mongoose.model('Stadium', StadiumSchema);

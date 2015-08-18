@@ -10,10 +10,10 @@ var mongoose = require('mongoose'),
  */
 
 var EventJoinSchema = new Schema({
-  _showId: { type: Schema.ObjectId, ref: 'Show'},   // id of the actual event_liteshow that is currently active
+  _showId: { type: Schema.ObjectId, ref: 'Show' },   // id of the actual event_liteshow that is currently active
   _user_locationId: { type: Schema.ObjectId, ref: 'User_Location' },   // the user who just joined the event
   _winner_user_locationId: { type: Schema.ObjectId, ref: 'User_Location' },  // set to id of the winner. if null, then the receiver is not the winner
-                                                                             //  the actual winner will also be stored in the event_liteshow object
+  //  the actual winner will also be stored in the event_liteshow object
   commands: [mongoose.CommandSchema],  // list of commands for this user.
   mobile_time: Date,   // passed in during creation to use as an offset from the actual Show's time  
   mobile_time_offset_ms: Number,  // the difference in ms between the passed in mobile time and the server time (used for info only)
@@ -24,11 +24,12 @@ var EventJoinSchema = new Schema({
  * Statics
  */
 EventJoinSchema.statics = {
-    load: function(id, cb) {
-        this.findOne({
-            _id: id
-        }).exec(cb);
-    }
+  load: function (id, cb)
+  {
+    this.findOne({
+      _id: id
+    }).exec(cb);
+  }
 };
 
 mongoose.model('Event_Join', EventJoinSchema);

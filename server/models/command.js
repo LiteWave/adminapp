@@ -38,27 +38,29 @@ var CommandSchema = new Schema({
  * Statics
  */
 CommandSchema.statics = {
-    load: function(id, cb) {
-        this.findOne({
-            _id: id
-        }).exec(cb);
-    }
+  load: function (id, cb)
+  {
+    this.findOne({
+      _id: id
+    }).exec(cb);
+  }
 };
 
 /**
  * Methods
  */
 CommandSchema.methods = {
-    /**
-     * set a logical seat
-     */
-    updateLogicalSeat: function() {
-        // this needs to map the stadium's layout to a logical row/col
-       // stadium = this.event.stadium;
-        this.logical_row = 99;
-        this.logical_col = 32;   // temporary
-        return 'ok';
-    }
+  /**
+   * set a logical seat
+   */
+  updateLogicalSeat: function ()
+  {
+    // this needs to map the stadium's layout to a logical row/col
+    // stadium = this.event.stadium;
+    this.logical_row = 99;
+    this.logical_col = 32;   // temporary
+    return 'ok';
+  }
 };
 mongoose.model('Command', CommandSchema);
 

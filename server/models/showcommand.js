@@ -22,12 +22,13 @@ var ShowCommandSchema = new Schema({
  * Statics
  */
 ShowCommandSchema.statics = {
-    load: function(id, cb) {
-        this.findOne({
-          _id: id
-        }).exec(cb);
-        //}).populate('_showId').exec(cb);
-    }
+  load: function (id, cb)
+  {
+    this.findOne({
+      _id: id
+    }).exec(cb);
+    //}).populate('_showId').exec(cb);
+  }
 };
 
 /**

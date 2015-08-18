@@ -9,18 +9,19 @@ var mongoose = require('mongoose'),
  * Client Schema - 
  */
 var ClientSchema = new Schema({
-    name: {
-        type: String,
-        trim: true
-    }
+  name: {
+    type: String,
+    trim: true
+  }
 });
 
 
 /**
  * Validations
  */
-ClientSchema.path('name').validate(function(name) {
-    return name.length;
+ClientSchema.path('name').validate(function (name)
+{
+  return name.length;
 }, 'Name cannot be blank');
 
 
@@ -28,11 +29,12 @@ ClientSchema.path('name').validate(function(name) {
  * Statics
  */
 ClientSchema.statics = {
-    load: function(id, cb) {
-        this.findOne({
-            _id: id
-        }).exec(cb);
-    }
+  load: function (id, cb)
+  {
+    this.findOne({
+      _id: id
+    }).exec(cb);
+  }
 };
 
 mongoose.model('Client', ClientSchema);
