@@ -166,7 +166,6 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       cmdList.push({ "c": red, "pl1": third_length });
 
       // Commands for winning section
-      // $$$ test this with index.
       if (onWinnerSection)
       {
         cmdList.push({ "pif": "w", "c": black, "pl1": fourth_length });
@@ -231,8 +230,6 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     // Display winner to Admin so they can prepare cameras.
     $scope.winnerSeat = $scope.formatWinnerString;
-
-    // $$$ what do we do once the Show and Event are over?  Need to store winners\events\etc?
   };
 
   $scope.changeEvent = function (event)

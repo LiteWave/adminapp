@@ -13,33 +13,11 @@ angular.module('liteWaveApp')
       $rootScope.setClient($rootScope.currentClient);
     });
 
-    /*
-    _clientId: { type: Schema.ObjectId, ref: 'Client' },  // The client associated with this Stadium.
-  name: { type: String,
-    required: true,
-    unique: true,
-    trim: true
-  },
-  sections: [
-    {
-      name: { type: String, required: true, trim: true },  // e.g. 301
-      sort_index: Number,  // used for the drop downs when user selects a section
-      rows: [{
-        name: { type: String, required: true, trim: true },
-        sort_index: Number,  // used for the drop downs when user selects a row after selecting a section
-        seats: [{
-          name: { type: String, required: true, trim: true },
-          sort_index: Number,    // used for ordering the seat selection drop down
-        }]
-      }]
-    }]
-
-    */
     $scope.saveStadium = function ()
     {
       var index = 0;
+      // Look at commands creation, create smaller arrays, then build them up.
       //var levels = $scope.levels; // how best to create\upload this?
-      // $$$ How to upload this?
       //var levelsInfo = [{ "level": "floor", "sections": [{ "section": "1", "rows": [{ "row": "A", "seats": [{ "seat": "1", "seat": "2" }] }] }] }];
       //var levelsInfo = [{ "levels": [{ "name": "floor", sort_index: 0, "sections": [{ "name": "1", sort_index: 0, "rows": [{ "name": "A", sort_index: 0, "seats": [{ "name": "1", sort_index: 0, "name": "2" }] }] }] }] }];
 
