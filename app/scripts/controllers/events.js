@@ -2,16 +2,19 @@
 
 angular.module('liteWaveApp')
 .controller('EventsController', ['$rootScope', '$scope', '$routeParams', '$location', 'Clients', 'Events',
-  function ($rootScope, $scope, $routeParams, $location, Clients, Events) {
+  function ($rootScope, $scope, $routeParams, $location, Clients, Events)
+  {
     $rootScope.currentArea = "events";
 
-    Clients.query({}, function (clients) {
+    Clients.query({}, function (clients)
+    {
       $rootScope.clients = clients;
       $rootScope.currentClient = clients[0];
       $rootScope.setClient($rootScope.currentClient);
     });
 
-    $scope.saveEvent = function () {
+    $scope.saveEvent = function ()
+    {
       // This eventually should be set in the UI by the user highlighting sections in the stadium map.
       // Should validate against the Stadium's data
       var index = 0;
@@ -38,20 +41,21 @@ angular.module('liteWaveApp')
       logicalLayout.columns.push({ "id": index++, "sectionList": ["122", "228", "229", "332", "333"] });
       logicalLayout.columns.push({ "id": index++, "sectionList": ["123", "230", "334"] });
 
-        var event = new Events({
-          name: $scope.name,
-          date: $scope.date,
-          _clientId: $rootScope.currentClient._id,
-          logicalLayout: logicalLayout,
-        });
-        event.$save(function (response) {
-          console.log(response);
-          //$location.path("event/" + response._id);
-        });
+      var event = new Events({
+        name: $scope.name,
+        date: $scope.date,
+        _clientId: $rootScope.currentClient._id,
+        logicalLayout: logicalLayout,
+      });
+      event.$save(function (response)
+      {
+        console.log(response);
+        //$location.path("event/" + response._id);
+      });
 
-        //this.name = "";
+      //this.name = "";
     };
-   
+
     /*$scope.remove = function (event) {
       event.$remove();
 
@@ -74,4 +78,4 @@ angular.module('liteWaveApp')
     };
    */
 
-}]);
+  }]);
