@@ -100,6 +100,18 @@ services.factory("Shows", ['$resource', function($resource) {
     });
 }]);
 
+// service used for Logical Layout REST endpoint
+services.factory("LogicalLayout", ['$resource', function ($resource)
+{
+  return $resource('/api/events/:eventId/logicallayouts/:logicallayoutId', {
+    eventId: '@_eventId', logicallayoutId: '@_id'
+  }, {
+    update: {
+      method: 'PUT'
+    }
+  });
+}]);
+
 // ShowCommands service used for showcommands REST endpoint
 services.factory("ShowCommands", ['$resource', function ($resource) {
   return $resource('/api/shows/:showId/showcommands/:showCommandId', {

@@ -57,6 +57,7 @@ module.exports = function(app, passport, auth) {
     app.post('/api/clients/:clientId/events', events.create);
     app.get('/api/clients/:clientId/events/:eventId', events.show);
     app.del('/api/clients/:clientId/events/:eventId', events.destroy);
+    app.put('/api/clients/:clientId/events/:eventId', events.update);
     app.get('/api/events/:eventId', events.show);
    
     // UserLocation Routes
@@ -78,6 +79,15 @@ module.exports = function(app, passport, auth) {
     app.put('/api/events/:eventId/shows/:showId', shows.update);    
     
     app.param('showId', shows.show);
+
+    // Logical Layout Routes
+    var logicallayouts = require('../controllers/logicallayouts');
+    app.get('/api/events/:eventId/logicallayouts', logicallayouts.all);
+    app.post('/api/events/:eventId/logicallayouts', logicallayouts.create);
+    app.get('/api/events/:eventId/logicallayouts/:logicallayoutId', logicallayouts.show);
+    app.put('/api/events/:eventId/logicallayouts/:logicallayoutId', logicallayouts.update);
+
+    app.param('logicallayoutId', logicallayouts.logicallayout);
 
     // ShowCommands Routes
     var showcommands = require('../controllers/showcommands');

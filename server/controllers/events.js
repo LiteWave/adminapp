@@ -6,7 +6,6 @@ var mongoose = require('mongoose'),
     Event = mongoose.model('Event'),
     _ = require('underscore');
 
-
 /**
  * Find event by id
  */
@@ -21,7 +20,6 @@ exports.event = function (req, res, next, id)
   });
 };
 
-
 /*
 * Create an event
 */
@@ -29,7 +27,6 @@ exports.create = function (req, res)
 {
   var clientId = req.params.clientId;
   console.log('Event:Create:clientId=' + clientId);
-  console.log('Event:Create:req.body=' + req.body.logicalLayout.columns[0].sectionList[0]);
   var event = new Event(req.body);
   event.clientId = clientId;
 
@@ -45,6 +42,20 @@ exports.create = function (req, res)
     {
       res.jsonp(event);
     }
+  });
+};
+
+/**
+ * Update a show
+ */
+exports.update = function (req, res)
+{
+  console.log('EVENT:Update:req=' + req);
+  var event = req.event;
+  event = _.extend(event, req.body);
+  event.save(function (err)
+  {
+    res.jsonp(event);
   });
 };
 
@@ -68,7 +79,6 @@ exports.destroy = function (req, res)
     }
   });
 };
-
 
 /**
  * Show an event

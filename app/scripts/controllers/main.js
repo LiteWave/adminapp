@@ -214,14 +214,14 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         });
 
         // Second, save the ShowCommands.
-        showCommands.$save(function (response)
+        showCommands.$save(function (response2)
         {
-          console.log(response);
+          console.log(response2);
 
-          if (response._id)
+          if (response2._id)
           {
             // Lastly, save the ShowCommandId on the Show.
-            show._showCommandId = response._id;
+            show._showCommandId = response2._id;
             show.$update();
           }
         });

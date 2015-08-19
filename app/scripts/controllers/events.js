@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liteWaveApp')
-.controller('EventsController', ['$rootScope', '$scope', '$routeParams', '$location', 'Clients', 'Events',
-  function ($rootScope, $scope, $routeParams, $location, Clients, Events)
+.controller('EventsController', ['$rootScope', '$scope', '$routeParams', '$location', 'Clients', 'Events', 'LogicalLayout',
+  function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalLayout)
   {
     $rootScope.currentArea = "events";
 
@@ -44,13 +44,35 @@ angular.module('liteWaveApp')
       var event = new Events({
         name: $scope.name,
         date: $scope.date,
-        _clientId: $rootScope.currentClient._id,
-        logicalLayout: logicalLayout,
+        _clientId: $rootScope.currentClient._id
       });
+
+      // Save the event.
       event.$save(function (response)
       {
         console.log(response);
-        //$location.path("event/" + response._id);
+
+        if (response._id)
+        {
+          var layout = new LogicalLayout({
+            _eventId: response._id,
+            name: $scope.name,
+            logicalLayout: logicalLayout
+          });
+
+          // Save the layout.
+          layout.$save(function (response2)
+          {
+            console.log(response2);
+
+            if (response2._id)
+            {
+              // Update the Event with the id of this layout
+              event._logicalLayoutId = response2._id;
+              event.$update();
+            }            
+          });
+        }
       });
 
       //this.name = "";
