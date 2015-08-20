@@ -27,7 +27,8 @@ ShowSchema.statics = {
   {
     this.findOne({
       _id: id
-    }).populate('_eventId').populate('_showCommandId').exec(cb);
+    }).exec(cb);
+    //}).populate('_eventId').populate('_showCommandId').exec(cb);
   },
   // looks for an eventLiteShow that has a start_at that is after now
   find_active: function (event_id, cb)

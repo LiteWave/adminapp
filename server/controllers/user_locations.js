@@ -51,7 +51,7 @@ exports.create = function (req, res)
     var user_location = new UserLocation(req.body);
     user_location._eventId = req.params.eventId;
 
-    // $$$ call updateLogicalSeat, see logic there.
+    // $$$ call updateLogicalSeat?, see logic there.
 
     // For DEMO START: hardcode different logical columns based on input section.
     switch (user_location.user_seat.section)

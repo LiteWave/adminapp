@@ -93,7 +93,7 @@ exports.show = function (req, res)
  */
 exports.all = function (req, res)
 {
-  Event.find({ _clientId: req.client._id }).sort('name').exec(function (err, events)
+  Event.find({ _clientId: req.client._id }).exec(function (err, events)
   {
     if (err)
     {

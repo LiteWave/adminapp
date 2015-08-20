@@ -63,13 +63,15 @@ services.factory('UserLocations', ['$resource', function ($resource) {
 // service used for Stadiums REST endpoint
 services.factory("Stadiums", ['$resource', function ($resource)
 {
-  return $resource('/api/stadiums', {}, {
+  return $resource('/api/stadiums', {
+    clientId: '@_id'
+  }, {
     update: {
       method: 'PUT'
     },
     get: {
       method: 'GET',
-      url: '/api/stadiums/'
+      url: '/api/stadiums/client/:clientId'
     }
   });
 }]);
@@ -108,6 +110,10 @@ services.factory("LogicalLayout", ['$resource', function ($resource)
   }, {
     update: {
       method: 'PUT'
+    },
+    query: {
+      method: 'GET',
+      isArray: false
     }
   });
 }]);

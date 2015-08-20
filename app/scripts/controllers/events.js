@@ -1,16 +1,24 @@
 'use strict';
 
 angular.module('liteWaveApp')
-.controller('EventsController', ['$rootScope', '$scope', '$routeParams', '$location', 'Clients', 'Events', 'LogicalLayout',
-  function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalLayout)
+.controller('EventsController', ['$rootScope', '$scope', '$routeParams', '$location', 'Clients', 'Events', 'LogicalLayout', 'Stadiums',
+function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalLayout, Stadiums)
   {
     $rootScope.currentArea = "events";
-
+  
     Clients.query({}, function (clients)
     {
       $rootScope.clients = clients;
       $rootScope.currentClient = clients[0];
       $rootScope.setClient($rootScope.currentClient);
+
+      Stadiums.query({ clientId: $rootScope.currentClient._id }, function (stadium)
+      {
+        if (stadium && stadium.length)
+        {
+          $rootScope.currentStadium = stadium[0];
+        }
+      });
     });
 
     $scope.saveEvent = function ()
@@ -44,7 +52,8 @@ angular.module('liteWaveApp')
       var event = new Events({
         name: $scope.name,
         date: $scope.date,
-        _clientId: $rootScope.currentClient._id
+        _clientId: $rootScope.currentClient._id,
+        _stadiumId: $rootScope.currentStadium._id
       });
 
       // Save the event.

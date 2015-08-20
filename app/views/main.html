@@ -26,7 +26,7 @@
 
 						<div class="details">
 							<span class="content">Event</span>
-							<span class="eventvalue">{{currentEvent.name}}</span>
+							<span class="eventvalue">{{currentEvent.name}} (id:{{currentEvent._id}})</span>
 						</div> <!-- /.details -->
 
 						<i class="fa fa-play-circle more"></i>
@@ -97,7 +97,7 @@
 						<div class="portlet-content">
 
 							<div class="pull-left">
-                                <form name="contestUrlForm" class="form-horizontal" role="form" ng-submit="createShow()">
+                                <form name="contestUrlForm" class="form-horizontal" role="form" ng-submit="loadLayouts()">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                                             Type of Show

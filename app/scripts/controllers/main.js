@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liteWaveApp')
-.controller('MainCtrl', ['$rootScope', '$scope', '$timeout', '$interval', 'Clients', 'Events', 'Shows', 'UserLocations', 'ShowCommands',
-function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserLocations, ShowCommands)
+.controller('MainCtrl', ['$rootScope', '$scope', '$timeout', '$interval', 'Clients', 'Events', 'Shows', 'UserLocations', 'ShowCommands', 'LogicalLayout',
+function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserLocations, ShowCommands, LogicalLayout)
 {
 
   $rootScope.currentArea = "main";
@@ -22,6 +22,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.userCheckPromise = null;
   $scope.userPollTime = 3000;
   $scope.currentShowType = 0;
+  $scope.currentLayout;
 
   Clients.query({}, function (clients)
   {
@@ -40,15 +41,30 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     return Math.floor(Math.random() * userCount);
   }
 
-  $scope.createShow = function ()
+  $scope.loadLayouts = function ()
   {
-    if (!$scope.currentEvent || !$scope.currentEvent.logicalLayout || !$scope.currentEvent.logicalLayout.columns || !$scope.currentEvent.logicalLayout.columns.length)
+    if (!$scope.currentEvent || !$scope.currentEvent._logicalLayoutId)
     {
       alert("Please select an Event");
       return;
     }
 
-    if (!$scope.currentEvent.logicalLayout || !$scope.currentEvent.logicalLayout.columns || !$scope.currentEvent.logicalLayout.columns.length)
+    LogicalLayout.query({ eventId: $scope.currentEvent._id, logicallayoutId: $scope.currentEvent._logicalLayoutId }, function (layout)
+    {
+        $scope.currentLayout = layout;
+        $scope.createShow();
+    });
+  }
+
+  $scope.createShow = function ()
+  {
+    if (!$scope.currentEvent)
+    {
+      alert("Please select an Event");
+      return;
+    }
+
+    if (!$scope.currentLayout.logicalLayout || !$scope.currentLayout.logicalLayout.columns || !$scope.currentLayout.logicalLayout.columns.length)
     {
       alert("Current Event has no logical columns. Please create an Event with logical columns.");
       return;
@@ -90,7 +106,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     // for each logical column, create commands
     // NOTE:this is simple logic. Need to account for logical rows and seats.  22
     var logicalCol = 1;
-    var columnLength = $scope.currentEvent.logicalLayout.columns.length;
+    var columnLength = $scope.currentLayout.logicalLayout.columns.length;
     var currentSection;
     var colLengthMS = columnLength * 1000;  // 22000
     var cmdList = [];
@@ -99,7 +115,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     var randomDelay;
     while (logicalCol <= columnLength)
     {
-      currentSection = $scope.currentEvent.logicalLayout.columns[logicalCol - 1].sectionList;
+      currentSection = $scope.currentLayout.logicalLayout.columns[logicalCol - 1].sectionList;
 
       // $$$ Need to handle multiple winning sections with a loop.
       onWinnerSection = (currentSection.indexOf($scope.winnerSection.toString()) > -1);
@@ -229,7 +245,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     });
 
     // Display winner to Admin so they can prepare cameras.
-    $scope.winnerSeat = $scope.formatWinnerString;
+    $scope.winnerSeat = $scope.formatWinnerString();
   };
 
   $scope.changeEvent = function (event)
@@ -248,9 +264,9 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   // check for new users every second.
   $scope.checkUsers = function ()
   {
-    if ($scope.currentShow)
+    if ($scope.currentEvent)
     {
-      UserLocations.query({ eventId: $scope.currentShow._eventId }, function (userLocations)
+      UserLocations.query({ eventId: $scope.currentEvent._id }, function (userLocations)
       {
         $scope.userLocations = userLocations;
         $scope.activeUsers = userLocations.length;
@@ -395,7 +411,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     if (!$scope.winnerSeat)
     {
-      $scope.winnerSeat = $scope.formatWinnerString;
+      $scope.winnerSeat = $scope.formatWinnerString();
     }
   };
 
