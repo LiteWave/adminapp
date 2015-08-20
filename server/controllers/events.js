@@ -32,6 +32,7 @@ exports.create = function (req, res)
 
   event.save(function (err)
   {
+console.log('Event:Create:err:' + err);
     if (err)
     {
       return res.send('clients/', {
