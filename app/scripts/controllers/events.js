@@ -23,6 +23,8 @@ function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalL
 
     $scope.saveEvent = function ()
     {
+        console.log("current Client Id" + $rootScope.currentClient._id + ": Current Stadium Id" + $rootScope.currentStadium._id);
+
       // This eventually should be set in the UI by the user highlighting sections in the stadium map.
       // Should validate against the Stadium's data
       var index = 0;
@@ -55,6 +57,8 @@ function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalL
         _clientId: $rootScope.currentClient._id,
         _stadiumId: $rootScope.currentStadium._id
       });
+
+      console.log("event name" + event.name + ": date:" + event.date + ":clientid:" + event._clientId + ": Stadium Id:" + event._stadiumId);
 
       // Save the event.
       event.$save(function (response)

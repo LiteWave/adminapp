@@ -28,7 +28,9 @@ exports.create = function (req, res)
   var clientId = req.params.clientId;
   console.log('Event:Create:clientId=' + clientId);
   var event = new Event(req.body);
-  event.clientId = clientId;
+  event._clientId = clientId;
+  console.log('Event:Create:Event=' + event);
+  console.log('Event:Create:clientId=' + event._clientId);
 
   event.save(function (err)
   {

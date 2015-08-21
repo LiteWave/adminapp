@@ -28,7 +28,7 @@ exports.create = function (req, res)
 {
   var logicallayout = new LogicalLayout(req.body);
   logicallayout._eventId = req.params.eventId;
-  console.log('LogicalLayout:Create:clientId=' + logicallayout._eventId);
+  console.log('LogicalLayout:Create:eventId=' + logicallayout._eventId);
   console.log('LogicalLayout:Create:req.body=' + req.body);
   logicallayout.save(function (err)
   {
