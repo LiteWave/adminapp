@@ -16,6 +16,7 @@ var ShowSchema = new Schema({
   start_at: Date,  // exact time to start show - normally set dynamically during the event since the start time might not be known ahead of time
   type: Number,   // type of show: liteshow, liteshow + contest, contest	
   winnerSections: [{ type: String, trim: true }], // list of winning sections. Could be a single section.
+  winnerImageUrl: String,  // URL of image to display to winner.
   winner_url: String  // URL to go to if they are the winner.
 });
 
