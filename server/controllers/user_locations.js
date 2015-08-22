@@ -55,7 +55,7 @@ exports.create = function (req, res)
       console.log('UL:Create:This seat is already taken.');
       return res.status(400).jsonp(err);      
     }
-    else if (user_location != null && user_location.user_key === req.body.user_key)
+    else if (user_location != null && user_location.user_key.toString() === req.body.user_key.toString())
     {
       // Found an existing user who is rejoining. Log a message that we are reusing the UL.
       console.log('UL:Create:Info: Reusing userLocation with user_key=' + req.body.user_key);
