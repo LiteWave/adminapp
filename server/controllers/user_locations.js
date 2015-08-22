@@ -54,7 +54,8 @@ exports.create = function (req, res)
     // $$$ call updateLogicalSeat?, see logic there.
 
     console.log('UL=' + user_location);
-
+    console.log('user_location.user_seat.section=' + user_location.user_seat.section);
+    
     // For DEMO START: hardcode different logical columns based on input section.
     switch (user_location.user_seat.section)
     {
@@ -86,15 +87,17 @@ exports.create = function (req, res)
     //console.log('user_location.logical_row=' + user_location.logical_row + 'logical_col=' + user_location.logical_col); // + res.jsonp(user_location));
     // For DEMO END
 
-    user_location.save(function (err, user_location)
+    user_location.save(function (err, UL)
     {
+        console.log('UL after save=' + UL);
+        console.log('user_location.user_seat.section=' + UL.user_seat.section);
       if (err)
       {
           console.log('error saving: ' + err);
         return res.status(500).jsonp(err);
       } else
       {
-        res.jsonp(user_location);
+          res.jsonp(UL);
       }
     });
   });
