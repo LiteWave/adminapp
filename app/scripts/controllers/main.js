@@ -14,6 +14,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.winnerSection = [];
   $scope.winner = null;
   $scope.contesturl = "";
+  $scope.contestimageurl = "";
   $scope.activeUsers = 0;
   $scope.iPhoneUsers = 0;
   $scope.androidUsers = 0;
@@ -211,7 +212,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       type: $scope.currentShowType,
       _winnerId: $scope.winner._id,
       winnerSections: $scope.winnerSection,
-      winner_url: $scope.contesturl ? $scope.contesturl : null
+      winnerImageUrl: !!($scope.contestimageurl.trim()) ? $scope.contestimageurl : null,
+      winner_url: !!($scope.contesturl.trim()) ? $scope.contesturl : null
     });
 
     $scope.currentShow = show;

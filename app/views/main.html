@@ -109,10 +109,13 @@
                                             <li><a href="javascript:;" ng-click="setShowType(2)">Pick a Winning Section</a></li>
                                             <li><a href="javascript:;" ng-click="setShowType(3)">Pick a Winner</a></li>
                                         </ul>
-
-                                        <label class="col-md-3 control-label" for="contesturl">Url for winner</label>
                                         <div class="col-md-3">
+                                            <label class="col-md-3 control-label" for="contesturl">Url for winner</label>
                                             <input type="url" class="form-control" ng-model="contesturl" id="contesturl" ng-minlength="10" > <!-- required -->
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="col-md-3 control-label" for="contestimageurl">Url for image</label>
+                                            <input type="url" class="form-control" ng-model="contestimageurl" id="contestimageurl" ng-minlength="10"> <!-- required -->
                                         </div>
                                         <div>
                                             <button class="btn btn-primary" type="submit" ng-disabled="contestUrlForm.$invalid">Create Show</button>
