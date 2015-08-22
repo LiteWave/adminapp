@@ -65,10 +65,10 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       return;
     }
 
-    if (!$scope.currentLayout.columns || !$scope.currentLayout.columns.length)
+    if (!$scope.currentLayout.columns)
     {
       console.log("CurrentLayout.columns is null. $scope.currentLayout:" + $scope.currentLayout);
-      if ($scope.currentLayout.logicalLayout.columns && $scope.currentLayout.logicalLayout.columns.length)
+      if ($scope.currentLayout.logicalLayout.columns)
       {
         console.log("Should be updating CurrentLayout.columns.");
         $scope.currentLayout.columns = $scope.currentLayout.logicalLayout.columns;
