@@ -10,19 +10,16 @@ var mongoose = require('mongoose'),
  */
 var LogicalLayoutSchema = new Schema({
   _eventId: { type: Schema.ObjectId, ref: 'Event' },
-  logicalLayout:     // what is the logical grouping of sections and rows for this event? Based on Stadium's actual sections, rows, and seat numbers.
-  {
-    columns: [{   // the length of this equals the number of logical columns
-      _id: false,
-      id: Number, // logical column id
-      sectionList: [{ type: String, trim: true }],  // array of sections that make up this logical column.
-    }],
-    rows: [{      // the length of this equals the number of logical rows
-      _id: false,
-      id: Number, // logical row id
-      sectionList: { type: String, trim: true },  // array of sections that make up this logical row.
-    }]
-  },
+  columns: [{   // the length of this equals the number of logical columns
+    _id: false,
+    id: Number, // logical column id
+    sectionList: [{ type: String, trim: true }],  // array of sections that make up this logical column.
+  }],
+  rows: [{      // the length of this equals the number of logical rows
+    _id: false,
+    id: Number, // logical row id
+    sectionList: { type: String, trim: true },  // array of sections that make up this logical row.
+  }],
   name: { type: String, default: '', trim: true }
 });
 

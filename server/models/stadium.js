@@ -7,27 +7,27 @@ var mongoose = require('mongoose'),
 
 var SeatSchema = new Schema({
   _id: false,
-  name: { type: String, trim: true, unique: true },  // e.g. 100, 200, etc. has to be unique
+  name: { type: String, trim: true },  // e.g. 100, 200, etc. has to be unique
   sort_index: Number  // used for the drop downs when user selects a section
 });
 
 var RowSchema = new Schema({
   _id: false,
-  name: { type: String, trim: true, unique: true },  // e.g. 100, 200, etc. has to be unique
+  name: { type: String, trim: true },  // e.g. 100, 200, etc. has to be unique
   sort_index: Number,  // used for the drop downs when user selects a section
   seats: [SeatSchema]
 });
 
 var SectionSchema = new Schema({
   _id: false,
-  name: { type: String, trim: true, unique: true },  // e.g. 100, 200, etc. has to be unique
+  name: { type: String, trim: true },  // e.g. 100, 200, etc. has to be unique
   sort_index: Number,  // used for the drop downs when user selects a section
   rows: [RowSchema]
 });
 
 var LevelSchema = new Schema({
   _id: false,
-  name: { type: String, trim: true, unique: true },  // e.g. 100, 200, etc. has to be unique
+  name: { type: String, trim: true },  // e.g. 100, 200, etc. has to be unique
   sort_index: Number,  // used for the drop downs when user selects a section
   sections: [SectionSchema]
 });

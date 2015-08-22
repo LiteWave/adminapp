@@ -4,6 +4,7 @@
 var mongoose = require('mongoose'),
     async = require('async'),
     Event = mongoose.model('Event'),
+    LogicalLayout = mongoose.model('LogicalLayout'),
     UserLocation = mongoose.model('User_Location'),
     _ = require('underscore');
 
@@ -32,74 +33,63 @@ exports.create = function (req, res)
   UserLocation.findOne({ _eventId: req.params.eventId, user_key: req.body.user_key }).exec(function (err, user_location)
   {
     // console.log(user_location);
-
     if (err)
     {
-      console.log('some kind of error on find: ' + err);
-      return res.status(500).jsonp(err);
+      console.log('UL:Create:Some kind of error on finding UL: ' + err);
+      return res.status(400).jsonp(err);
     }
 
     if (user_location != null)
     {
-      // for now, we error. If we don't, need to update and not error. user_location.updateLogicalSeat();
-      console.log('Error: Only one userLocation allowed for now.');
-      return res.status(500).jsonp(err);
+      // Log a message that we are reusing the UL.
+      console.log('UL:Create:Info: Reusing userLocation with user_key=' + req.body.user_key);
+
+      user_location.delete;
+      user_location = null;
+    }
+    else
+    {
+      // Check if the seat is already taken?
+      /*user_seat: {
+          level: String,
+          section: String,
+          row: String,
+          seat_number: String
+      },*/
+
+      console.log('UL:Create:nothing found, creating new UL with ' + req.body.user_key);
     }
 
-    console.log('nothing found, creating new UL with ' + req.body.user_key);
-
-    var user_location = new UserLocation(req.body);
-    user_location._eventId = req.params.eventId;
-
-    // $$$ call updateLogicalSeat?, see logic there.
-
-    console.log('UL=' + user_location);
-    console.log('UL.user_seat=' + user_location.user_seat);
-    console.log('user_location.user_seat.section=' + user_location.user_seat.section);
-    
-    // For DEMO START: hardcode different logical columns based on input section.
-    switch (user_location.user_seat.section)
+    LogicalLayout.findOne({ _eventId: req.params.eventId }).exec(function (err, layout)
     {
-      case '101':
-        user_location.logical_row = 1;
-        user_location.logical_col = 1;
-        break;
-      case '102':
-        user_location.logical_row = 1;
-        user_location.logical_col = 2;
-        break;
-      case '103':
-        user_location.logical_row = 1;
-        user_location.logical_col = 3;
-        break;
-      case '104':
-        user_location.logical_row = 1;
-        user_location.logical_col = 4;
-        break;
-      case '105':
-        user_location.logical_row = 1;
-        user_location.logical_col = 5;
-        break;
-      default:
-        user_location.logical_row = 1;
-        user_location.logical_col = 1;
-        break;
-    }
-    //console.log('user_location.logical_row=' + user_location.logical_row + 'logical_col=' + user_location.logical_col); // + res.jsonp(user_location));
-    // For DEMO END
-
-    user_location.save(function (err, UL)
-    {
-        console.log('UL after save=' + UL);
-        console.log('user_location.user_seat.section=' + UL.user_seat.section);
       if (err)
       {
-          console.log('error saving: ' + err);
-        return res.status(500).jsonp(err);
-      } else
-      {
-          res.jsonp(UL);
+        console.log('UL:Create:Some kind of error on finding Layout: ' + err);
+        return res.status(400).jsonp(err);
       }
+
+      var user_location = new UserLocation(req.body);
+      user_location._eventId = req.params.eventId;
+
+      if (!user_location.updateLogicalSeat(layout))
+      {
+        console.log('UL:Create:Error setting logical seat. Defaulting to 1 and 1.');
+        this.logical_col = 1;
+        this.logical_row = 1;
+      }
+
+      user_location.save(function (err, UL)
+      {
+        if (err)
+        {
+          console.log('UL:Create:Error saving UL. err: ' + err);
+          return res.status(400).jsonp(err);
+        }
+        else
+        {
+          res.jsonp(UL);
+        }
+      });
     });
   });
 };
@@ -133,7 +123,8 @@ exports.destroy = function (req, res)
       res.render('Error deleting User Location', {
         status: 500
       });
-    } else
+    }
+    else
     {
       res.jsonp(user_location);
     }
