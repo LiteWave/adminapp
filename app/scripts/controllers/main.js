@@ -90,7 +90,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     if (!$scope.winner)
     {
-      $scope.winner = $scope.userLocations[2];
+      $scope.winner = $scope.userLocations[0];
     }
 
     $scope.winnerSection.push($scope.winner.user_seat.section);
