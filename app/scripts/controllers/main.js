@@ -67,8 +67,16 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     if (!$scope.currentLayout.columns || !$scope.currentLayout.columns.length)
     {
-      alert("Current Event has no logical columns. Please create an Event with logical columns.");
-      return;
+      if ($scope.currentLayout.logicalLayout.columns && $scope.currentLayout.logicalLayout.columns.length)
+      {
+        $scope.currentLayout.columns = $scope.currentLayout.logicalLayout.columns;
+        $scope.currentLayout.$update();
+      }
+      else
+      {
+        alert("Current Event has no logical columns. Please create an Event with logical columns.");
+        return;
+      }
     }
 
     if (!$scope.userLocations || $scope.userLocations.length < 1)
