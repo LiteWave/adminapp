@@ -29,8 +29,17 @@ exports.user_location = function (req, res, next, id)
 exports.create = function (req, res)
 {
   console.log('UL:Create:event id=' + req.params.eventId + '. user_key:' + req.body.user_key);
+  //console.log('UL:Create:event req.body.user_seat.level=' + req.body.user_seat.level + '. req.body.user_seat.section:' + req.body.user_seat.section);
 
-  UserLocation.findOne({ _eventId: req.params.eventId, user_key: req.body.user_key }).exec(function (err, user_location)
+  UserLocation.findOne({
+    _eventId: req.params.eventId,
+    user_seat: {
+      "level" : req.body.user_seat.level,
+      "section": req.body.user_seat.section,
+      "row": req.body.user_seat.row,
+      "seat_number": req.body.user_seat.seat_number
+    }
+  }).exec(function (err, user_location)
   {
     // console.log(user_location);
     if (err)
@@ -39,9 +48,16 @@ exports.create = function (req, res)
       return res.status(400).jsonp(err);
     }
 
-    if (user_location != null)
+    // Check if this user is rejoining or someone is trying to take someone else's seat.
+    if (user_location != null && user_location.user_key != req.body.user_key)
     {
-      // Log a message that we are reusing the UL.
+      // This seat is already taken. Return 400.
+      console.log('UL:Create:This seat is already taken.');
+      return res.status(400).jsonp(err);      
+    }
+    else if (user_location != null && user_location.user_key === req.body.user_key)
+    {
+      // Found an existing user who is rejoining. Log a message that we are reusing the UL.
       console.log('UL:Create:Info: Reusing userLocation with user_key=' + req.body.user_key);
 
       user_location.delete;
@@ -49,15 +65,8 @@ exports.create = function (req, res)
     }
     else
     {
-      // Check if the seat is already taken?
-      /*user_seat: {
-          level: String,
-          section: String,
-          row: String,
-          seat_number: String
-      },*/
-
-      console.log('UL:Create:nothing found, creating new UL with ' + req.body.user_key);
+      // Brand new user joining.
+      console.log('UL:Create:No UL. Creating new UL with ' + req.body.user_key);
     }
 
     LogicalLayout.findOne({ _eventId: req.params.eventId }).exec(function (err, layout)
@@ -144,7 +153,6 @@ exports.show = function (req, res)
  */
 exports.all = function (req, res)
 {
-  //UserLocation.find({ _eventId: req.params.eventId }).sort('logical_col').exec(function (err, user_locations) {
   UserLocation.find({ _eventId: req.params.eventId }).exec(function (err, user_locations)
   {
     console.log('Inside of Find');
