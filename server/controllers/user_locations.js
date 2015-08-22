@@ -35,7 +35,7 @@ exports.create = function (req, res)
 
     if (err)
     {
-      console.log('some kind of error on find');
+      console.log('some kind of error on find: ' + err);
       return res.status(500).jsonp(err);
     }
 
@@ -52,6 +52,8 @@ exports.create = function (req, res)
     user_location._eventId = req.params.eventId;
 
     // $$$ call updateLogicalSeat?, see logic there.
+
+    console.log('UL=' + user_location);
 
     // For DEMO START: hardcode different logical columns based on input section.
     switch (user_location.user_seat.section)
@@ -88,6 +90,7 @@ exports.create = function (req, res)
     {
       if (err)
       {
+          console.log('error saving: ' + err);
         return res.status(500).jsonp(err);
       } else
       {

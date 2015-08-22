@@ -12,7 +12,8 @@ var UserLocationSchema = new Schema({
   _eventId: { type: Schema.ObjectId, ref: 'Event' },
   user_key: String,
   user_seat: {
-    section: String,
+      level: String,
+      section: String,
     row: String,
     seat_number: String
   },
