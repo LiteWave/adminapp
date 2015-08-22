@@ -65,7 +65,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       return;
     }
 
-    if (!$scope.currentLayout.logicalLayout || !$scope.currentLayout.logicalLayout.columns || !$scope.currentLayout.logicalLayout.columns.length)
+    if (!$scope.currentLayout.columns || !$scope.currentLayout.columns.length)
     {
       alert("Current Event has no logical columns. Please create an Event with logical columns.");
       return;
@@ -107,7 +107,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     // for each logical column, create commands
     // NOTE:this is simple logic. Need to account for logical rows and seats.  22
     var logicalCol = 1;
-    var columnLength = $scope.currentLayout.logicalLayout.columns.length;
+    var columnLength = $scope.currentLayout.columns.length;
     var currentSection;
     var colLengthMS = columnLength * 1000;  // 22000
     var cmdList = [];
@@ -116,7 +116,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     var randomDelay;
     while (logicalCol <= columnLength)
     {
-      currentSection = $scope.currentLayout.logicalLayout.columns[logicalCol - 1].sectionList;
+      currentSection = $scope.currentLayout.columns[logicalCol - 1].sectionList;
 
       // $$$ Need to handle multiple winning sections with a loop.
       onWinnerSection = (currentSection.indexOf($scope.winnerSection.toString()) > -1);
