@@ -54,6 +54,7 @@ exports.create = function (req, res)
     // $$$ call updateLogicalSeat?, see logic there.
 
     console.log('UL=' + user_location);
+    console.log('UL.user_seat=' + user_location.user_seat);
     console.log('user_location.user_seat.section=' + user_location.user_seat.section);
     
     // For DEMO START: hardcode different logical columns based on input section.
