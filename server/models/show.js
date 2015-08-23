@@ -35,7 +35,6 @@ ShowSchema.statics = {
   find_active: function (event_id, cb)
   {
     var utc = new Date().toISOString();
-    var curDateUTC = new Date(utc);
 
     this
     .findOne({ _eventId: event_id })
