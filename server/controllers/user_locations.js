@@ -49,13 +49,14 @@ exports.create = function (req, res)
     }
 
     // Check if this user is rejoining or someone is trying to take someone else's seat.
-    if (user_location != null && user_location.user_key.toString() !== req.body.user_key.toString())
+    var regExp = new RegExp(req.body.user_key);    
+    if (user_location != null && !regExp.test(user_location.user_key))
     {
       // This seat is already taken. Return 400.
       console.log('UL:Create:This seat is already taken.');
       return res.status(400).jsonp(err);      
     }
-    else if (user_location != null && user_location.user_key.toString() === req.body.user_key.toString())
+    else if (user_location != null && regExp.test(user_location.user_key))
     {
       // Found an existing user who is rejoining. Log a message that we are reusing the UL.
       console.log('UL:Create:Info: Reusing userLocation with user_key=' + req.body.user_key);

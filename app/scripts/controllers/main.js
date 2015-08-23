@@ -220,8 +220,9 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     var show = new Shows({
       _eventId: $scope.currentEvent._id,
-      type: $scope.currentShowType,
       _winnerId: $scope.winner._id,
+      type: $scope.currentShowType,      
+      start_at : null,
       winnerSections: $scope.winnerSection,
       winnerImageUrl: !!($scope.contestimageurl.trim()) ? $scope.contestimageurl : null,
       winner_url: !!($scope.contesturl.trim()) ? $scope.contesturl : null
