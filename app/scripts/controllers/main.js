@@ -136,75 +136,75 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       if (logicalCol > 1)
       {
         // first section doesn't need to wait.
-        cmdList.push({ "pt": "w", "pl1": first_length * (logicalCol - 1) });
+        cmdList.push({ "ct": "w", "pl1": first_length * (logicalCol - 1) });
       }
-      cmdList.push({ "c": red, "pl1": first_length, "v": true });             // display 500 ms and vibrate
-      cmdList.push({ "pt": "w", "pl1": colLengthMS - (first_length * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
+      cmdList.push({ "bg": red, "pl1": first_length, "sb": true });             // display 500 ms and vibrate
+      cmdList.push({ "ct": "w", "pl1": colLengthMS - (first_length * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
 
       // Wave 2.
       if (logicalCol > 1)
       {
         // first section doesn't need to wait.
-        cmdList.push({ "pt": "w", "pl1": second_length * (logicalCol - 1) });
+        cmdList.push({ "ct": "w", "pl1": second_length * (logicalCol - 1) });
       }
-      cmdList.push({ "c": red, "pl1": second_length, "v": true }); // display and vibrate.
-      cmdList.push({ "pt": "w", "pl1": colLengthMS - (second_length * logicalCol) }); // pause 21.750 seconds, 21.5. 21.25, 21
+      cmdList.push({ "bg": red, "pl1": second_length, "sb": true }); // display and vibrate.
+      cmdList.push({ "ct": "w", "pl1": colLengthMS - (second_length * logicalCol) }); // pause 21.750 seconds, 21.5. 21.25, 21
 
       // Common Contest Commands
       // Generate random delay time between 0 and 100 ms for each logical column.
       // NOTE: must be small to prevent winning phone to go off too soon.
       randomDelay = $scope.getRandomNumber(100);
-      cmdList.push({ "pt": "w", "pl1": randomDelay });  // wait X ms, max delay 250ms        
-      cmdList.push({ "c": black, "pl1": first_length });
-      cmdList.push({ "c": white, "pl1": first_length });
-      cmdList.push({ "c": red, "pl1": first_length });
-      cmdList.push({ "c": black, "pl1": first_length });
-      cmdList.push({ "c": white, "pl1": first_length });
-      cmdList.push({ "c": red, "pl1": first_length, "v": true });
+      cmdList.push({ "ct": "w", "pl1": randomDelay });  // wait X ms, max delay 250ms        
+      cmdList.push({ "bg": black, "pl1": first_length });
+      cmdList.push({ "bg": white, "pl1": first_length });
+      cmdList.push({ "bg": red, "pl1": first_length });
+      cmdList.push({ "bg": black, "pl1": first_length });
+      cmdList.push({ "bg": white, "pl1": first_length });
+      cmdList.push({ "bg": red, "pl1": first_length, "sb": true });
 
-      cmdList.push({ "c": black, "pl1": second_length });
-      cmdList.push({ "c": white, "pl1": second_length });
+      cmdList.push({ "bg": black, "pl1": second_length });
+      cmdList.push({ "bg": white, "pl1": second_length });
 
       // Take out a few commands from non-winner sections
       if (onWinnerSection)
       {
-        cmdList.push({ "c": red, "pl1": second_length });
+        cmdList.push({ "bg": red, "pl1": second_length });
       }
-      cmdList.push({ "c": black, "pl1": second_length });
+      cmdList.push({ "bg": black, "pl1": second_length });
 
       if (onWinnerSection)
       {
-        cmdList.push({ "c": white, "pl1": second_length });
+        cmdList.push({ "bg": white, "pl1": second_length });
       }
-      cmdList.push({ "c": red, "pl1": second_length, "v": true });
+      cmdList.push({ "bg": red, "pl1": second_length, "sb": true });
 
-      cmdList.push({ "c": black, "pl1": third_length });
-      cmdList.push({ "c": white, "pl1": third_length });
-
-      if (onWinnerSection)
-      {
-        cmdList.push({ "c": red, "pl1": third_length });
-      }
-      cmdList.push({ "c": black, "pl1": third_length });
+      cmdList.push({ "bg": black, "pl1": third_length });
+      cmdList.push({ "bg": white, "pl1": third_length });
 
       if (onWinnerSection)
       {
-        cmdList.push({ "c": white, "pl1": third_length });
+        cmdList.push({ "bg": red, "pl1": third_length });
       }
-      cmdList.push({ "c": red, "pl1": third_length });
+      cmdList.push({ "bg": black, "pl1": third_length });
+
+      if (onWinnerSection)
+      {
+        cmdList.push({ "bg": white, "pl1": third_length });
+      }
+      cmdList.push({ "bg": red, "pl1": third_length });
 
       // Commands for winning section
       if (onWinnerSection)
       {
-        cmdList.push({ "pif": "w", "c": black, "pl1": fourth_length });
-        cmdList.push({ "c": white, "pl1": fourth_length });
-        cmdList.push({ "pif": "w", "c": red, "pl1": fourth_length });
-        cmdList.push({ "c": black, "pl1": fourth_length });
-        cmdList.push({ "c": white, "pl1": fourth_length });
-        cmdList.push({ "pif": "w", "c": red, "pl1": fourth_length, "v": true });
+        cmdList.push({ "pif": "w", "bg": black, "pl1": fourth_length });
+        cmdList.push({ "bg": white, "pl1": fourth_length });
+        cmdList.push({ "pif": "w", "bg": red, "pl1": fourth_length });
+        cmdList.push({ "bg": black, "pl1": fourth_length });
+        cmdList.push({ "bg": white, "pl1": fourth_length });
+        cmdList.push({ "pif": "w", "bg": red, "pl1": fourth_length, "sb": true });
 
         // push winning command to winner inside of winning section.
-        cmdList.push({ "pif": "w", "pt": "win", "c": "216,19,37", "pl1": 60000 });
+        cmdList.push({ "pif": "w", "ct": "win", "bg": "216,19,37", "pl1": 60000 });
       }
 
       // Add this set of commands to the overall list

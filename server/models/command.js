@@ -22,15 +22,14 @@ var CommandSchema = new Schema({
   lp2: Number,   // only used if it's a seat and this is the column  (not used by mobile app)
   offset: Number,  // milliseconds from start of show to do this command (not returned to mobile app, only used for full command set)
   pif: String, // play if winner ('w') or loser 'l'.  if this is set and its a contest then only play the command if you're a loser or winner
-  pt: String, // play type, default is 'c' for color if not specified.   could be:  wait (w), flash (f), color (c), sound (s)
-  v: Boolean,  // default is false.   true if vibrate during this sequence
+  ct: String, // command type, default is 'c' for color if not specified.   could be:  wait (w), flash (f), color (c), sound (s)
+  sv: Boolean,  // should vibrate? default is false.   true if vibrate during this sequence
   lt: String, // default is 't' if not specified.  length type: t (time:  play_length1 milliseconds), r (random color between pl1 and pl2 times)
   //  NOTE: if the length type is 'r' for random, then the app will wait after it stops playing the color until pl2 time
   //
   pl1: Number,  // play length 1 parameter in milliseconds
-  pl2: Number,  // play length 2 parameter (if applicable) in milliseconds
   s: String,      // name of the sound to play - for future use
-  c: String,   // color:  rgb value (255,0,0 for red)
+  bg: String,   // color:  rgb value (255,0,0 for red)
   b: Number  // brightness 1 - 10 - for future use
 });
 
