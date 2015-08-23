@@ -26,8 +26,7 @@ var CommandSchema = new Schema({
   sv: Boolean,  // should vibrate? default is false.   true if vibrate during this sequence
   lt: String, // default is 't' if not specified.  length type: t (time:  play_length1 milliseconds), r (random color between pl1 and pl2 times)
   //  NOTE: if the length type is 'r' for random, then the app will wait after it stops playing the color until pl2 time
-  //
-  pl1: Number,  // play length 1 parameter in milliseconds
+  cl: Number,  // command length in milliseconds
   s: String,      // name of the sound to play - for future use
   bg: String,   // color:  rgb value (255,0,0 for red)
   b: Number  // brightness 1 - 10 - for future use
