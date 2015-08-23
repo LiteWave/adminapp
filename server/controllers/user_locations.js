@@ -131,7 +131,7 @@ exports.destroy = function (req, res)
     if (err)
     {
       res.render('Error deleting User Location', {
-        status: 500
+        status: 404
       });
     }
     else
@@ -160,7 +160,7 @@ exports.all = function (req, res)
     if (err)
     {
       res.render('Error getting User Locations', {
-        status: 500
+        status: 404
       });
     } else
     {

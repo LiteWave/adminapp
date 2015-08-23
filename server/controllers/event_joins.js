@@ -66,7 +66,7 @@ exports.create = function (req, res)
   //EventJoin.find({_user_locationId: requestUserLocationId}, function(err, event_joins) {
   //  if (err || event_joins.count > 0) {
   //    res.render('error', {
-  //      status: 500
+  //      status: 404
   //    });
   //  }
   // });
@@ -77,7 +77,7 @@ exports.create = function (req, res)
     if (err)
     {
       res.render('No active show error', {
-        status: 500
+        status: 404
       });
     }
     else
@@ -162,7 +162,7 @@ exports.create = function (req, res)
               if (err)
               {
                 res.render('error', {
-                  status: 500
+                  status: 404
                 });
               } else
               {
@@ -202,7 +202,7 @@ exports.destroy = function (req, res)
     if (err)
     {
       res.render('error', {
-        status: 500
+        status: 404
       });
     } else
     {
@@ -232,7 +232,7 @@ exports.all = function (req, res)
     if (err)
     {
       res.render('error', {
-        status: 500
+        status: 404
       });
     } else
     {

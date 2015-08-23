@@ -59,7 +59,7 @@ exports.destroy = function(req, res) {
     liteshow.remove(function(err) {
         if (err) {
             res.render('error', {
-                status: 500
+              status: 404
             });
         } else {
             res.jsonp(liteshow);
@@ -81,7 +81,7 @@ exports.all = function(req, res) {
     LiteShow.find().exec(function(err, liteshows) {
        if (err) {
             res.render('error', {
-                status: 500
+              status: 404
             });
         } else {
             res.jsonp(liteshows);

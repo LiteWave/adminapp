@@ -74,7 +74,7 @@ exports.destroy = function (req, res)
     if (err)
     {
       res.render('Error deleting Event', {
-        status: 500
+        status: 404
       });
     } else
     {
@@ -101,7 +101,7 @@ exports.all = function (req, res)
     if (err)
     {
       res.render('Could not find events', {
-        status: 500
+        status: 404
       });
     } else
     {

@@ -99,7 +99,7 @@ exports.all = function (req, res)
     if (err)
     {
       res.render('error', {
-        status: 500
+        status: 404
       });
     } else
     {
