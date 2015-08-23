@@ -82,7 +82,8 @@ exports.create = function (req, res)
     }
     else
     {
-      //console.log('Something WAS FOUND. req.user_location._eventId is ' + req.user_location._eventId);
+        //console.log('Something WAS FOUND. req.user_location._eventId is ' + req.user_location._eventId);
+        console.log('Something WAS FOUND. show:' + show);
       if (!show)
       {
         console.log('error, event liteshow is null');
