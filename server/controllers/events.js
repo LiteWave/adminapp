@@ -74,7 +74,7 @@ exports.destroy = function (req, res)
     if (err)
     {
       res.render('Error deleting Event', {
-        status: 404
+        status: 400
       });
     } else
     {

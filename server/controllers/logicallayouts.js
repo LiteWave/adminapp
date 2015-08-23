@@ -73,7 +73,7 @@ exports.destroy = function (req, res)
     if (err)
     {
       res.render('error', {
-        status: 404
+        status: 400
       });
     } else
     {

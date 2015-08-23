@@ -59,7 +59,7 @@ exports.destroy = function(req, res) {
     liteshow.remove(function(err) {
         if (err) {
             res.render('error', {
-              status: 404
+              status: 400
             });
         } else {
             res.jsonp(liteshow);

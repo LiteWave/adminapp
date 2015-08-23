@@ -124,7 +124,7 @@ exports.create = function (req, res)
             if (err)
             {
               console.log('Err in find SC. err=' + err);
-              res.status(404);
+              res.status(400);
               res.send({ error: 'Show Command not available' });
               return;
             }
@@ -163,7 +163,7 @@ exports.create = function (req, res)
               if (err)
               {
                 res.render('error', {
-                  status: 404
+                  status: 400
                 });
               } else
               {
@@ -203,7 +203,7 @@ exports.destroy = function (req, res)
     if (err)
     {
       res.render('error', {
-        status: 404
+        status: 400
       });
     } else
     {
@@ -233,7 +233,7 @@ exports.all = function (req, res)
     if (err)
     {
       res.render('error', {
-        status: 404
+        status: 400
       });
     } else
     {
