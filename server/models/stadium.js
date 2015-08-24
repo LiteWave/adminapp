@@ -5,31 +5,9 @@ var mongoose = require('mongoose'),
     config = require('../config/config'),
     Schema = mongoose.Schema;
 
-var SeatSchema = new Schema({
-  _id: false,
-  name: { type: String, trim: true },  // e.g. 100, 200, etc. has to be unique
-  sort_index: Number  // used for the drop downs when user selects a section
-});
-
-var RowSchema = new Schema({
-  _id: false,
-  name: { type: String, trim: true },  // e.g. 100, 200, etc. has to be unique
-  sort_index: Number,  // used for the drop downs when user selects a section
-  seats: [SeatSchema]
-});
-
-var SectionSchema = new Schema({
-  _id: false,
-  name: { type: String, trim: true },  // e.g. 100, 200, etc. has to be unique
-  sort_index: Number,  // used for the drop downs when user selects a section
-  rows: [RowSchema]
-});
-
 var LevelSchema = new Schema({
-  _id: false,
-  name: { type: String, trim: true },  // e.g. 100, 200, etc. has to be unique
-  sort_index: Number,  // used for the drop downs when user selects a section
-  sections: [SectionSchema]
+  _levelId: { type: Schema.ObjectId, ref: 'Level' },  // The Level.
+  nm: { type: String, trim: true },  // e.g. 100, 200, etc. 
 });
 
 /**
@@ -40,9 +18,10 @@ var StadiumSchema = new Schema({
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    unique: true
   },
-  levels: [LevelSchema] // Every stadium needs at least one level even if it is just flat.  
+  levels: [LevelSchema] // Array of id's that point to the each Level's data.
 });
 
 

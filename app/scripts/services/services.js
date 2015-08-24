@@ -64,14 +64,28 @@ services.factory('UserLocations', ['$resource', function ($resource) {
 services.factory("Stadiums", ['$resource', function ($resource)
 {
   return $resource('/api/stadiums', {
-    clientId: '@_id'
+    clientId: '@_clientId', stadiumId: '@_id'
   }, {
     update: {
-      method: 'PUT'
+      method: 'PUT',
+      url: '/api/stadiums/:stadiumId'
     },
     get: {
       method: 'GET',
       url: '/api/stadiums/client/:clientId'
+    }
+  });
+}]);
+
+// service used for Levels REST endpoint
+services.factory("Levels", ['$resource', function ($resource)
+{
+  return $resource('/api/levels/:levelId', {
+    levelId: '@_id'
+  }, {
+    update: {
+      method: 'PUT',
+      url: '/api/levels'
     }
   });
 }]);

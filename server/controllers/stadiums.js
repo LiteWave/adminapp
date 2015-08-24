@@ -3,9 +3,9 @@
  */
 var mongoose = require('mongoose'),
     async = require('async'),
+    Level = mongoose.model('Level'),
     Stadium = mongoose.model('Stadium'),
     _ = require('underscore');
-
 
 /**
  * Find stadium by id
@@ -104,6 +104,58 @@ exports.showbyclient = function (req, res)
     } else
     {
       res.jsonp(stadiums);
+    }
+  });
+};
+
+/**
+ * Show a stadium by client id
+ */
+exports.showbylevel = function (req, res)
+{
+  var levelName = req.params.levelName;
+  //console.log('ShowByLevel:req.stadiumId=' + req.stadium._id);
+  //console.log('ShowByLevel:req.level=' + req.params.levelName);
+
+  Stadium.findOne({ _id: req.stadium._id }).exec(function (err, stadium)
+  {
+    if (err)
+    {
+      res.render('error', {
+        status: 404
+      });
+    }
+    else
+    {
+      if (stadium)
+      {
+        var count = stadium.levels.length;
+        var levelId;
+        for (var i = 0; i < count; i++)
+        {
+          if (stadium.levels[i].nm === levelName)
+          {
+            levelId = stadium.levels[i]._levelId;
+            break;
+          }  
+        }
+
+        //console.log('ShowByLevel:level.levels=' + stadium.levels);
+
+        Level.findOne({ _id: levelId }).exec(function (err, level)
+        {
+          if (err)
+          {
+            res.render('error', {
+              status: 404
+            });
+          }
+
+          console.log('ShowByLevel:level=' + level);
+
+          res.jsonp(level);
+        });
+      }
     }
   });
 };

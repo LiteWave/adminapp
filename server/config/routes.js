@@ -108,15 +108,27 @@ module.exports = function(app, passport, auth) {
     
     app.param('event_joinId', event_joins.event_join);
 
+    // Levels Routes
+    var levels = require('../controllers/levels');
+    app.get('/api/stadiums/:stadiumId/levels', levels.all);
+    app.post('/api/levels', levels.create);
+    app.get('/api/levels/:levelId', levels.show);
+    app.put('/api/levels/:levelId', levels.update);
+    app.del('/api/levels/:levelId', levels.destroy);
+
+    app.param('levelId', levels.level);
+    app.param('levelName');
+
     //Stadium Routes
     var stadiums = require('../controllers/stadiums');
     app.get('/api/stadiums', stadiums.all);
     app.post('/api/stadiums', stadiums.create);
+    app.get('/api/stadiums/:stadiumId/levels/:levelName', stadiums.showbylevel);
     app.get('/api/stadiums/:stadiumId', stadiums.show);
-    app.get('/api/stadiums/client/:clientId', stadiums.showbyclient);
     app.put('/api/stadiums/:stadiumId', stadiums.update);
-    
-    app.param('stadiumId', stadiums.stadium);    
+    app.get('/api/stadiums/client/:clientId', stadiums.showbyclient);
+      
+    app.param('stadiumId', stadiums.stadium);
   
     //Home route
     var index = require('../controllers/index');
