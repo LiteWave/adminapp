@@ -5,15 +5,6 @@ var mongoose = require('mongoose'),
     config = require('../config/config'),
     Schema = mongoose.Schema;
 
-var SettingsSchema = new Schema({
-  backgroundColor: { type: String, trim: true },
-  borderColor: { type: String, trim: true },
-  highlightColor: { type: String, trim: true },
-  textColor: { type: String, trim: true },
-  textSelectedColor: { type: String, trim: true },
-  retryCount: Number
-});
-
 /**
  * Event Schema - an event is at a specific stadium
  */
@@ -23,7 +14,14 @@ var EventSchema = new Schema({
   _stadiumId: { type: Schema.ObjectId, ref: 'Stadium' },
   date: Date,
   name: { type: String, default: '', trim: true },
-  settings: [SettingsSchema], // Array of settings for Client.
+  settings: {
+    backgroundColor: { type: String, trim: true },
+    borderColor: { type: String, trim: true },
+    highlightColor: { type: String, trim: true },
+    textColor: { type: String, trim: true },
+    textSelectedColor: { type: String, trim: true },
+    retryCount: Number
+  }, // settings for Client.
   type: Number  // (future) The type of this event: sporting event (use whole Stadium), concert (half of Stadium), etc.
 });
 
