@@ -51,12 +51,22 @@ function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalL
       columns.push({ "id": index++, "sectionList": ["122", "228", "229", "332", "333"] });
       columns.push({ "id": index++, "sectionList": ["123", "230", "334"] });
 
+      // Should read this from another location in the UI I guess.
+      var settingsArray = [];
+      settingsArray.push({ "backgroundColor": "255,255,255" });
+      settingsArray.push({ "borderColor": "0,0,0" });
+      settingsArray.push({ "highlightColor": "222,32,50" });
+      settingsArray.push({ "textColor": "0,0,0" });
+      settingsArray.push({ "textSelectedColor": "255,255,255" });
+      settingsArray.push({ "retryCount": "3" });
+
       var event = new Events({
         name: $scope.name,
         date: $scope.date,
         _clientId: $rootScope.currentClient._id,
-        _stadiumId: $rootScope.currentStadium._id
-      });
+        _stadiumId: $rootScope.currentStadium._id,
+        settings: settingsArray
+      });      
 
       console.log("event name" + event.name + ": date:" + event.date + ":clientid:" + event._clientId + ": Stadium Id:" + event._stadiumId);
 
