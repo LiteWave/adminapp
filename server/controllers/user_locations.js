@@ -28,17 +28,17 @@ exports.user_location = function (req, res, next, id)
  */
 exports.create = function (req, res)
 {
-  console.log('UL:Create:event id=' + req.params.eventId + '. user_key:' + req.body.user_key);
-  console.log('UL:Create:event req.body.user_seat.level=' + req.body.user_seat.level + '. req.body.user_seat.section:' + req.body.user_seat.section);
-  console.log('UL:Create:event req.body.user_seat.row=' + req.body.user_seat.row + '. req.body.user_seat.seat_number:' + req.body.user_seat.seat_number);
+  console.log('UL:Create:event id=' + req.params.eventId + '. userKey:' + req.body.userKey);
+  console.log('UL:Create:event req.body.userSeat.level=' + req.body.userSeat.level + '. req.body.userSeat.section:' + req.body.userSeat.section);
+  console.log('UL:Create:event req.body.userSeat.row=' + req.body.userSeat.row + '. req.body.userSeat.seatNumber:' + req.body.userSeat.seatNumber);
 
   UserLocation.findOne({
     _eventId: req.params.eventId,
-    user_seat: {
-      "level" : req.body.user_seat.level,
-      "section": req.body.user_seat.section,
-      "row": req.body.user_seat.row,
-      "seat_number": req.body.user_seat.seat_number
+    userSeat: {
+      "level": req.body.userSeat.level,
+      "section": req.body.userSeat.section,
+      "row": req.body.userSeat.row,
+      "seatNumber": req.body.userSeat.seatNumber
     }
   }).exec(function (err, user_location)
   {
@@ -52,10 +52,10 @@ exports.create = function (req, res)
     if (user_location != null)
     {
       // Check if this user is rejoining or someone is trying to take someone else's seat.
-      console.log('UL:Create:req.body.user_key: ' + req.body.user_key);
-      console.log('UL:Create:user_location.user_key: ' + user_location.user_key);
-      var regExp = new RegExp(req.body.user_key);
-      if (!regExp.test(user_location.user_key))
+      console.log('UL:Create:req.body.userKey: ' + req.body.userKey);
+      console.log('UL:Create:user_location.userKey: ' + user_location.userKey);
+      var regExp = new RegExp(req.body.userKey);
+      if (!regExp.test(user_location.userKey))
       {
         // This seat is already taken. Return 400.
         console.log('UL:Create:This seat is already taken.');
@@ -63,7 +63,7 @@ exports.create = function (req, res)
       }
 
       // Found an existing user who is rejoining. Log a message that we are reusing the UL.
-      console.log('UL:Create:Info: Reusing userLocation with user_key=' + req.body.user_key);
+      console.log('UL:Create:Info: Reusing userLocation with userKey=' + req.body.userKey);
 
       user_location.delete;
       user_location = null;
@@ -71,7 +71,7 @@ exports.create = function (req, res)
     else
     {
       // Brand new user joining.
-      console.log('UL:Create:No UL. Creating new UL with ' + req.body.user_key);
+      console.log('UL:Create:No UL. Creating new UL with ' + req.body.userKey);
     }
 
     LogicalLayout.findOne({ _eventId: req.params.eventId }).exec(function (err, layout)
@@ -88,8 +88,8 @@ exports.create = function (req, res)
       if (!user_location.updateLogicalSeat(layout))
       {
         console.log('UL:Create:Error setting logical seat. Defaulting to 1 and 1.');
-        this.logical_col = 1;
-        this.logical_row = 1;
+        this.logicalCol = 1;
+        this.logicalRow = 1;
       }
 
       user_location.save(function (err, UL)

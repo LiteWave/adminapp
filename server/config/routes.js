@@ -14,7 +14,7 @@ module.exports = function(app, passport, auth) {
     });
     app.post('/api/login', passport.authenticate('local'), function(req, res) {
       // successful login, so update last login date
-      req.user.last_login = new Date();
+      req.user.lastLogin = new Date();
       req.user.save(function(err) {
           res.send(req.user);
       });

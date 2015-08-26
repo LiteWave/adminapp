@@ -85,13 +85,13 @@ exports.all = function (req, res)
   var q = {};
 
   // if the logged in user is an agent, then only return that agency's users
-  if (req.user.user_type == 'Agent')
+  if (req.user.userType == 'Agent')
   {
     q = { _agent: req.user._agent };
   }
-  if (req.param('user_type'))
+  if (req.param('userType'))
   {
-    q = _.extend(q, { user_type: req.param('user_type') });
+    q = _.extend(q, { userType: req.param('userType') });
   }
 
   User.find(q).sort('username').exec(function (err, users)

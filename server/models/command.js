@@ -17,11 +17,11 @@ var mongoose = require('mongoose'),
  *              for all, all devices.
  */
 var CommandSchema = new Schema({
-  loc_t: String,  // location type:  col, row, seat, all, winner (specific winner's phone only) (not used by mobile app)
+  locT: String,  // location type:  col, row, seat, all, winner (specific winner's phone only) (not used by mobile app)
   lp1: Number,    // location parameter 1  (not used by mobile app)
   lp2: Number,   // only used if it's a seat and this is the column  (not used by mobile app)
   offset: Number,  // milliseconds from start of show to do this command (not returned to mobile app, only used for full command set)
-  pif: String, // play if winner ('w') or loser 'l'.  if this is set and its a contest then only play the command if you're a loser or winner
+  cif: String, // command if winner ('w') or loser 'l'.  if this is set and its a contest then only play the command if you're a loser or winner
   ct: String, // command type, default is 'c' for color if not specified.   could be:  wait (w), flash (f), color (c), sound (s), winning command (win)
   sv: Boolean,  // should vibrate? default is false.   true if vibrate during this sequence
   lt: String, // default is 't' if not specified.  length type: t (time:  play_length1 milliseconds), r (random color between pl1 and pl2 times)
@@ -47,18 +47,7 @@ CommandSchema.statics = {
 /**
  * Methods
  */
-CommandSchema.methods = {
-  /**
-   * set a logical seat
-   */
-  updateLogicalSeat: function ()
-  {
-    // this needs to map the stadium's layout to a logical row/col
-    // stadium = this.event.stadium;
-    this.logical_row = 99;
-    this.logical_col = 32;   // temporary
-    return 'ok';
-  }
-};
+CommandSchema.methods = {};
+
 mongoose.model('Command', CommandSchema);
 

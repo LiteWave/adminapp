@@ -28,8 +28,8 @@ var app = angular.module('liteWaveApp', [
         // Authenticated
         if (user !== '0') {
           $rootScope.loggedInUser = user;
-          $rootScope.isTeamUser = (user.user_type == 'Team');
-          $rootScope.isAdminUser = (user.user_type == 'Admin');
+          $rootScope.isTeamUser = (user.userType == 'Team');
+          $rootScope.isAdminUser = (user.userType == 'Admin');
 
           $timeout(deferred.resolve, 0);
         }

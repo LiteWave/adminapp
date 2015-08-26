@@ -10,15 +10,15 @@ var mongoose = require('mongoose'),
  */
 var UserLocationSchema = new Schema({
   _eventId: { type: Schema.ObjectId, ref: 'Event' },
-  user_key: String,
-  user_seat: {
+  userKey: String,
+  userSeat: {
     level: String,
     section: String,
     row: String,
-    seat_number: String
+    seatNumber: String
   },
-  logical_row: Number,
-  logical_col: Number
+  logicalRow: Number,
+  logicalCol: Number
 });
 
 /**
@@ -60,21 +60,21 @@ UserLocationSchema.methods = {
       for (section = 0; section < sectionLength; section++)
       {
         // console.log('layout.columns[col].sectionList[sectionLength]: ' + layout.columns[col].sectionList[section]);
-        if (layout.columns[col].sectionList[section] === this.user_seat.section)
+        if (layout.columns[col].sectionList[section] === this.userSeat.section)
         {
           console.log('FOUND. Logical column will be: ' + col);
-          this.logical_col = col;
-          this.logical_row = 1;
+          this.logicalCol = col;
+          this.logicalRow = 1;
           col = colLength + 1;
           break;
         }
       }
     }
 
-    // first loop through sections from stadium.sections[i].name == this.user_seat.section
-    //  then loop through rows, find row:  sections.rows[x].name == this.user_seat.row
-    //   then find seat:  row.seats[i].name == this.seat.seat_number
-    //  now this.logical_col = seat.virtual_col
+    // first loop through sections from stadium.sections[i].name == this.userSeat.section
+    //  then loop through rows, find row:  sections.rows[x].name == this.userSeat.row
+    //   then find seat:  row.seats[i].name == this.seat.seatNumber
+    //  now this.logicalCol = seat.virtual_col
     return 'ok';
   }
 };

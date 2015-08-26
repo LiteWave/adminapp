@@ -43,9 +43,9 @@ exports.create = function (req, res)
   //    second, we set the offset to 0.  If some day we have a better way to deal with these offsets, then we can do it here.
   //
   //    $$$ test this
-  if (req.body.mobile_time)
+  if (req.body.mobileTime)
   {
-    mobile_date = new Date(req.body.mobile_time);
+    mobile_date = new Date(req.body.mobileTime);
     mobile_timezone_offset = mobile_date.getTimezoneOffset() * 60000;
     mobile_time_offset = (mobile_date.getTime() - mobile_timezone_offset) - curTime;
     if (mobile_time_offset < 1000)
@@ -99,7 +99,7 @@ exports.create = function (req, res)
         UserLocation.findOne({ _eventId: req.user_location._eventId, _id: requestUserLocationId }, function (err, UL)
         {
           var event_join = new EventJoin(req.body);
-          event_join.mobile_time_offset_ms = mobile_time_offset;
+          event_join.mobileTimeOffset = mobile_time_offset;
           event_join._user_locationId = req.user_location._id;
           event_join._showId = show._id;
 
@@ -137,7 +137,7 @@ exports.create = function (req, res)
               return;
             }
 
-            var logicalCmd = showCommand.commands[UL.logical_col];
+            var logicalCmd = showCommand.commands[UL.logicalCol];
             if (!logicalCmd || !logicalCmd.commandList)
             {
               console.log('Commands for this logical column are not available.');
@@ -156,7 +156,7 @@ exports.create = function (req, res)
             console.log('EJ:Create::event_join._winner_user_locationId=' + event_join._winner_user_locationId);
 
             // use the offset to set the time for this phone to start
-            event_join.mobile_start_at = new Date(show.start_at.getTime() - event_join.mobile_time_offset_ms);
+            event_join.mobileStartAt = new Date(show.startAt.getTime() - event_join.mobileTimeOffset);
 
             event_join.save(function (err)
             {
@@ -226,7 +226,7 @@ exports.show = function (req, res)
 exports.all = function (req, res)
 {
   EventJoin.find({ _eventId: req.params.eventId })
-  .sort('logical_col')
+  .sort('logicalCol')
   .populate('_user_locationId')
   .exec(function (err, event_joins)
   {

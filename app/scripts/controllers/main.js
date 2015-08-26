@@ -105,7 +105,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       $scope.winner = $scope.userLocations[0];
     }
 
-    $scope.winnerSection.push($scope.winner.user_seat.section);
+    $scope.winnerSection.push($scope.winner.userSeat.section);
 
     var first_length = 500;  // 500 ms
     var second_length = 250;  // 250 ms
@@ -222,10 +222,10 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       _eventId: $scope.currentEvent._id,
       _winnerId: $scope.winner._id,
       type: $scope.currentShowType,      
-      start_at : null,
+      startAt: null,
       winnerSections: $scope.winnerSection,
       winnerImageUrl: !!($scope.contestimageurl.trim()) ? $scope.contestimageurl : null,
-      winner_url: !!($scope.contesturl.trim()) ? $scope.contesturl : null
+      winnerUrl: !!($scope.contesturl.trim()) ? $scope.contesturl : null
     });
 
     $scope.currentShow = show;
@@ -364,7 +364,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     var stopTime = startTime + (1000 * $scope.showLength);
 
     // Set showStartTime for UI. Different format than just getting Date.now()
-    $scope.currentShow.start_at = $scope.showStartTime = new Date(startTime).toISOString();
+    $scope.currentShow.startAt = $scope.showStartTime = new Date(startTime).toISOString();
     $scope.stopTime = new Date(stopTime).toISOString();
 
     // Set the start time. Already have a winner.
@@ -398,7 +398,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     // TODO figure out what to add by deviding length of show by 100?
     $scope.percentTimeToStart += 6.66;
 
-    console.log('UpdateShowCLock: current time = ' + $scope.current_time.toString() + ' . start_at time = ' + $scope.stopTime.toString());
+    console.log('UpdateShowCLock: current time = ' + $scope.current_time.toString() + ' . startAt time = ' + $scope.stopTime.toString());
 
     if ($scope.current_time < $scope.stopTime)
     {
@@ -412,7 +412,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.formatWinnerString = function ()
   {
     // stupid. Need to add string.format
-    return "Section " + $scope.winner.user_seat.section + ", Row " + $scope.winner.user_seat.row + ", Seat " + $scope.winner.user_seat.seat_number;
+    return "Section " + $scope.winner.userSeat.section + ", Row " + $scope.winner.userSeat.row + ", Seat " + $scope.winner.userSeat.seatNumber;
   }
 
   $scope.showIsOver = function ()

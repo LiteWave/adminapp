@@ -23,9 +23,9 @@ var UserSchema = new Schema({
   twitter: {},
   github: {},
   google: {},
-  user_type: String,  // Agent, Admin, Underwriter, 
+  userType: String,  // Agent, Admin, Underwriter, 
   _agent: { type: Schema.ObjectId, ref: 'Company' },
-  last_login: Date
+  lastLogin: Date
 });
 
 /**

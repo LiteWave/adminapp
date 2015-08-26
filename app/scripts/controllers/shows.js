@@ -64,9 +64,9 @@ angular.module('liteWaveApp').controller('ShowsController',
         showId: $routeParams.showId
       }, function (show)
       {
-        if (!show.start_at)
+        if (!show.startAt)
         {
-          show.start_at = new Date(Date.now()); //.format('yyyy-MM-dd HH:mm:ss Z');
+          show.startAt = new Date(Date.now()); //.format('yyyy-MM-dd HH:mm:ss Z');
         }
         $scope.show = show;
         Events.get({
@@ -109,7 +109,7 @@ angular.module('liteWaveApp').controller('ShowsController',
 
     $scope.setStartTime = function ()
     {
-      $scope.show.start_at = new Date((Math.ceil(Date.now() / 1000) * 1000) + ($scope.offset_seconds * 1000));
+      $scope.show.startAt = new Date((Math.ceil(Date.now() / 1000) * 1000) + ($scope.offset_seconds * 1000));
     };
 
     $scope.$on('$locationChangeStart', function ()

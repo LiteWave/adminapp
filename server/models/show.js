@@ -13,11 +13,11 @@ var ShowSchema = new Schema({
   _eventId: { type: Schema.ObjectId, ref: 'Event' },
   _showCommandId: { type: Schema.ObjectId, ref: 'ShowCommand' },  // The id of the list of Show Commands
   _winnerId: { type: Schema.ObjectId, ref: 'User_Location' },  // set if this show is a contest.
-  start_at: Date,  // exact time to start show - normally set dynamically during the event since the start time might not be known ahead of time
+  startAt: Date,  // exact time to start show - normally set dynamically during the event since the start time might not be known ahead of time
   type: Number,   // type of show: liteshow, liteshow + contest, contest	
   winnerSections: [{ type: String, trim: true }], // list of winning sections. Could be a single section.
   winnerImageUrl: String,  // URL of image to display to winner.
-  winner_url: String  // URL to go to if they are the winner.
+  winnerUrl: String  // URL to go to if they are the winner.
 });
 
 /**
@@ -31,14 +31,14 @@ ShowSchema.statics = {
     }).exec(cb);
     //}).populate('_eventId').populate('_showCommandId').exec(cb);
   },
-  // looks for an eventLiteShow that has a start_at that is after now
+  // looks for an eventLiteShow that has a startAt that is after now
   find_active: function (event_id, cb)
   {
     var utc = new Date().toISOString();
 
     this
     .findOne({ _eventId: event_id })
-    .where('start_at').gt(utc)
+    .where('startAt').gt(utc)
     .exec(cb);
   }
 };

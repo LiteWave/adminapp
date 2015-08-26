@@ -15,9 +15,9 @@ var EventJoinSchema = new Schema({
   _winner_user_locationId: { type: Schema.ObjectId, ref: 'User_Location' },  // set to id of the winner. if null, then the receiver is not the winner
   //  the actual winner will also be stored in the event_liteshow object
   commands: [mongoose.CommandSchema],  // list of commands for this user.
-  mobile_time: Date,   // passed in during creation to use as an offset from the actual Show's time  
-  mobile_time_offset_ms: Number,  // the difference in ms between the passed in mobile time and the server time (used for info only)
-  mobile_start_at: Date // time that the mobile app should start the show - might be slightly different than the event_lite show's start time  
+  mobileTime: Date,   // passed in during creation to use as an offset from the actual Show's time  
+  mobileTimeOffset: Number,  // the difference in ms between the passed in mobile time and the server time (used for info only)
+  mobileStartAt: Date // time that the mobile app should start the show - might be slightly different than the event_lite show's start time  
 });
 
 /**

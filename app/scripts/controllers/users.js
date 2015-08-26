@@ -14,7 +14,7 @@ app.controller('UserListCtrl', ['$rootScope', '$scope', '$location', '$routePara
       { field: 'edit', displayName: '', width: 25, cellTemplate: editUserTemplate },
       { field: 'name', displayName: 'Name' },
       { field: 'username', displayName: 'Email/Username' },
-      { field: 'user_type', displayName: 'Type' }
+      { field: 'userType', displayName: 'Type' }
       ]
     };
   }]);
@@ -23,7 +23,7 @@ app.controller('UserEditCtrl', ['$scope', '$location', 'user',
   function ($scope, $location, user)
   {
     $scope.user = user;
-    $scope.user_types = get_user_types();
+    $scope.userTypes = getUserTypes();
 
 
     $scope.save = function ()
@@ -47,7 +47,7 @@ app.controller('UserNewCtrl', ['$scope', '$location', 'Users',
   function ($scope, $location, Users)
   {
     $scope.user = new Users();
-    $scope.user_types = get_user_types();
+    $scope.userTypes = getUserTypes();
 
     $scope.save = function ()
     {
@@ -61,7 +61,7 @@ app.controller('UserNewCtrl', ['$scope', '$location', 'Users',
 
   }]);
 
-function get_user_types()
+function getUserTypes()
 {
   return ['Admin', 'Regular'];
 };

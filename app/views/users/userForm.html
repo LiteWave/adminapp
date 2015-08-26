@@ -31,14 +31,14 @@
     
     
     <div class="form-group">
-      <label class="col-md-2 control-label" for="user_type">Type</label>
+      <label class="col-md-2 control-label" for="userType">Type</label>
       <div class="col-md-3">    
-        <select class="form-control" ng-model="user.user_type" ng-options="user_type for user_type in user_types"></select>
+        <select class="form-control" ng-model="user.userType" ng-options="userType for userType in userTypes"></select>
       </div>
   
     </div> 
     
-    <div ng-hide="user.user_type != 'Agent'" class="form-group">
+    <div ng-hide="user.userType != 'Agent'" class="form-group">
       <label class="col-md-2 control-label" for="agent">Agent</label>
       <div class="col-md-3">    
         <div class='container-fluid'>
