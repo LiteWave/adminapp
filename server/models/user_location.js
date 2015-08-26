@@ -15,7 +15,7 @@ var UserLocationSchema = new Schema({
     level: String,
     section: String,
     row: String,
-    seatNumber: String
+    seat: String
   },
   logicalRow: Number,
   logicalCol: Number

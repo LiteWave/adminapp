@@ -30,7 +30,7 @@ exports.create = function (req, res)
 {
   console.log('UL:Create:event id=' + req.params.eventId + '. userKey:' + req.body.userKey);
   console.log('UL:Create:event req.body.userSeat.level=' + req.body.userSeat.level + '. req.body.userSeat.section:' + req.body.userSeat.section);
-  console.log('UL:Create:event req.body.userSeat.row=' + req.body.userSeat.row + '. req.body.userSeat.seatNumber:' + req.body.userSeat.seatNumber);
+  console.log('UL:Create:event req.body.userSeat.row=' + req.body.userSeat.row + '. req.body.userSeat.seat:' + req.body.userSeat.seat);
 
   UserLocation.findOne({
     _eventId: req.params.eventId,
@@ -38,7 +38,7 @@ exports.create = function (req, res)
       "level": req.body.userSeat.level,
       "section": req.body.userSeat.section,
       "row": req.body.userSeat.row,
-      "seatNumber": req.body.userSeat.seatNumber
+      "seat": req.body.userSeat.seat
     }
   }).exec(function (err, user_location)
   {

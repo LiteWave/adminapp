@@ -412,7 +412,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.formatWinnerString = function ()
   {
     // stupid. Need to add string.format
-    return "Section " + $scope.winner.userSeat.section + ", Row " + $scope.winner.userSeat.row + ", Seat " + $scope.winner.userSeat.seatNumber;
+    return "Section " + $scope.winner.userSeat.section + ", Row " + $scope.winner.userSeat.row + ", Seat " + $scope.winner.userSeat.seat;
   }
 
   $scope.showIsOver = function ()
