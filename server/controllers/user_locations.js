@@ -29,7 +29,8 @@ exports.user_location = function (req, res, next, id)
 exports.create = function (req, res)
 {
   console.log('UL:Create:event id=' + req.params.eventId + '. user_key:' + req.body.user_key);
-  //console.log('UL:Create:event req.body.user_seat.level=' + req.body.user_seat.level + '. req.body.user_seat.section:' + req.body.user_seat.section);
+  console.log('UL:Create:event req.body.user_seat.level=' + req.body.user_seat.level + '. req.body.user_seat.section:' + req.body.user_seat.section);
+  console.log('UL:Create:event req.body.user_seat.row=' + req.body.user_seat.row + '. req.body.user_seat.seat_number:' + req.body.user_seat.seat_number);
 
   UserLocation.findOne({
     _eventId: req.params.eventId,
@@ -48,16 +49,19 @@ exports.create = function (req, res)
       return res.status(400).jsonp(err);
     }
 
-    // Check if this user is rejoining or someone is trying to take someone else's seat.
-    var regExp = new RegExp(req.body.user_key);    
-    if (user_location != null && !regExp.test(user_location.user_key))
+    if (user_location != null)
     {
-      // This seat is already taken. Return 400.
-      console.log('UL:Create:This seat is already taken.');
-      return res.status(400).jsonp(err);      
-    }
-    else if (user_location != null && regExp.test(user_location.user_key))
-    {
+      // Check if this user is rejoining or someone is trying to take someone else's seat.
+      console.log('UL:Create:req.body.user_key: ' + req.body.user_key);
+      console.log('UL:Create:user_location.user_key: ' + user_location.user_key);
+      var regExp = new RegExp(req.body.user_key);
+      if (!regExp.test(user_location.user_key))
+      {
+        // This seat is already taken. Return 400.
+        console.log('UL:Create:This seat is already taken.');
+        return res.status(400).jsonp(err);
+      }
+
       // Found an existing user who is rejoining. Log a message that we are reusing the UL.
       console.log('UL:Create:Info: Reusing userLocation with user_key=' + req.body.user_key);
 
