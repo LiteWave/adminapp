@@ -113,7 +113,8 @@ exports.showbyclient = function (req, res)
  */
 exports.showbylevel = function (req, res)
 {
-  var levelName = req.params.levelName;
+  // decode name of level
+  var levelName = decodeURIComponent(req.params.levelName);
   //console.log('ShowByLevel:req.stadiumId=' + req.stadium._id);
   //console.log('ShowByLevel:req.level=' + req.params.levelName);
 
@@ -133,7 +134,7 @@ exports.showbylevel = function (req, res)
         var levelId;
         for (var i = 0; i < count; i++)
         {
-          if (stadium.levels[i].nm === levelName)
+          if (stadium.levels[i].name === levelName)
           {
             levelId = stadium.levels[i]._levelId;
             break;
@@ -151,7 +152,7 @@ exports.showbylevel = function (req, res)
             });
           }
 
-          console.log('ShowByLevel:level=' + level);
+          //console.log('ShowByLevel:level=' + level);
 
           res.jsonp(level);
         });

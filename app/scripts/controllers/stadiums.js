@@ -5,6 +5,11 @@ angular.module('liteWaveApp')
   function ($rootScope, $scope, $routeParams, $location, Clients, Stadiums, Levels)
   {
     $rootScope.currentArea = "stadiums";
+    $scope.stadiumInfo;
+    $scope.sectionFloor = [];
+    $scope.sectionOne = [];
+    $scope.sectionTwo = [];
+    $scope.sectionThree = [];
 
     Clients.query({}, function (clients)
     {
@@ -13,7 +18,54 @@ angular.module('liteWaveApp')
       $rootScope.setClient($rootScope.currentClient);
     });
 
-    $scope.getSeats = function ()
+    $scope.processStadiumContents = function (contents)
+    {
+      if (contents)
+      {
+        $scope.stadiumInfo = JSON.parse(contents);
+        $scope.buildSections();
+      }
+    }
+
+    $scope.readStadiumInfo = function (filePath)
+    {
+      if (window.File && window.FileReader && window.FileList && window.Blob)
+      {
+        var reader = new window.FileReader();
+
+        $scope.fileInput = ""; //placeholder for text output
+        if (filePath.files && filePath.files[0])
+        {
+          reader.onload = function (e)
+          {
+            $scope.processStadiumContents(e.target.result);
+          };
+          reader.readAsText(filePath.files[0]);
+        }
+      }
+    }
+
+    $scope.getSeats = function (section)
+    {
+      var startLength = section.START;
+      var endLength = section.END;
+      var seatArray = [];
+      for (var index = startLength; index <= endLength; index++)
+      {
+        seatArray.push(index.toString());
+      }
+      
+      return seatArray;
+    }
+
+    $scope.getRows = function (section)
+    {
+      var rowArray = [];
+      rowArray.push({ "name": section.ROW, "seats": $scope.getSeats(section) });
+      return rowArray;
+    }
+
+    $scope.getDummySeats = function ()
     {
       var seatArray = [];
       seatArray.push("A");
@@ -21,146 +73,89 @@ angular.module('liteWaveApp')
       seatArray.push("C");
       seatArray.push("D");
       seatArray.push("E");
-      seatArray.push("F");
-      seatArray.push("G");
-      seatArray.push("H");
-      seatArray.push("I");
-      seatArray.push("J");
 
       return seatArray;
     }
 
-    $scope.getRows = function ()
+    $scope.getDummyRows = function ()
     {
       var rowArray = [];
-      rowArray.push({ "nm": "1", "sts": $scope.getSeats() });
-      rowArray.push({ "nm": "2", "sts": $scope.getSeats() });
-      rowArray.push({ "nm": "3", "sts": $scope.getSeats() });
-      rowArray.push({ "nm": "4", "sts": $scope.getSeats() });
-      rowArray.push({ "nm": "5", "sts": $scope.getSeats() });
-      rowArray.push({ "nm": "6", "sts": $scope.getSeats() });
-      rowArray.push({ "nm": "7", "sts": $scope.getSeats() });
-      rowArray.push({ "nm": "8", "sts": $scope.getSeats() });
-      rowArray.push({ "nm": "9", "sts": $scope.getSeats() });
+
+      for (var index = 1; index < 9; index++)
+      {
+        rowArray.push({ "name": index.toString(), "seats": $scope.getDummySeats() });
+      }
 
       return rowArray;
     }
 
-    $scope.getSections = function (level)
+    $scope.buildSections = function ()
     {
-      var sectionArray = [];
+      $scope.sectionFloor = [];
+      $scope.sectionOne = [];
+      $scope.sectionTwo = [];
+      $scope.sectionThree = [];
 
-      if (level === "floor")
+      var objectLength = $scope.stadiumInfo.length;
+      var currentSection;
+      var previousSectionName;
+      var currentSectionName;
+      var level;
+      var rowArray = [];
+      for (var index = 0; index < objectLength; index++)
       {
-        sectionArray.push({ "nm": "1", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "2", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "3", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "4", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "5", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "6", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "7", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "8", "rws": $scope.getRows() });
-      }
-      else if (level === "one")
-      {
-        sectionArray.push({ "nm": "101", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "102", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "103", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "104", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "105", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "106", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "107", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "108", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "109", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "111", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "112", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "113", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "114", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "116", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "117", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "118", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "119", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "120", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "122", "rws": $scope.getRows() });
-        sectionArray.push({ "nm": "123", "rws": $scope.getRows() });
-      }
-      else if (level === "two")
-      {
-        sectionArray.push({ "nm": "201" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "202" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "203" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "204" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "205" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "206" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "207" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "208" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "209" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "211" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "212" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "213" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "214" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "216" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "217" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "218" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "219" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "220" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "221" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "222" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "223" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "224" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "225" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "226" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "227" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "228" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "229" , "rws": $scope.getRows()});
-        sectionArray.push({ "nm": "230" , "rws": $scope.getRows()});
+        currentSection = $scope.stadiumInfo[index];
+        currentSectionName = currentSection.SECTION;
+
+        if (index === 0)
+        {
+          previousSectionName = currentSectionName;
+        }
+
+        if (currentSectionName !== previousSectionName)
+        {
+          // find out what section array we need to work with.
+          level = previousSectionName.charAt(0);
+
+          // We have a new section name, that means we need to save the current rows their correct section array.
+          switch (level)
+          {
+            case "1":
+              $scope.sectionOne.push({ "name": previousSectionName, "rows": rowArray });
+              break;
+            case "2":
+              $scope.sectionTwo.push({ "name": previousSectionName, "rows": rowArray });
+              break;
+            case "3":
+              $scope.sectionThree.push({ "name": previousSectionName, "rows": rowArray });
+              break;
+          }
+
+          // clear out current rows as we just added them to the correct section array.
+          rowArray = [];
+
+          // Add this new row to the new array
+          rowArray.push({ "name": currentSection.ROW, "seats": $scope.getSeats(currentSection) });
+
+          // Set the previous section name as the new section name.
+          previousSectionName = currentSectionName;
+        }
+        else
+        {
+          rowArray.push({ "name": currentSection.ROW, "seats": $scope.getSeats(currentSection) });
+        }
+
       }
 
-      sectionArray.push({ "nm": "301" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "302" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "303" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "304" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "305" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "306" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "307" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "308" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "309" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "311" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "312" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "313" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "314" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "316" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "317" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "318" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "319" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "320" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "321" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "322" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "323" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "324" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "325" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "326" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "327" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "328" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "329" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "330" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "331" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "332" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "333" , "rws": $scope.getRows()});
-      sectionArray.push({ "nm": "334" , "rws": $scope.getRows()});
-
-      return sectionArray;
+      for (var index = 0; index < 8; index++)
+      {
+        $scope.sectionFloor.push({ "name": index.toString(), "rows": $scope.getDummyRows() });
+      }
     }
 
     $scope.saveStadium = function ()
     {
       // Create Section for each floor, save them, get id, then save 
-
-      /* var LevelSchema = new Schema({
-        _stadiumId: { type: Schema.ObjectId, ref: 'Stadium' },  // The Stadium associated with this Section.
-        nm: { type: String, trim: true },  // e.g. 100, 200, etc. 
-        sections: [SectionSchema]
-      });*/
       var levelInfo = [];
 
       var stadium = new Stadiums({
@@ -176,8 +171,8 @@ angular.module('liteWaveApp')
         {
           var level1 = new Levels({
             _stadiumId: response0._id,
-            nm: "floor",
-            sctns: $scope.getSections("floor")
+            name: "floor",
+            sections: $scope.sectionFloor
           });
 
           level1.$save(function (response1)
@@ -186,12 +181,12 @@ angular.module('liteWaveApp')
 
             if (response1._id)
             {
-              levelInfo.push({ "nm": "floor", "_levelId": response1._id });
+              levelInfo.push({ "name": "floor", "_levelId": response1._id });
 
               var level2 = new Levels({
                 _stadiumId: response0._id,
-                nm: "one",
-                sctns: $scope.getSections("one")
+                name: "one",
+                sections: $scope.sectionOne
               });
 
               level2.$save(function (response2)
@@ -200,12 +195,12 @@ angular.module('liteWaveApp')
 
                 if (response2._id)
                 {
-                  levelInfo.push({ "nm": "one", "_levelId": response2._id });
+                  levelInfo.push({ "name": "one", "_levelId": response2._id });
 
                   var level3 = new Levels({
                     _stadiumId: response0._id,
-                    nm: "two",
-                    sctns: $scope.getSections("two")
+                    name: "two",
+                    sections: $scope.sectionTwo
                   });
 
                   level3.$save(function (response3)
@@ -214,12 +209,12 @@ angular.module('liteWaveApp')
 
                     if (response3._id)
                     {
-                      levelInfo.push({ "nm": "two", "_levelId": response3._id });
+                      levelInfo.push({ "name": "two", "_levelId": response3._id });
 
                       var level4 = new Levels({
                         _stadiumId: response0._id,
-                        nm: "three",
-                        sctns: $scope.getSections("three")
+                        name: "three",
+                        sections: $scope.sectionThree
                       });
 
                       level4.$save(function (response4)
@@ -228,7 +223,7 @@ angular.module('liteWaveApp')
 
                         if (response4._id)
                         {
-                          levelInfo.push({ "nm": "three", "_levelId": response4._id });
+                          levelInfo.push({ "name": "three", "_levelId": response4._id });
 
                           stadium.levels = levelInfo;
                           stadium.$update();

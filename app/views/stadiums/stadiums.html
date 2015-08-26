@@ -14,7 +14,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="levels">Levels, Sections, Rows, Seat</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" ng-model="levels" id="levels" ng-minlength="3" required>
+                                <input type="file" class="form-control" ng-model="filelevels" id="levels" onchange="angular.element(this).scope().readStadiumInfo(this)">
                             </div>
                         </div>
                         <div class="form-group">

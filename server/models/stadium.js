@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
 
 var LevelSchema = new Schema({
   _levelId: { type: Schema.ObjectId, ref: 'Level' },  // The Level.
-  nm: { type: String, trim: true },  // e.g. 100, 200, etc. 
+  name: { type: String, trim: true },  // e.g. 100, 200, etc. 
 });
 
 /**

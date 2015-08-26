@@ -7,14 +7,14 @@ var mongoose = require('mongoose'),
 
 var RowSchema = new Schema({
   _id: false,
-  nm: { type: String, trim: true },  // e.g. 100, 200, etc. 
-  sts: [String]
+  name: { type: String, trim: true },  // e.g. 100, 200, etc. 
+  seats: [String]
 });
 
 var SectionSchema = new Schema({
   _id: false,
-  nm: { type: String, trim: true },  // e.g. 100, 200, etc. 
-  rws: [RowSchema]
+  name: { type: String, trim: true },  // e.g. 100, 200, etc. 
+  rows: [RowSchema]
 });
 
 /**
@@ -22,8 +22,8 @@ var SectionSchema = new Schema({
  */
 var LevelSchema = new Schema({
   _stadiumId: { type: Schema.ObjectId, ref: 'Stadium' },  // The Stadium associated with this Section.
-  nm: { type: String, trim: true },  // e.g. 100, 200, etc. 
-  sctns: [SectionSchema]
+  name: { type: String, trim: true },  // e.g. 100, 200, etc. 
+  sections: [SectionSchema]
 });
 
 /**
@@ -40,7 +40,7 @@ LevelSchema.statics = {
   {
     console.log('Level:name=' + name);
     this.findOne({
-      nm: name
+      name: name
     }).exec(cb);
   }
 };
