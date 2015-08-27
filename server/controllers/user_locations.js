@@ -54,8 +54,7 @@ exports.create = function (req, res)
       // Check if this user is rejoining or someone is trying to take someone else's seat.
       console.log('UL:Create:req.body.userKey: ' + req.body.userKey);
       console.log('UL:Create:user_location.userKey: ' + user_location.userKey);
-      var regExp = new RegExp(req.body.userKey);
-      if (!regExp.test(user_location.userKey))
+      if (req.body.userKey.localeCompare(user_location.userKey) != 0)
       {
         // This seat is already taken. Return 400.
         console.log('UL:Create:This seat is already taken.');

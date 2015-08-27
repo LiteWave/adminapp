@@ -204,7 +204,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         cmdList.push({ "pif": "w", "bg": red, "cl": fourth_length, "sv": true });
 
         // push winning command to winner inside of winning section.
-        cmdList.push({ "pif": "w", "ct": "win", "bg": "216,19,37", "cl": 10000 });
+        cmdList.push({ "pif": "w", "ct": "win", "bg": "216,19,37", "cl": 5000 });
       }
 
       // Add this set of commands to the overall list
