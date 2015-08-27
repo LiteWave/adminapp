@@ -18,7 +18,7 @@ exports.event_join = function (req, res, next, id)
   {
     console.log('in event_join constr');
     // don't know this was doing.
-    //EventJoin.findOne({ _id: req.params.event_joinId }).populate('_user_locationId').exec(function (err, event_joint) {
+    //EventJoin.findOne({ _id: req.params.event_joinId }).populate('_user_location_Id').exec(function (err, event_joint) {
     //console.log(err);
     if (err) return next(err);
     if (!event_join) return next(new Error('Failed to load event_join ' + id));
@@ -63,7 +63,7 @@ exports.create = function (req, res)
 
   // ???? need to check to see if the user already joined this event and if they did, then return an error.
   // $$$ instead of an error just return the EJ for this user?
-  //EventJoin.find({_user_locationId: requestUserLocationId}, function(err, event_joins) {
+  //EventJoin.find({_user_location_Id: requestUserLocationId}, function(err, event_joins) {
   //  if (err || event_joins.count > 0) {
   //    res.render('error', {
   //      status: 404
@@ -100,7 +100,7 @@ exports.create = function (req, res)
         {
           var event_join = new EventJoin(req.body);
           event_join.mobileTimeOffset = mobile_time_offset;
-          event_join._user_locationId = req.user_location._id;
+          event_join._user_location_Id = req.user_location._id;
           event_join._showId = show._id;
 
           if (err)
@@ -151,9 +151,9 @@ exports.create = function (req, res)
 
             // retrieve the commands for this user based on their logical row or col. Only col for now.
             event_join.commands = logicalCmd.commandList;
-            event_join._winner_user_locationId = show._winnerId;
+            event_join._winnerId = show._winnerId;
 
-            console.log('EJ:Create::event_join._winner_user_locationId=' + event_join._winner_user_locationId);
+            console.log('EJ:Create::event_join._winnerId=' + event_join._winnerId);
 
             // use the offset to set the time for this phone to start
             event_join.mobileStartAt = new Date(show.startAt.getTime() - event_join.mobileTimeOffset);
@@ -227,7 +227,7 @@ exports.all = function (req, res)
 {
   EventJoin.find({ _eventId: req.params.eventId })
   .sort('logicalCol')
-  .populate('_user_locationId')
+  .populate('_user_location_Id')
   .exec(function (err, event_joins)
   {
     if (err)

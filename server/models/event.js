@@ -17,10 +17,11 @@ var EventSchema = new Schema({
   settings: {
     backgroundColor: { type: String, trim: true },
     borderColor: { type: String, trim: true },
+    clientLogoUrl: String,
     highlightColor: { type: String, trim: true },
+    retryCount: Number,
     textColor: { type: String, trim: true },
-    textSelectedColor: { type: String, trim: true },
-    retryCount: Number
+    textSelectedColor: { type: String, trim: true }
   }, // settings for Client.
   type: Number  // (future) The type of this event: sporting event (use whole Stadium), concert (half of Stadium), etc.
 });

@@ -12,7 +12,16 @@ var ClientSchema = new Schema({
   name: {
     type: String,
     trim: true
-  }
+  },
+  settings: {
+    backgroundColor: { type: String, trim: true },
+    borderColor: { type: String, trim: true },
+    clientLogoUrl: String,
+    highlightColor: { type: String, trim: true },
+    retryCount: Number,
+    textColor: { type: String, trim: true },
+    textSelectedColor: { type: String, trim: true }
+  }, // settings for Client.
 });
 
 
