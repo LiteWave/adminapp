@@ -147,10 +147,10 @@ angular.module('liteWaveApp')
 
       }
 
-      for (var index = 0; index < 8; index++)
+      /*for (var index = 0; index < 8; index++)
       {
         $scope.sectionFloor.push({ "name": index.toString(), "rows": $scope.getDummyRows() });
-      }
+      }*/
     }
 
     $scope.saveStadium = function ()
@@ -169,19 +169,19 @@ angular.module('liteWaveApp')
 
         if (response0._id)
         {
-          var level1 = new Levels({
+          /*var level1 = new Levels({
             _stadiumId: response0._id,
             name: "floor",
             sections: $scope.sectionFloor
-          });
+          });*/
 
-          level1.$save(function (response1)
+          /*level1.$save(function (response1)
           {
             console.log(response1);
 
             if (response1._id)
             {
-              levelInfo.push({ "name": "floor", "_levelId": response1._id });
+              levelInfo.push({ "name": "floor", "_levelId": response1._id });*/
 
               var level2 = new Levels({
                 _stadiumId: response0._id,
@@ -236,8 +236,8 @@ angular.module('liteWaveApp')
             }
           });
         }
-      });
-    };
+      //});
+    //};
 
     /*$scope.remove = function (event) {
       event.$remove();
