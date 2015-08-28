@@ -34,7 +34,9 @@ exports.create = function (req, res)
 {
   var requestUserLocationId = req.user_location._id;
   curTime = new Date().getTime();
+  console.log('EJ:Create. Server curTime initial:' + curTime);
   curTime = curTime - (new Date().getTimezoneOffset() * 60000);  // convert to GMT time offset
+  console.log('EJ:Create. Server curTime: GMT? ' + curTime);
 
   //  we are seeing if the time that the mobile app has is different than the server.  The problem is that the time to post
   //   to the server is different depending on the phone, so the time offset is actually varied enough due to this posting that
@@ -48,6 +50,11 @@ exports.create = function (req, res)
     mobile_date = new Date(req.body.mobileTime);
     mobile_timezone_offset = mobile_date.getTimezoneOffset() * 60000;
     mobile_time_offset = (mobile_date.getTime() - mobile_timezone_offset) - curTime;
+
+    console.log('EJ:Create. Mobile Time:' + mobile_date.toString());
+    console.log('EJ:Create. mobile_timezone_offset:' + mobile_timezone_offset);
+    console.log('EJ:Create. mobile_time_offset:' + mobile_timezone_offset);
+
     if (mobile_time_offset < 1000)
     {
       mobile_time_offset = 0;
