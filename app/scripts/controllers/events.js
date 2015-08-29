@@ -52,7 +52,7 @@ function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalL
       columns.push({ "id": index++, "sectionList": ["123", "230", "334"] });
 
       // Should read this from another location in the UI I guess.
-      var settings = { "backgroundColor": "255,255,255", "borderColor": "0,0,0", "highlightColor": "222,32,50", "textColor": "0,0,0", "textSelectedColor": "255,255,255", "retryCount": "3", logoUrl:"https://s-media-cache-ak0.pinimg.com/originals/a7/e0/5d/a7e05d588e5bdf5f4f7a4d3ea03486a2.gif" };
+      var settings = { "backgroundColor": "255,255,255", "borderColor": "0,0,0", "highlightColor": "222,32,50", "textColor": "0,0,0", "textSelectedColor": "255,255,255", "retryCount": "3","logoUrl":"https://s-media-cache-ak0.pinimg.com/originals/a7/e0/5d/a7e05d588e5bdf5f4f7a4d3ea03486a2.gif"};
 
       var event = new Events({
         name: $scope.name,
