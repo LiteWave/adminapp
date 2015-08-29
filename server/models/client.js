@@ -16,7 +16,7 @@ var ClientSchema = new Schema({
   settings: {
     backgroundColor: { type: String, trim: true },
     borderColor: { type: String, trim: true },
-    clientLogoUrl: String,
+    logoUrl: String,
     highlightColor: { type: String, trim: true },
     retryCount: Number,
     textColor: { type: String, trim: true },

@@ -204,7 +204,12 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         cmdList.push({ "pif": "w", "bg": red, "cl": fourth_length, "sv": true });
 
         // push winning command to winner inside of winning section.
-        cmdList.push({ "pif": "w", "ct": "win", "bg": "216,19,37", "cl": 5000 });
+        cmdList.push({ "pif": "w", "ct": "win", "bg": red, "cl": first_length });
+        cmdList.push({ "pif": "w", "bg": black, "cl": first_length, "sv": true });
+        cmdList.push({ "pif": "w", "bg": white, "cl": first_length });
+        cmdList.push({ "pif": "w", "bg": red, "cl": first_length, "sv": true});
+        cmdList.push({ "pif": "w", "bg": black, "cl": first_length });
+        cmdList.push({ "pif": "w", "bg": white, "cl": first_length });
       }
 
       // Add this set of commands to the overall list
@@ -360,6 +365,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     $timeout.cancel($scope.promise_clock);
 
     var now = Date.now();
+    // Calculate UTC start time for consistency.
+    //var curTime = curTime - (new Date().getTimezoneOffset() * 60000);
     var startTime = now + (1000 * seconds);
     var stopTime = startTime + (1000 * $scope.showLength);
 
