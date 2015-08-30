@@ -34,15 +34,10 @@ exports.create = function (req, res)
 
   UserLocation.findOne({
     _eventId: req.params.eventId,
-    userSeat: {
-      "level": req.body.userSeat.level,
-      "section": req.body.userSeat.section,
-      "row": req.body.userSeat.row,
-      "seat": req.body.userSeat.seat
-    }
+    "userSeat.level": req.body.userSeat.level, "userSeat.section" : req.body.userSeat.section, "userSeat.row" : req.body.userSeat.row, "userSeat.seat" : req.body.userSeat.seat
   }).exec(function (err, user_location)
   {
-    // console.log(user_location);
+    //console.log("UL:" + user_location);
     if (err)
     {
       console.log('UL:Create:Some kind of error on finding UL: ' + err);
@@ -52,6 +47,7 @@ exports.create = function (req, res)
     if (user_location != null)
     {
       // Check if this user is rejoining or someone is trying to take someone else's seat.
+      console.log('UL:Create:UL NOT NULL: ');
       console.log('UL:Create:req.body.userKey: ' + req.body.userKey);
       console.log('UL:Create:user_location.userKey: ' + user_location.userKey);
       if (req.body.userKey.localeCompare(user_location.userKey) != 0)

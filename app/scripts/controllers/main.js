@@ -21,7 +21,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.stadiumCoverage = 0;
   $scope.stadiumSize = 20;
   $scope.userCheckPromise = null;
-  $scope.userPollTime = 3000;
+  $scope.userPollTime = 5000;
   $scope.currentShowType = 0;
   $scope.currentLayout;
 
@@ -364,22 +364,23 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     $timeout.cancel($scope.promise_clock);
 
-    var now = Date.now();
-    // Calculate UTC start time for consistency.
-    //var curTime = curTime - (new Date().getTimezoneOffset() * 60000);
-    var startTime = now + (1000 * seconds);
-    var stopTime = startTime + (1000 * $scope.showLength);
+    var now = new Date();
+    var startTime = Math.floor(now.getTime() + (1000 * seconds));
+    var stopTime = Math.floor(startTime + (1000 * $scope.showLength));
 
     // Set showStartTime for UI. Different format than just getting Date.now()
-    $scope.currentShow.startAt = $scope.showStartTime = new Date(startTime).toISOString();
-    $scope.stopTime = new Date(stopTime).toISOString();
+    $scope.currentShow.startAt = $scope.showStartTime = new Date(startTime).toUTCString();
+    $scope.stopTime = new Date(stopTime).toUTCString();
+
+    console.log($scope.currentShow.startAt);
+    console.log($scope.stopTime);
 
     // Set the start time. Already have a winner.
     $scope.currentShow.$update();
 
     $scope.percentTimeToStart = 0;
     $scope.updateTime = seconds * 10;
-    $scope.updateClock();
+    //$scope.updateClock();
   };
 
   $scope.updateClock = function ()
@@ -391,7 +392,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     if ($scope.current_time < $scope.showStartTime)
     {
       //$scope.promise_clock = $timeout($scope.updateClock,$scope.updateTime);
-      $scope.promise_clock = $timeout($scope.updateClock, 100);
+      //$scope.promise_clock = $timeout($scope.updateClock, 100);
     } else
     {
       $timeout($scope.updateShowClock, 100);
@@ -409,7 +410,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     if ($scope.current_time < $scope.stopTime)
     {
-      $scope.promise_clock = $timeout($scope.updateShowClock, 1000);
+      //$scope.promise_clock = $timeout($scope.updateShowClock, 1000);
     } else
     {
       $timeout($scope.showIsOver, 100);

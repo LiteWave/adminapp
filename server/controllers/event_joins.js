@@ -33,10 +33,9 @@ exports.event_join = function (req, res, next, id)
 exports.create = function (req, res)
 {
   var requestUserLocationId = req.user_location._id;
-  curTime = new Date().getTime();
+  var curTime = new Date();
   console.log('EJ:Create. Server curTime initial:' + curTime);
-  curTime = curTime - (new Date().getTimezoneOffset() * 60000);  // convert to GMT time offset
-  console.log('EJ:Create. Server curTime: GMT? ' + curTime);
+  var curUTCTime = curTime.getTime() - (curTime.getTimezoneOffset() * 60000);  // convert to GMT time offset
 
   //  we are seeing if the time that the mobile app has is different than the server.  The problem is that the time to post
   //   to the server is different depending on the phone, so the time offset is actually varied enough due to this posting that
@@ -45,24 +44,20 @@ exports.create = function (req, res)
   //    second, we set the offset to 0.  If some day we have a better way to deal with these offsets, then we can do it here.
   //
   //    $$$ test this
+  var mobile_time_offset = 0;
   if (req.body.mobileTime)
   {
-    mobile_date = new Date(req.body.mobileTime);
-    mobile_timezone_offset = mobile_date.getTimezoneOffset() * 60000;
-    mobile_time_offset = (mobile_date.getTime() - mobile_timezone_offset) - curTime;
+    var mobile_date = new Date(req.body.mobileTime);
+    var mobile_timezone_offset = mobile_date.getTimezoneOffset() * 60000;
+    mobile_time_offset = mobile_date.getTime() - mobile_timezone_offset - curUTCTime;
 
-    console.log('EJ:Create. Mobile Time:' + mobile_date.toString());
-    console.log('EJ:Create. mobile_timezone_offset:' + mobile_timezone_offset);
-    console.log('EJ:Create. mobile_time_offset:' + mobile_timezone_offset);
+    console.log('EJ:Create. mobile_time_offset:' + (mobile_time_offset / 60000));
+    console.log('EJ:Create. Mobile Time:' + mobile_date);
 
-    if (mobile_time_offset < 1000)
+    if (mobile_time_offset < 10)
     {
       mobile_time_offset = 0;
     }
-  }
-  else
-  {
-    mobile_time_offset = 0;  // if no time is passed from the phone, then assume it's the same as server.
   }
 
   // I'm thinking that if they already joined, then we delete the first join and create the new one.  That will help me out
@@ -88,9 +83,7 @@ exports.create = function (req, res)
       });
     }
     else
-    {
-        //console.log('Something WAS FOUND. req.user_location._eventId is ' + req.user_location._eventId);
-        console.log('Something WAS FOUND. show:' + show);
+    {      
       if (!show)
       {
         console.log('error, event liteshow is null');
@@ -101,6 +94,8 @@ exports.create = function (req, res)
       }
       else
       {
+        console.log('EJ. show:startAt:' + show.startAt);
+
         console.log('EJ:trying to create the EJ');
 
         UserLocation.findOne({ _eventId: req.user_location._eventId, _id: requestUserLocationId }, function (err, UL)
@@ -163,7 +158,7 @@ exports.create = function (req, res)
             console.log('EJ:Create::event_join._winnerId=' + event_join._winnerId);
 
             // use the offset to set the time for this phone to start
-            event_join.mobileStartAt = new Date(show.startAt.getTime() - event_join.mobileTimeOffset);
+            event_join.mobileStartAt = new Date(Math.round(show.startAt.getTime() - event_join.mobileTimeOffset));
 
             event_join.save(function (err)
             {
