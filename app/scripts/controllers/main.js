@@ -120,7 +120,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     var logicalCol = 1;
     var columnLength = $scope.currentLayout.columns.length;
     var currentSection;
-    var colLengthMS = columnLength * 1000;  // 22000
+    var firstColLengthMS = columnLength * first_length;  // 11sec
+    var secondColLengthMS = columnLength * second_length;  // 5.5sec
     var cmdList = [];
     var cmds = [];
     var onWinnerSection = false;
@@ -139,7 +140,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         cmdList.push({ "ct": "w", "cl": first_length * (logicalCol - 1) });
       }
       cmdList.push({ "bg": red, "cl": first_length, "sv": true });             // display 500 ms and vibrate
-      cmdList.push({ "ct": "w", "cl": colLengthMS - (first_length * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
+      cmdList.push({ "ct": "w", "cl": firstColLengthMS - (first_length * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
 
       // Wave 2.
       if (logicalCol > 1)
@@ -148,7 +149,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         cmdList.push({ "ct": "w", "cl": second_length * (logicalCol - 1) });
       }
       cmdList.push({ "bg": red, "cl": second_length, "sv": true }); // display and vibrate.
-      cmdList.push({ "ct": "w", "cl": colLengthMS - (second_length * logicalCol) }); // pause 21.750 seconds, 21.5. 21.25, 21
+      cmdList.push({ "ct": "w", "cl": secondColLengthMS - (second_length * logicalCol) }); // pause 21.750 seconds, 21.5. 21.25, 21
 
       // Common Contest Commands
       // Generate random delay time between 0 and 100 ms for each logical column.
