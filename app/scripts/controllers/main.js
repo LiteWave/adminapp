@@ -24,6 +24,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.userPollTime = 5000;
   $scope.currentShowType = 0;
   $scope.currentLayout;
+  $scope.cmds;
 
   Clients.query({}, function (clients)
   {
@@ -107,7 +108,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     $scope.winnerSection.push($scope.winner.userSeat.section);
 
-    var first_length = 500;  // 500 ms
+    var first_length = 350;  // 500 ms
     var second_length = 250;  // 250 ms
     var third_length = 250;  // 250 ms
     var fourth_length = 250;  // 250 ms
@@ -222,6 +223,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       logicalCol++;
     }
 
+    $scope.cmds = cmds;
+
     // $$$ move some or all of this to the server
 
     var show = new Shows({
@@ -267,6 +270,104 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     // Display winner to Admin so they can prepare cameras.
     $scope.winnerSeat = $scope.formatWinnerString();
   };
+
+  $scope.executeCmdA = function(logicalCol, cmd)
+  {
+    if (!cmd.length)
+    {
+      return;
+    }
+
+    var black = "0,0,0";
+    var red = "216,19,37";
+    var white = "162,157,176";
+    var col = "#lcol" + logicalCol.toString();
+    var currentCmd = cmd[0];
+    console.log('{0}', currentCmd);
+    if (currentCmd.bg)
+    {
+      if (currentCmd.bg == black)
+      {
+        $(col).css("background-color", "black");
+      }
+      else if (currentCmd.bg == red)
+      {
+        $(col).css("background-color", "red");
+      }
+      else
+      {
+        $(col).css("background-color", "white");
+      }      
+    }
+    else if (currentCmd.ct)
+    {
+      $(col).css("background-color", "white");
+    }
+    else
+    {
+      $(col).css("background-color", "white");
+    }
+    $timeout(function () { $scope.executeCmdB(logicalCol, cmd.slice(1)) }, currentCmd.cl);
+  }
+
+  $scope.executeCmdB = function (logicalCol, cmd)
+  {
+    if (!cmd.length)
+    {
+      return;
+    }
+
+    var black = "0,0,0";
+    var red = "216,19,37";
+    var white = "162,157,176";
+    var col = "#lcol" + logicalCol.toString();
+    var currentCmd = cmd[0];
+    console.log('{0}', currentCmd);
+    if (currentCmd.bg)
+    {
+      if (currentCmd.bg == black)
+      {
+        $(col).css("background-color", "black");
+      }
+      else if (currentCmd.bg == red)
+      {
+        $(col).css("background-color", "red");
+      }
+      else
+      {
+        $(col).css("background-color", "white");
+      }
+    }
+    else if (currentCmd.ct)
+    {
+      $(col).css("background-color", "white");
+    }
+    else
+    {
+      $(col).css("background-color", "white");
+    }
+    $timeout(function () { $scope.executeCmdB(logicalCol, cmd.slice(1)) }, currentCmd.cl);
+  }
+
+  $scope.testCommands = function ()
+  {
+    /* cmdList.push({ "ct": "w", "cl": first_length * (logicalCol - 1) });
+      }
+      cmdList.push({ "bg": red, "cl": first_length, "sv": true });             // display 500 ms and vibrate
+      cmdList.push({ "ct": "w", "cl": colLengthMS - (first_length * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
+    */
+    var col;
+    var cmdsLength = $scope.cmds.length;
+    var cmdsIndex = 0;
+    var testCmds = $scope.cmds;
+    while (cmdsIndex <= cmdsLength)
+    {
+      col = "#lcol" + cmdsIndex.toString();
+      $(col).css("background-color", "white");
+      $scope.executeCmdA(cmdsIndex, testCmds[cmdsIndex].commandList);
+      cmdsIndex++;
+    }
+  }
 
   $scope.changeEvent = function (event)
   {
