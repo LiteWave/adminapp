@@ -482,7 +482,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     $scope.percentTimeToStart = 0;
     $scope.updateTime = seconds * 10;
-    //$scope.updateClock();
+    $scope.updateClock();
   };
 
   $scope.updateClock = function ()
@@ -493,8 +493,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     if ($scope.current_time < $scope.showStartTime)
     {
-      //$scope.promise_clock = $timeout($scope.updateClock,$scope.updateTime);
-      //$scope.promise_clock = $timeout($scope.updateClock, 100);
+      $scope.promise_clock = $timeout($scope.updateClock,$scope.updateTime);
+      $scope.promise_clock = $timeout($scope.updateClock, 100);
     } else
     {
       $timeout($scope.updateShowClock, 100);
@@ -512,7 +512,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     if ($scope.current_time < $scope.stopTime)
     {
-      //$scope.promise_clock = $timeout($scope.updateShowClock, 1000);
+      $scope.promise_clock = $timeout($scope.updateShowClock, 1000);
     } else
     {
       $timeout($scope.showIsOver, 100);

@@ -3439,3 +3439,15 @@ ul.support-list li {
 @media (min-width: 1200px) {
   
 }
+.btn-group.showtype,
+.ctrl-lbl
+{
+    margin-bottom: 1rem;
+}
+.separator
+{
+    border-top: 1px solid #d5d5d5;
+    margin-top: 1rem;
+    padding-top: 1rem;
+}
+    
