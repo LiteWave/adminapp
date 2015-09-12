@@ -8,9 +8,7 @@ var app = angular.module('liteWaveApp', [
   'ngSanitize',
   'ngRoute',
   'ngGrid',
-  'ui.bootstrap',
-  'google-maps'
-
+  'ui.bootstrap'
 ])
   .config(['$routeProvider', '$locationProvider', '$httpProvider', 
     function ($routeProvider, $locationProvider, $httpProvider) {
