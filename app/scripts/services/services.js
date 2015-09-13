@@ -139,6 +139,10 @@ services.factory("ShowCommands", ['$resource', function ($resource) {
   }, {
     update: {
       method: 'PUT'
+    },
+    query: {
+      method: 'GET',
+      isArray: false
     }
   });
 }]);

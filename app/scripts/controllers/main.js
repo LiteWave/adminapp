@@ -13,8 +13,6 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.winnerSeat = "";
   $scope.winnerSection = [];
   $scope.winner = null;
-  $scope.contesturl = "";
-  $scope.contestimageurl = "";
   $scope.activeUsers = 0;
   $scope.iPhoneUsers = 0;
   $scope.androidUsers = 0;
@@ -24,7 +22,6 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.userPollTime = 5000;
   $scope.currentShowType = 0;
   $scope.currentLayout;
-  $scope.cmds;
 
   Clients.query({}, function (clients)
   {
@@ -233,8 +230,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       type: $scope.currentShowType,      
       startAt: null,
       winnerSections: $scope.winnerSection,
-      winnerImageUrl: !!($scope.contestimageurl.trim()) ? $scope.contestimageurl : null,
-      winnerUrl: !!($scope.contesturl.trim()) ? $scope.contesturl : null
+      winnerImageUrl: !!($scope.currentShow.winnerImageUrl.trim()) ? $scope.currentShow.winnerImageUrl : null,
+      winnerUrl: !!($scope.currentShow.winnerUrl.trim()) ? $scope.currentShow.winnerUrl : null
     });
 
     $scope.currentShow = show;
@@ -351,22 +348,33 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
   $scope.testCommands = function ()
   {
-    /* cmdList.push({ "ct": "w", "cl": first_length * (logicalCol - 1) });
-      }
-      cmdList.push({ "bg": red, "cl": first_length, "sv": true });             // display 500 ms and vibrate
-      cmdList.push({ "ct": "w", "cl": colLengthMS - (first_length * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
-    */
-    var col;
-    var cmdsLength = $scope.cmds.length;
-    var cmdsIndex = 0;
-    var testCmds = $scope.cmds;
-    while (cmdsIndex <= cmdsLength)
+    if ($scope.currentShow == null)
     {
-      col = "#lcol" + cmdsIndex.toString();
-      $(col).css("background-color", "white");
-      $scope.executeCmdA(cmdsIndex, testCmds[cmdsIndex].commandList);
-      cmdsIndex++;
+      alert("No Shows detected. Please create a show.");
+      return;
     }
+
+    ShowCommands.query({ showId: $scope.currentShow._id, showCommandId: $scope.currentShow._showCommandId }, function (showCommands)
+    {
+      if (showCommands == null || showCommands.commands == null)
+      {
+        alert("No Show Commands detected. Please create a show.");
+        return;
+      }
+
+      // Make a copy of the Show's commands because we remove them one by one.
+      var testCmds = showCommands.commands;
+      var cmdsLength = testCmds.length;
+      var cmdsIndex = 0;
+      var col;
+      while (cmdsIndex <= cmdsLength)
+      {
+        col = "#lcol" + cmdsIndex.toString();
+        $(col).css("background-color", "white");
+        $scope.executeCmdA(cmdsIndex, testCmds[cmdsIndex].commandList);
+        cmdsIndex++;
+      }
+    });
   }
 
   $scope.changeEvent = function (event)
@@ -430,7 +438,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         if (show && show.length)
         {
           $scope.liteshows = show;
-          $scope.currentShow = show[0];
+          $scope.currentShow = show[show.length - 1];
 
           // Start checking for new users
           if ($scope.userCheckPromise == null)
@@ -482,28 +490,30 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     $scope.percentTimeToStart = 0;
     $scope.updateTime = seconds * 10;
-    //$scope.updateClock();
+    $scope.updateClock();
   };
 
   $scope.updateClock = function ()
   {
-    $scope.current_time = new Date(Date.now()).toISOString();
+    $scope.current_time = new Date(Date.now()).toUTCString();
 
     console.log('UpdateCLock: current time = ' + $scope.current_time.toString() + '. showStartTime' + $scope.showStartTime.toString());
 
     if ($scope.current_time < $scope.showStartTime)
     {
-      //$scope.promise_clock = $timeout($scope.updateClock,$scope.updateTime);
+      $scope.promise_clock = $timeout($scope.updateClock,$scope.updateTime);
       //$scope.promise_clock = $timeout($scope.updateClock, 100);
-    } else
+    }
+    else
     {
-      $timeout($scope.updateShowClock, 100);
+      //$timeout($scope.updateShowClock, 100);
+      $timeout($scope.testCommands, 100);      
     }
   };
 
   $scope.updateShowClock = function ()
   {
-    $scope.current_time = new Date(Date.now()).toISOString();
+    $scope.current_time = new Date(Date.now()).toUTCString();
 
     // TODO figure out what to add by deviding length of show by 100?
     $scope.percentTimeToStart += 6.66;
@@ -512,8 +522,9 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     if ($scope.current_time < $scope.stopTime)
     {
-      //$scope.promise_clock = $timeout($scope.updateShowClock, 1000);
-    } else
+      $scope.promise_clock = $timeout($scope.updateShowClock, 1000);
+    }
+    else
     {
       $timeout($scope.showIsOver, 100);
     }
