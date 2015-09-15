@@ -6,8 +6,6 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 {
 
   $rootScope.currentArea = "main";
-  // DEMO ONLY, hardcode winner.
-  $scope.showLength = 15;
   $scope.showStartTime = null;
   $scope.stopTime = null;
   $scope.winnerSeat = "";
@@ -22,6 +20,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.userPollTime = 5000;
   $scope.currentShowType = 0;
   $scope.currentLayout;
+  $scope.lengthOfShow = 15;
 
   Clients.query({}, function (clients)
   {
@@ -55,8 +54,34 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     });
   }
 
+  $scope.findWinner = function ()
+  {
+    var userCount = $scope.userLocations.length;
+    var randomNum;
+    var retries = 0;
+    do
+    {
+      randomNum = $scope.getRandomNumber(userCount);
+      $scope.winner = $scope.userLocations[randomNum];
+      retries++;
+    } while (!$scope.winner && retries < 10)
+
+    if (!$scope.winner)
+    {
+      $scope.winner = $scope.userLocations[0];
+    }
+
+    $scope.winnerSection.push($scope.winner.userSeat.section);
+  }
+
   $scope.createShow = function ()
   {
+    /*if ($scope.lengthOfShow < 15)
+    {
+      alert("Sorry, the Show must run for at least 15 seconds.");
+      return;
+    }*/
+
     if (!$scope.currentEvent)
     {
       alert("Please select an Event");
@@ -88,27 +113,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     $scope.resetWinners();
 
-    var userCount = $scope.userLocations.length;
-    var randomNum;
-    var retries = 0;
-    do
-    {
-      randomNum = $scope.getRandomNumber(userCount);
-      $scope.winner = $scope.userLocations[randomNum];
-      retries++;
-    } while (!$scope.winner && retries < 10)
+    $scope.findWinner();
 
-    if (!$scope.winner)
-    {
-      $scope.winner = $scope.userLocations[0];
-    }
-
-    $scope.winnerSection.push($scope.winner.userSeat.section);
-
-    var first_length = 350;  // 500 ms
-    var second_length = 250;  // 250 ms
-    var third_length = 250;  // 250 ms
-    var fourth_length = 250;  // 250 ms
     var black = "0,0,0";
     var red = "216,19,37";
     var white = "162,157,176";
@@ -118,17 +124,30 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     var logicalCol = 1;
     var columnLength = $scope.currentLayout.columns.length;
     var currentSection;
-    var firstColLengthMS = columnLength * first_length;  // 11sec
-    var secondColLengthMS = columnLength * second_length;  // 5.5sec
     var cmdList = [];
     var cmds = [];
     var onWinnerSection = false;
     var randomDelay;
+
+    // TODO: remove the hardcoding of subtracting 6 seconds for the contest. If this was a litewave only, don't subtract.
+    // See later TODO about putting command creation in a loop for more easily setting the # of commands.
+    var first_length = Math.ceil((($scope.lengthOfShow - 6) * 1000) / columnLength);  //  first was 350 ms
+    if (first_length < 350)
+    {
+      first_length = 350;
+    }
+
+    var second_length = 250;  // 250 ms
+    var third_length = 250;  // 250 ms
+    var fourth_length = 250;  // 250 ms
+    var firstColLengthMS = columnLength * first_length;  // 11sec
+    var secondColLengthMS = columnLength * second_length;  // 5.5sec
+
     while (logicalCol <= columnLength)
     {
       currentSection = $scope.currentLayout.columns[logicalCol - 1].sectionList;
 
-      // $$$ Need to handle multiple winning sections with a loop.
+      // TODO Need to handle multiple winning sections with a loop.
       onWinnerSection = (currentSection.indexOf($scope.winnerSection.toString()) > -1);
 
       // Wave 1.
@@ -152,6 +171,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       // Common Contest Commands
       // Generate random delay time between 0 and 100 ms for each logical column.
       // NOTE: must be small to prevent winning phone to go off too soon.
+      // TODO: put in a loop of X number so we easily know how many commands we are adding.
       randomDelay = $scope.getRandomNumber(100);
       cmdList.push({ "ct": "w", "cl": randomDelay });  // wait X ms, max delay 250ms        
       cmdList.push({ "bg": black, "cl": first_length });
@@ -177,38 +197,38 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       }
       cmdList.push({ "bg": red, "cl": second_length, "sv": true });
 
-      cmdList.push({ "bg": black, "cl": third_length });
-      cmdList.push({ "bg": white, "cl": third_length });
+      cmdList.push({ "bg": black, "cl": second_length });
+      cmdList.push({ "bg": white, "cl": second_length });
 
       if (onWinnerSection)
       {
-        cmdList.push({ "bg": red, "cl": third_length });
+        cmdList.push({ "bg": red, "cl": second_length });
       }
-      cmdList.push({ "bg": black, "cl": third_length });
+      cmdList.push({ "bg": black, "cl": second_length });
 
       if (onWinnerSection)
       {
-        cmdList.push({ "bg": white, "cl": third_length });
+        cmdList.push({ "bg": white, "cl": second_length });
       }
-      cmdList.push({ "bg": red, "cl": third_length });
+      cmdList.push({ "bg": red, "cl": second_length });
 
       // Commands for winning section
       if (onWinnerSection)
       {
-        cmdList.push({ "pif": "w", "bg": black, "cl": fourth_length });
-        cmdList.push({ "bg": white, "cl": fourth_length });
-        cmdList.push({ "pif": "w", "bg": red, "cl": fourth_length });
-        cmdList.push({ "bg": black, "cl": fourth_length });
-        cmdList.push({ "bg": white, "cl": fourth_length });
-        cmdList.push({ "pif": "w", "bg": red, "cl": fourth_length, "sv": true });
+        cmdList.push({ "pif": "w", "bg": black, "cl": second_length });
+        cmdList.push({ "bg": white, "cl": second_length });
+        cmdList.push({ "pif": "w", "bg": red, "cl": second_length });
+        cmdList.push({ "bg": black, "cl": second_length });
+        cmdList.push({ "bg": white, "cl": second_length });
+        cmdList.push({ "pif": "w", "bg": red, "cl": second_length, "sv": true });
 
         // push winning command to winner inside of winning section.
-        cmdList.push({ "pif": "w", "ct": "win", "bg": red, "cl": first_length });
-        cmdList.push({ "pif": "w", "bg": black, "cl": first_length, "sv": true });
-        cmdList.push({ "pif": "w", "bg": white, "cl": first_length });
-        cmdList.push({ "pif": "w", "bg": red, "cl": first_length, "sv": true});
-        cmdList.push({ "pif": "w", "bg": black, "cl": first_length });
-        cmdList.push({ "pif": "w", "bg": white, "cl": first_length });
+        cmdList.push({ "pif": "w", "ct": "win", "bg": red, "cl": second_length });
+        cmdList.push({ "pif": "w", "bg": black, "cl": second_length, "sv": true });
+        cmdList.push({ "pif": "w", "bg": white, "cl": second_length });
+        cmdList.push({ "pif": "w", "bg": red, "cl": second_length, "sv": true });
+        cmdList.push({ "pif": "w", "bg": black, "cl": second_length });
+        cmdList.push({ "pif": "w", "bg": white, "cl": second_length });
       }
 
       // Add this set of commands to the overall list
@@ -222,7 +242,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     $scope.cmds = cmds;
 
-    // $$$ move some or all of this to the server
+    // TODO move some or all of this to the server
 
     var show = new Shows({
       _eventId: $scope.currentEvent._id,
@@ -280,7 +300,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     var white = "162,157,176";
     var col = "#lcol" + logicalCol.toString();
     var currentCmd = cmd[0];
-    console.log('{0}', currentCmd);
+    //console.log('{0}', currentCmd);
     if (currentCmd.bg)
     {
       if (currentCmd.bg == black)
@@ -319,7 +339,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     var white = "162,157,176";
     var col = "#lcol" + logicalCol.toString();
     var currentCmd = cmd[0];
-    console.log('{0}', currentCmd);
+    //console.log('{0}', currentCmd);
     if (currentCmd.bg)
     {
       if (currentCmd.bg == black)
@@ -367,7 +387,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       var cmdsLength = testCmds.length;
       var cmdsIndex = 0;
       var col;
-      while (cmdsIndex <= cmdsLength)
+      while (cmdsIndex < cmdsLength)
       {
         col = "#lcol" + cmdsIndex.toString();
         $(col).css("background-color", "white");
@@ -459,7 +479,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
   $scope.startShow = function (seconds)
   {
-    if ($scope.userLocations.length < 1)
+    if ($scope.userLocations == null || $scope.userLocations.length < 1)
     {
       alert("Sorry, not enough users have joined this event. Cancelling show.");
       return;
@@ -474,13 +494,24 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     $timeout.cancel($scope.promise_clock);
 
+    if (!$scope.winner)
+    {
+      $scope.findWinner();
+    }
+
+    $timeout($scope.showIsOver, 100);
+
     var now = new Date();
     var startTime = Math.floor(now.getTime() + (1000 * seconds));
-    var stopTime = Math.floor(startTime + (1000 * $scope.showLength));
+    var stopTime = Math.floor(startTime + (1000 * $scope.lengthOfShow));
 
     // Set showStartTime for UI. Different format than just getting Date.now()
-    $scope.currentShow.startAt = $scope.showStartTime = new Date(startTime).toUTCString();
-    $scope.stopTime = new Date(stopTime).toUTCString();
+    var startTimeDate = new Date(startTime);
+    var stopTimeDate = new Date(stopTime);
+    $scope.currentShow.startAt = $scope.showStartTime = startTimeDate.toUTCString();
+    $scope.showStartTimeDisplay = startTimeDate.toLocaleTimeString();
+    $scope.stopTime = stopTimeDate.toUTCString();
+    $scope.showStopTimeDisplay = stopTimeDate.toLocaleTimeString();
 
     console.log($scope.currentShow.startAt);
     console.log($scope.stopTime);
@@ -495,28 +526,31 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
   $scope.updateClock = function ()
   {
-    $scope.current_time = new Date(Date.now()).toUTCString();
+    var currDate = new Date(Date.now());
+    $scope.current_time = currDate.toUTCString();
+    $scope.currentTimeDisplay = currDate.toLocaleTimeString();
 
-    console.log('UpdateCLock: current time = ' + $scope.current_time.toString() + '. showStartTime' + $scope.showStartTime.toString());
+    console.log('UpdateCLock: current time = ' + $scope.current_time.toString() + '. showStartTime' + $scope.showStartTimeDisplay.toString());
 
     if ($scope.current_time < $scope.showStartTime)
     {
       $scope.promise_clock = $timeout($scope.updateClock,$scope.updateTime);
-      //$scope.promise_clock = $timeout($scope.updateClock, 100);
     }
     else
     {
-      //$timeout($scope.updateShowClock, 100);
+      $timeout($scope.updateShowClock, 100);
       $timeout($scope.testCommands, 100);      
     }
   };
 
   $scope.updateShowClock = function ()
   {
-    $scope.current_time = new Date(Date.now()).toUTCString();
+    var currDate = new Date(Date.now());
+    $scope.current_time = currDate.toUTCString();
+    $scope.currentTimeDisplay = currDate.toLocaleTimeString();
 
     // TODO figure out what to add by deviding length of show by 100?
-    $scope.percentTimeToStart += 6.66;
+    //$scope.percentTimeToStart += 6.66;
 
     console.log('UpdateShowCLock: current time = ' + $scope.current_time.toString() + ' . startAt time = ' + $scope.stopTime.toString());
 
@@ -526,7 +560,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     }
     else
     {
-      $timeout($scope.showIsOver, 100);
+      //$timeout($scope.showIsOver, 100);
     }
   };
 

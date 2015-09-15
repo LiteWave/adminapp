@@ -85,6 +85,9 @@
                                             <li><a href="javascript:;" ng-click="setShowType(3)">Pick a Winner</a></li>
                                         </ul>
                                     </div>
+                                    <div class="pull-left">
+                                        <span>Length of Show </span><input ng-model="lengthOfShow" size="2" value=15 /><span> seconds.</span>
+                                    </div>
                                     <div class="pull-right">
                                         <button class="btn btn-primary" type="submit" ng-disabled="contestUrlForm.$invalid">Create Show</button>
                                     </div>
@@ -92,10 +95,7 @@
 							</div>
                             <div class="clear"></div>
                             <div class="separator">
-                                <div class="pull-left">
-                                    <span>Run Show for </span><input size="2" value=15 /><span> seconds.</span>
-                                </div>
-                                <div class="btn-group pull-right">
+                                <div class="btn-group pull-left">
                                     <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                                         Start LiteShow in Seconds
                                         <span class="caret"></span>
@@ -109,22 +109,20 @@
                             </div>
                             <div class="clear"></div>
                             <hr />
-							<div class="progress-stat" ng-show="winnerSeat ===''">
+							<div class="progress-stat" >
 								<div class="stat-header">
-									<div class="stat-label">
+									<!--<div class="stat-label">
 										<span ng-show="percentTimeToStart < 1">Time to Start</span>
                                         <span ng-show="percentTimeToStart > 1 && percentTimeToStart < 100">Lite Show In Progress</span>
-									</div>
-									<div class="stat-value">
-										Current Time: {{current_time | date:'HH:mm:ss'}} (Show Start: {{currentShow.startAt | date:'HH:mm:ss'}}) 
-									</div>
+									</div>-->
+									<div class="stat-value">Current Time: {{currentTimeDisplay | date:'HH:mm:ss'}} (Show Start: {{showStartTimeDisplay | date:'HH:mm:ss'}} - Show Stop: {{showStopTimeDisplay | date:'HH:mm:ss'}})</div>
 								</div>
 								<div class="progress progress-striped active">
 								  <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="{{percentTimeToStart}}" aria-valuemin="0" aria-valuemax="100" style="width: {{percentTimeToStart}}%">
 								  </div>
 								</div>
 							</div>
-                            <h2 ng-show="winnerSeat != ''">Winner: {{winnerSeat}}</h2>
+                            <h3 ng-show="winnerSeat != ''">Winner: {{winnerSeat}}</h3>
 						</div> <!-- /.portlet-content -->
                         <div>
                             <div id="lcol0" style="width:10rem; height: 5rem; border: 1px solid black; float:left"></div>
