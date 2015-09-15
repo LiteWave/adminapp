@@ -305,24 +305,24 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     {
       if (currentCmd.bg == black)
       {
-        $(col).css("background-color", "black");
+        $(col).css("background", "black");
       }
       else if (currentCmd.bg == red)
       {
-        $(col).css("background-color", "red");
+        $(col).css("background", "red");
       }
       else
       {
-        $(col).css("background-color", "white");
+        $(col).css("background", "white");
       }      
     }
     else if (currentCmd.ct)
     {
-      $(col).css("background-color", "white");
+      $(col).css("background", "transparent");
     }
     else
     {
-      $(col).css("background-color", "white");
+      $(col).css("background", "transparent");
     }
     $timeout(function () { $scope.executeCmdB(logicalCol, cmd.slice(1)) }, currentCmd.cl);
   }
@@ -344,24 +344,24 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     {
       if (currentCmd.bg == black)
       {
-        $(col).css("background-color", "black");
+        $(col).css("background", "black");
       }
       else if (currentCmd.bg == red)
       {
-        $(col).css("background-color", "red");
+        $(col).css("background", "red");
       }
       else
       {
-        $(col).css("background-color", "white");
+        $(col).css("background", "white");
       }
     }
     else if (currentCmd.ct)
     {
-      $(col).css("background-color", "white");
+      $(col).css("background", "transparent");
     }
     else
     {
-      $(col).css("background-color", "white");
+      $(col).css("background", "transparent");
     }
     $timeout(function () { $scope.executeCmdB(logicalCol, cmd.slice(1)) }, currentCmd.cl);
   }
@@ -390,7 +390,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       while (cmdsIndex < cmdsLength)
       {
         col = "#lcol" + cmdsIndex.toString();
-        $(col).css("background-color", "white");
+        $(col).css("background", "transparent");
         $scope.executeCmdA(cmdsIndex, testCmds[cmdsIndex].commandList);
         cmdsIndex++;
       }

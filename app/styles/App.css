@@ -3450,4 +3450,156 @@ ul.support-list li {
     margin-top: 1rem;
     padding-top: 1rem;
 }
-    
+.logcols
+{
+    position: relative;
+}
+.logcols > div
+{
+    background: transparent;
+    border: 1px solid black;
+    bottom: 0;
+    height: 18.5rem;
+    position: absolute;    
+    width:5rem;
+}
+.logcols div:nth-child(2)
+{
+    left: 33.5rem;
+}
+.logcols div:nth-child(3)
+{
+    left: 28.5rem;
+}
+
+.logcols div:nth-child(4)
+{
+    bottom: 1rem;
+    left: 21rem;
+    transform: rotate(15deg);
+}
+.logcols div:nth-child(5)
+{
+    bottom: 2rem;
+    left: 17rem;
+    transform: rotate(26deg);
+    width:2rem;
+}
+.logcols div:nth-child(6)
+{
+    bottom: 6rem;
+    left: 12rem;
+    transform: rotate(50deg);
+    width:4rem;
+}
+.logcols div:nth-child(7)
+{
+    bottom: 15rem;
+    left: 8rem;
+    transform: rotate(90deg);
+    width:5rem;
+}
+.logcols div:nth-child(8)
+{
+    bottom: 20rem;
+    left: 8rem;
+    transform: rotate(90deg);
+    width:3rem;
+}
+.logcols div:nth-child(9)
+{
+    bottom: 27rem;
+    left: 11rem;
+    transform: rotate(120deg);
+    width:3rem;
+}
+.logcols div:nth-child(10)
+{
+    bottom: 32rem;
+    left: 17rem;
+    transform: rotate(150deg);
+    width:2rem;
+}
+
+.logcols div:nth-child(11)
+{
+    bottom: 34rem;
+    left: 23rem;
+}
+.logcols div:nth-child(12)
+{
+    bottom: 34rem;
+    left: 28.5rem;
+}
+.logcols div:nth-child(13)
+{
+    bottom: 34rem;
+    left: 33.5rem;
+}
+.logcols div:nth-child(14)
+{
+    bottom: 34rem;
+    left: 38.5rem;
+}
+.logcols div:nth-child(15)
+{
+    bottom: 34rem;
+    left: 43.5rem;
+}
+
+.logcols div:nth-child(16)
+{
+    bottom: 32rem;
+    left: 53rem;
+    transform: rotate(-150deg);
+    width:2rem;
+}
+.logcols div:nth-child(17)
+{
+    bottom: 27rem;
+    left: 58rem;
+    transform: rotate(-120deg);
+    width:3rem;
+
+}
+.logcols div:nth-child(18)
+{
+    bottom: 20rem;
+    left: 61rem;
+    transform: rotate(-90deg);
+    width:3rem;
+
+}
+.logcols div:nth-child(19)
+{
+    bottom: 15rem;
+    left: 61rem;
+    transform: rotate(-90deg);
+    width:3rem;
+}
+.logcols div:nth-child(20)
+{
+    bottom: 6rem;
+    left: 57rem;
+    transform: rotate(-50deg);
+    width:4rem;
+}
+
+.logcols div:nth-child(21)
+{
+    bottom: 2rem;
+    left: 53rem;
+    transform: rotate(-26deg);
+    width:2rem;
+}
+.logcols div:nth-child(22)
+{
+    bottom: 1rem;
+    left: 46rem;
+    transform: rotate(-15deg);
+}
+
+.logcols div:nth-child(23)
+{
+    left: 38rem;
+}
