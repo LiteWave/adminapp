@@ -13,77 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{B7B2523D-64BA-4EF2-9641-C2BA60382A03}"
-	ProjectSection(SolutionItems) = preProject
-		server\server.js = server\server.js
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "models", "models", "{10E40785-8B85-42B5-8F17-F27264553B5A}"
-	ProjectSection(SolutionItems) = preProject
-		server\models\client.js = server\models\client.js
-		server\models\command.js = server\models\command.js
-		server\models\event.js = server\models\event.js
-		server\models\event_join.js = server\models\event_join.js
-		server\models\level.js = server\models\level.js
-		server\models\logicallayout.js = server\models\logicallayout.js
-		server\models\show.js = server\models\show.js
-		server\models\showcommand.js = server\models\showcommand.js
-		server\models\stadium.js = server\models\stadium.js
-		server\models\user.js = server\models\user.js
-		server\models\user_location.js = server\models\user_location.js
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{7763C771-D36D-46BA-8F45-F67813CF44EB}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "controllers", "controllers", "{C4CDCE33-7F5C-4206-8A01-E94A315022F2}"
-	ProjectSection(SolutionItems) = preProject
-		server\controllers\clients.js = server\controllers\clients.js
-		server\controllers\event_joins.js = server\controllers\event_joins.js
-		server\controllers\events.js = server\controllers\events.js
-		server\controllers\index.js = server\controllers\index.js
-		server\controllers\levels.js = server\controllers\levels.js
-		server\controllers\liteshows.js = server\controllers\liteshows.js
-		server\controllers\logicallayouts.js = server\controllers\logicallayouts.js
-		server\controllers\showcommands.js = server\controllers\showcommands.js
-		server\controllers\shows.js = server\controllers\shows.js
-		server\controllers\stadiums.js = server\controllers\stadiums.js
-		server\controllers\user_locations.js = server\controllers\user_locations.js
-		server\controllers\users.js = server\controllers\users.js
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{4249F4D7-AD2E-4337-BEA9-06EA6C69ED7D}"
-	ProjectSection(SolutionItems) = preProject
-		server\config\config.js = server\config\config.js
-		server\config\deploy.rb = server\config\deploy.rb
-		server\config\express.js = server\config\express.js
-		server\config\passport.js = server\config\passport.js
-		server\config\routes.js = server\config\routes.js
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "public", "public", "{328A43AC-E8DB-482B-938A-38BFA7EBE4F0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "views", "views", "{EDD469EA-D7DE-4720-8845-3F1119972554}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{BAE79D7C-2684-4D8C-91E6-33C5D0380268}"
-	ProjectSection(SolutionItems) = preProject
-		server\config\deploy\production.rb = server\config\deploy\production.rb
-		server\config\deploy\staging.rb = server\config\deploy\staging.rb
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "env", "env", "{05CF9818-4BF3-4855-ADF8-3D1CA695E0C4}"
-	ProjectSection(SolutionItems) = preProject
-		server\config\env\all.js = server\config\env\all.js
-		server\config\env\development.json = server\config\env\development.json
-		server\config\env\production.json = server\config\env\production.json
-		server\config\env\test.json = server\config\env\test.json
-		server\config\env\travis.json = server\config\env\travis.json
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "middlewares", "middlewares", "{54BB600B-22AC-42A6-AD8D-A0AA0DB9F159}"
-	ProjectSection(SolutionItems) = preProject
-		server\config\middlewares\authorization.js = server\config\middlewares\authorization.js
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{BCF8A7D2-0F1F-4330-8979-CFE57AC90BBC}"
 	ProjectSection(SolutionItems) = preProject
 		app\index.html = app\index.html
@@ -180,15 +109,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{10E40785-8B85-42B5-8F17-F27264553B5A} = {B7B2523D-64BA-4EF2-9641-C2BA60382A03}
-		{7763C771-D36D-46BA-8F45-F67813CF44EB} = {B7B2523D-64BA-4EF2-9641-C2BA60382A03}
-		{C4CDCE33-7F5C-4206-8A01-E94A315022F2} = {B7B2523D-64BA-4EF2-9641-C2BA60382A03}
-		{4249F4D7-AD2E-4337-BEA9-06EA6C69ED7D} = {B7B2523D-64BA-4EF2-9641-C2BA60382A03}
-		{328A43AC-E8DB-482B-938A-38BFA7EBE4F0} = {B7B2523D-64BA-4EF2-9641-C2BA60382A03}
-		{EDD469EA-D7DE-4720-8845-3F1119972554} = {B7B2523D-64BA-4EF2-9641-C2BA60382A03}
-		{BAE79D7C-2684-4D8C-91E6-33C5D0380268} = {4249F4D7-AD2E-4337-BEA9-06EA6C69ED7D}
-		{05CF9818-4BF3-4855-ADF8-3D1CA695E0C4} = {4249F4D7-AD2E-4337-BEA9-06EA6C69ED7D}
-		{54BB600B-22AC-42A6-AD8D-A0AA0DB9F159} = {4249F4D7-AD2E-4337-BEA9-06EA6C69ED7D}
 		{BD3212E6-9B55-42CE-8307-C6000535E1FF} = {BCF8A7D2-0F1F-4330-8979-CFE57AC90BBC}
 		{6A750903-4A39-4778-ADE6-60E686CFC610} = {BCF8A7D2-0F1F-4330-8979-CFE57AC90BBC}
 		{0E28F8FA-C51B-4763-AA16-67A5D615D9AF} = {BCF8A7D2-0F1F-4330-8979-CFE57AC90BBC}
