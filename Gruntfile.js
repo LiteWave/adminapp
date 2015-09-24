@@ -84,7 +84,7 @@ module.exports = function (grunt) {
       proxies: [ // Local
         {
             context: '/api',
-            host: '104.130.156.82',
+            host: 'litewaveinc.com',
             port: 8080
         }
       ],
