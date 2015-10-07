@@ -250,8 +250,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       type: $scope.currentShowType,      
       startAt: null,
       winnerSections: $scope.winnerSection,
-      winnerImageUrl: !!($scope.currentShow.winnerImageUrl.trim()) ? $scope.currentShow.winnerImageUrl : null,
-      winnerUrl: !!($scope.currentShow.winnerUrl.trim()) ? $scope.currentShow.winnerUrl : null
+      winnerImageUrl: !!($scope.currentShow.winnerImageUrl) ? $scope.currentShow.winnerImageUrl.trim() : null,
+      winnerUrl: !!($scope.currentShow.winnerUrl) ? $scope.currentShow.winnerUrl.trim() : null
     });
 
     $scope.currentShow = show;
