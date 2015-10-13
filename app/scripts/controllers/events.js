@@ -87,6 +87,8 @@ function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalL
               // Update the Event with the id of this layout
               event._logicalLayoutId = response2._id;
               event.$update();
+
+              alert("Event successfully created. Click the Game Day tab to see new event.");
             }            
           });
         }

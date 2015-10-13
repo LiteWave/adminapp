@@ -279,6 +279,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
             // Lastly, save the ShowCommandId on the Show.
             show._showCommandId = response2._id;
             show.$update();
+
+            alert("Show successfully created.");
           }
         });
       }
@@ -407,6 +409,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     if ($scope.currentEvent)
     {
       $scope.currentEvent.$delete();
+
+      alert("Event successfully deleted.");
     }
   };
 
