@@ -11,11 +11,12 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.winnerSeat = "";
   $scope.winnerSection = [];
   $scope.winner = null;
+  $scope.winningSectionCounter = 0;
   $scope.activeUsers = 0;
   $scope.iPhoneUsers = 0;
   $scope.androidUsers = 0;
   $scope.stadiumCoverage = 0;
-  $scope.stadiumSize = 20;
+  $scope.stadiumSize = 19980;
   $scope.userCheckPromise = null;
   $scope.userPollTime = 5000;
   $scope.currentShowType = 0;
@@ -70,6 +71,17 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     {
       $scope.winner = $scope.userLocations[0];
     }
+
+    $scope.winningSectionCounter = 0;
+    var counter = 0;
+    do
+    {
+      if ($scope.userLocations[counter].userSeat.section == $scope.winner.userSeat.section)
+      {
+        $scope.winningSectionCounter++;
+      }
+      counter++;
+    } while (counter < userCount)
 
     $scope.winnerSection.push($scope.winner.userSeat.section);
   }
@@ -246,7 +258,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     var show = new Shows({
       _eventId: $scope.currentEvent._id,
-      _winnerId: $scope.winner._id,
+      _winnerId: $scope.winner._id,   // TODO Comment this out
       type: $scope.currentShowType,      
       startAt: null,
       winnerSections: $scope.winnerSection,
@@ -280,7 +292,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
             show._showCommandId = response2._id;
             show.$update();
 
-            alert("Show successfully created.");
+            //alert("Show successfully created.");
           }
         });
       }
@@ -516,6 +528,9 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     $scope.showStartTimeDisplay = startTimeDate.toLocaleTimeString();
     $scope.stopTime = stopTimeDate.toUTCString();
     $scope.showStopTimeDisplay = stopTimeDate.toLocaleTimeString();
+
+    //var upperLimit = Math.floor($scope.winningSectionCounter / 2);
+    //$scope.currentShow.winnerIndex = $scope.getRandomNumber(upperLimit);
 
     console.log($scope.currentShow.startAt);
     console.log($scope.stopTime);
