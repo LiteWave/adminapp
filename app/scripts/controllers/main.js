@@ -4,7 +4,6 @@ angular.module('liteWaveApp')
 .controller('MainCtrl', ['$rootScope', '$scope', '$timeout', '$interval', 'Clients', 'Events', 'Shows', 'UserLocations', 'ShowCommands', 'LogicalLayout',
 function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserLocations, ShowCommands, LogicalLayout)
 {
-
   $rootScope.currentArea = "main";
   $scope.showStartTime = null;
   $scope.stopTime = null;
@@ -16,7 +15,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.iPhoneUsers = 0;
   $scope.androidUsers = 0;
   $scope.stadiumCoverage = 0;
-  $scope.stadiumSize = 19980;
+  $scope.stadiumSize = 10000;
   $scope.userCheckPromise = null;
   $scope.userPollTime = 5000;
   $scope.currentShowType = 0;
@@ -258,7 +257,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     var show = new Shows({
       _eventId: $scope.currentEvent._id,
-      _winnerId: $scope.winner._id,   // TODO Comment this out
+      //_winnerId: $scope.winner._id,   // TODO Comment this out
       type: $scope.currentShowType,      
       startAt: null,
       winnerSections: $scope.winnerSection,
@@ -529,9 +528,6 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     $scope.stopTime = stopTimeDate.toUTCString();
     $scope.showStopTimeDisplay = stopTimeDate.toLocaleTimeString();
 
-    //var upperLimit = Math.floor($scope.winningSectionCounter / 2);
-    //$scope.currentShow.winnerIndex = $scope.getRandomNumber(upperLimit);
-
     console.log($scope.currentShow.startAt);
     console.log($scope.stopTime);
 
@@ -586,7 +582,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.formatWinnerString = function ()
   {
     // stupid. Need to add string.format
-    return "Section " + $scope.winner.userSeat.section + ", Row " + $scope.winner.userSeat.row + ", Seat " + $scope.winner.userSeat.seat;
+    //return "Section " + $scope.winner.userSeat.section + ", Row " + $scope.winner.userSeat.row + ", Seat " + $scope.winner.userSeat.seat;
+    return $scope.winner.userSeat.section;
   }
 
   $scope.showIsOver = function ()
