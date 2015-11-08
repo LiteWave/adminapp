@@ -257,7 +257,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     var show = new Shows({
       _eventId: $scope.currentEvent._id,
-      //_winnerId: $scope.winner._id,   // TODO Comment this out
+      _winnerId: null,
       type: $scope.currentShowType,      
       startAt: null,
       winnerSections: $scope.winnerSection,
