@@ -158,88 +158,93 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     {
       currentSection = $scope.currentLayout.columns[logicalCol - 1].sectionList;
 
-      // TODO Need to handle multiple winning sections with a loop.
-      onWinnerSection = (currentSection.indexOf($scope.winnerSection.toString()) > -1);
-
-      // Wave 1.
-      if (logicalCol > 1)
+      // If a contest is involved set winner.
+      if ($scope.currentShowType >= 1)
       {
-        // first section doesn't need to wait.
-        cmdList.push({ "ct": "w", "cl": first_length * (logicalCol - 1) });
+        // TODO Need to handle multiple winning sections with a loop.
+        onWinnerSection = (currentSection.indexOf($scope.winnerSection.toString()) > -1);
       }
-      cmdList.push({ "bg": red, "cl": first_length, "sv": true });             // display 500 ms and vibrate
-      cmdList.push({ "ct": "w", "cl": firstColLengthMS - (first_length * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
 
-      // Wave 2.
-      if (logicalCol > 1)
+      // If a LiteShow
+      if ($scope.currentShowType === 0 || $scope.currentShowType === 1)
       {
-        // first section doesn't need to wait.
-        cmdList.push({ "ct": "w", "cl": second_length * (logicalCol - 1) });
+        // Wave 1.
+        if (logicalCol > 1) {
+          // first section doesn't need to wait.
+          cmdList.push({ "ct": "w", "cl": first_length * (logicalCol - 1) });
+        }
+        cmdList.push({ "bg": red, "cl": first_length, "sv": true });             // display 500 ms and vibrate
+        cmdList.push({ "ct": "w", "cl": firstColLengthMS - (first_length * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
+
+        // Wave 2.
+        if (logicalCol > 1) {
+          // first section doesn't need to wait.
+          cmdList.push({ "ct": "w", "cl": second_length * (logicalCol - 1) });
+        }
+        cmdList.push({ "bg": red, "cl": second_length, "sv": true }); // display and vibrate.
+        cmdList.push({ "ct": "w", "cl": secondColLengthMS - (second_length * logicalCol) }); // pause 21.750 seconds, 21.5. 21.25, 21
       }
-      cmdList.push({ "bg": red, "cl": second_length, "sv": true }); // display and vibrate.
-      cmdList.push({ "ct": "w", "cl": secondColLengthMS - (second_length * logicalCol) }); // pause 21.750 seconds, 21.5. 21.25, 21
 
-      // Common Contest Commands
-      // Generate random delay time between 0 and 100 ms for each logical column.
-      // NOTE: must be small to prevent winning phone to go off too soon.
-      // TODO: put in a loop of X number so we easily know how many commands we are adding.
-      randomDelay = $scope.getRandomNumber(100);
-      cmdList.push({ "ct": "w", "cl": randomDelay });  // wait X ms, max delay 250ms        
-      cmdList.push({ "bg": black, "cl": first_length });
-      cmdList.push({ "bg": white, "cl": first_length });
-      cmdList.push({ "bg": red, "cl": first_length });
-      cmdList.push({ "bg": black, "cl": first_length });
-      cmdList.push({ "bg": white, "cl": first_length });
-      cmdList.push({ "bg": red, "cl": first_length, "sv": true });
-
-      cmdList.push({ "bg": black, "cl": second_length });
-      cmdList.push({ "bg": white, "cl": second_length });
-
-      // Take out a few commands from non-winner sections
-      if (onWinnerSection)
+      // If a contest.
+      if ($scope.currentShowType >= 1)
       {
-        cmdList.push({ "bg": red, "cl": second_length });
-      }
-      cmdList.push({ "bg": black, "cl": second_length });
+        // Common Contest Commands
+        // Generate random delay time between 0 and 100 ms for each logical column.
+        // NOTE: must be small to prevent winning phone to go off too soon.
+        // TODO: put in a loop of X number so we easily know how many commands we are adding.
+        randomDelay = $scope.getRandomNumber(100);
+        cmdList.push({ "ct": "w", "cl": randomDelay });  // wait X ms, max delay 250ms        
+        cmdList.push({ "bg": black, "cl": first_length });
+        cmdList.push({ "bg": white, "cl": first_length });
+        cmdList.push({ "bg": red, "cl": first_length });
+        cmdList.push({ "bg": black, "cl": first_length });
+        cmdList.push({ "bg": white, "cl": first_length });
+        cmdList.push({ "bg": red, "cl": first_length, "sv": true });
 
-      if (onWinnerSection)
-      {
-        cmdList.push({ "bg": white, "cl": second_length });
-      }
-      cmdList.push({ "bg": red, "cl": second_length, "sv": true });
-
-      cmdList.push({ "bg": black, "cl": second_length });
-      cmdList.push({ "bg": white, "cl": second_length });
-
-      if (onWinnerSection)
-      {
-        cmdList.push({ "bg": red, "cl": second_length });
-      }
-      cmdList.push({ "bg": black, "cl": second_length });
-
-      if (onWinnerSection)
-      {
-        cmdList.push({ "bg": white, "cl": second_length });
-      }
-      cmdList.push({ "bg": red, "cl": second_length });
-
-      // Commands for winning section
-      if (onWinnerSection)
-      {
-        cmdList.push({ "pif": "w", "bg": black, "cl": second_length });
-        cmdList.push({ "bg": white, "cl": second_length });
-        cmdList.push({ "pif": "w", "bg": red, "cl": second_length });
         cmdList.push({ "bg": black, "cl": second_length });
         cmdList.push({ "bg": white, "cl": second_length });
-        cmdList.push({ "pif": "w", "bg": red, "cl": second_length, "sv": true });
 
-        // push winning command to winner inside of winning section.
-        cmdList.push({ "pif": "w", "ct": "win", "bg": red, "cl": second_length });
-        cmdList.push({ "pif": "w", "bg": black, "cl": second_length, "sv": true });
-        cmdList.push({ "pif": "w", "bg": white, "cl": second_length });
-        cmdList.push({ "pif": "w", "bg": red, "cl": second_length, "sv": true });
-        cmdList.push({ "pif": "w", "bg": black, "cl": second_length });
-        cmdList.push({ "pif": "w", "bg": white, "cl": second_length });
+        // Take out a few commands from non-winner sections
+        if (onWinnerSection) {
+          cmdList.push({ "bg": red, "cl": second_length });
+        }
+        cmdList.push({ "bg": black, "cl": second_length });
+
+        if (onWinnerSection) {
+          cmdList.push({ "bg": white, "cl": second_length });
+        }
+        cmdList.push({ "bg": red, "cl": second_length, "sv": true });
+
+        cmdList.push({ "bg": black, "cl": second_length });
+        cmdList.push({ "bg": white, "cl": second_length });
+
+        if (onWinnerSection) {
+          cmdList.push({ "bg": red, "cl": second_length });
+        }
+        cmdList.push({ "bg": black, "cl": second_length });
+
+        if (onWinnerSection) {
+          cmdList.push({ "bg": white, "cl": second_length });
+        }
+        cmdList.push({ "bg": red, "cl": second_length });
+
+        // Commands for winning section
+        if (onWinnerSection) {
+          cmdList.push({ "pif": "w", "bg": black, "cl": second_length });
+          cmdList.push({ "bg": white, "cl": second_length });
+          cmdList.push({ "pif": "w", "bg": red, "cl": second_length });
+          cmdList.push({ "bg": black, "cl": second_length });
+          cmdList.push({ "bg": white, "cl": second_length });
+          cmdList.push({ "pif": "w", "bg": red, "cl": second_length, "sv": true });
+
+          // push winning command to winner inside of winning section.
+          cmdList.push({ "pif": "w", "ct": "win", "bg": red, "cl": second_length });
+          cmdList.push({ "pif": "w", "bg": black, "cl": second_length, "sv": true });
+          cmdList.push({ "pif": "w", "bg": white, "cl": second_length });
+          cmdList.push({ "pif": "w", "bg": red, "cl": second_length, "sv": true });
+          cmdList.push({ "pif": "w", "bg": black, "cl": second_length });
+          cmdList.push({ "pif": "w", "bg": white, "cl": second_length });
+        }
       }
 
       // Add this set of commands to the overall list
