@@ -1,9 +1,10 @@
 var services = angular.module('liteWaveServices', []);
+var apiURL = window.config.apiURL;
 
 // to deal with Users
 
 services.factory('Users', ['$resource', function($resource) {
-  return $resource('/api/users/:userId', {
+  return $resource(apiURL+'/users/:userId', {
     userId: '@_id'
   }, {
     update: {
@@ -40,7 +41,7 @@ services.factory('UserLoader', ['Users', '$route', '$q',
 
 //Clients service used for clients REST endpoint
 services.factory("Clients", ['$resource', function($resource) {
-    return $resource('/api/clients/:clientId', {
+    return $resource(apiURL+'/clients/:clientId', {
         clientId: '@_id'
     }, {
         update: {
@@ -51,7 +52,7 @@ services.factory("Clients", ['$resource', function($resource) {
 
 // UserLocations service used for client REST endpoint.
 services.factory('UserLocations', ['$resource', function ($resource) {
-    return $resource('/api/events/:eventId/user_locations', {
+    return $resource(apiURL+'/events/:eventId/user_locations', {
         eventId: '@_id'
     }, {
         update: {
@@ -63,16 +64,16 @@ services.factory('UserLocations', ['$resource', function ($resource) {
 // service used for Stadiums REST endpoint
 services.factory("Stadiums", ['$resource', function ($resource)
 {
-  return $resource('/api/stadiums', {
+  return $resource(apiURL+'/stadiums', {
     clientId: '@_clientId', stadiumId: '@_id'
   }, {
     update: {
       method: 'PUT',
-      url: '/api/stadiums/:stadiumId'
+      url: apiURL+'/stadiums/:stadiumId'
     },
     get: {
       method: 'GET',
-      url: '/api/stadiums/client/:clientId'
+      url: apiURL+'/stadiums/client/:clientId'
     }
   });
 }]);
@@ -80,19 +81,19 @@ services.factory("Stadiums", ['$resource', function ($resource)
 // service used for Levels REST endpoint
 services.factory("Levels", ['$resource', function ($resource)
 {
-  return $resource('/api/levels/:levelId', {
+  return $resource(apiURL+'/levels/:levelId', {
     levelId: '@_id'
   }, {
     update: {
       method: 'PUT',
-      url: '/api/levels'
+      url: apiURL+'/levels'
     }
   });
 }]);
 
 // service used for Events REST endpoint
 services.factory("Events", ['$resource', function($resource) {
-    return $resource('/api/clients/:clientId/events/:eventId', {
+    return $resource(apiURL+'/clients/:clientId/events/:eventId', {
       clientId: '@_clientId', eventId: '@_id'
     }, {
         update: {
@@ -100,14 +101,14 @@ services.factory("Events", ['$resource', function($resource) {
         },
         get: {
           method: 'GET',
-          url: '/api/events/:eventId'
+          url: apiURL+'/events/:eventId'
         }
     });
 }]);
 
 // service used for Shows REST endpoint
 services.factory("Shows", ['$resource', function($resource) {
-    return $resource('/api/events/:eventId/shows/:showId', {
+    return $resource(apiURL+'/events/:eventId/shows/:showId', {
         eventId: '@_eventId', showId: '@_id'
     }, {
         update: {
@@ -119,7 +120,7 @@ services.factory("Shows", ['$resource', function($resource) {
 // service used for Logical Layout REST endpoint
 services.factory("LogicalLayout", ['$resource', function ($resource)
 {
-  return $resource('/api/events/:eventId/logicallayouts/:logicallayoutId', {
+  return $resource(apiURL+'/events/:eventId/logicallayouts/:logicallayoutId', {
     eventId: '@_eventId', logicallayoutId: '@_id'
   }, {
     update: {
@@ -134,7 +135,7 @@ services.factory("LogicalLayout", ['$resource', function ($resource)
 
 // ShowCommands service used for showcommands REST endpoint
 services.factory("ShowCommands", ['$resource', function ($resource) {
-  return $resource('/api/shows/:showId/showcommands/:showCommandId', {
+  return $resource(apiURL+'/shows/:showId/showcommands/:showCommandId', {
     showId: '@_showId', showCommandId: '@_id'
   }, {
     update: {

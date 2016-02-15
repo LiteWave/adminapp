@@ -286,7 +286,8 @@ module.exports = function (grunt) {
             'bower_components/**/*',
             'images/{,*/}*.{gif,webp}',
             'img/**/*',
-            'fonts/*'
+            'fonts/*',
+            'styles/*'
           ]
         }, {
           expand: true,
@@ -302,7 +303,13 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
-      }
+      },
+      prodConfig:{
+        //expand: true,
+        //cwd: '<%= yeoman.app %>/scripts',
+        src: '<%= yeoman.app %>/scripts/config/prod.js',
+        dest: '<%= yeoman.dist %>/scripts/config.js',
+      }              
     },
     concurrent: {
       nodemon: {
@@ -434,6 +441,12 @@ module.exports = function (grunt) {
     'connect:test',
     'karma'
   ]);
+  
+  grunt.registerTask('config',function(environment){
+    //call our copy task, to copy the environment config file to the app/build folder
+    grunt.task.run("copy:" + environment + "Config");
+
+  });
 
   grunt.registerTask('build', [
     'clean:dist',
@@ -447,7 +460,8 @@ module.exports = function (grunt) {
     'cssmin',
     'uglify',
     'rev',
-    'usemin'
+    'usemin',
+    'copy:prodConfig',
   ]);
 
   grunt.registerTask('default', [

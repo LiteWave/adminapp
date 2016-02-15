@@ -13,6 +13,8 @@ var app = angular.module('liteWaveApp', [
   .config(['$routeProvider', '$locationProvider', '$httpProvider', 
     function ($routeProvider, $locationProvider, $httpProvider) {
     
+    var apiURL = window.config.apiURL;
+    
     //================================================
     // Check if the user is connected
     //================================================
@@ -21,7 +23,7 @@ var app = angular.module('liteWaveApp', [
       var deferred = $q.defer();
 
       // Make an AJAX call to check if the user is logged in
-      $http.get('/api/loggedin').success(function(user){
+      $http.get(apiURL+'/loggedin').success(function(user){
 
         // Authenticated
         if (user !== '0') {
@@ -45,7 +47,7 @@ var app = angular.module('liteWaveApp', [
     
     var sendlogOut = ['$q', '$timeout', '$http', '$location', '$rootScope', function($q, $timeout, $http, $location, $rootScope) {
       var deferred = $q.defer();
-      $http.post('/api/logout').success(function() {
+      $http.post(apiURL+'/logout').success(function() {
         $rootScope.message = 'Successfully logged out';
         $timeout(deferred.resolve, 0);
       });
@@ -145,7 +147,7 @@ app.run(['$rootScope', function ($rootScope) {
   // Logout function is available in any pages
   $rootScope.logout = function(){
     $rootScope.message = 'Logged out.';
-    $http.post('/api/logout');
+    $http.post(apiURL+'/logout');
   };
   
   $rootScope.getDayOfMonth = function(d) {

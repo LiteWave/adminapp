@@ -4,6 +4,7 @@
 angular.module('liteWaveApp').controller('LoginCtrl', ['$scope', '$rootScope', '$http', '$location',
   function ($scope, $rootScope, $http, $location)
   {
+    var apiURL = window.config.apiURL;
     $rootScope.currentArea = "login";  // this will turn off the main menus
 
     // This object will be filled by the form
@@ -12,7 +13,7 @@ angular.module('liteWaveApp').controller('LoginCtrl', ['$scope', '$rootScope', '
     // Register the login() function
     $scope.login = function ()
     {
-      $http.post('/api/login', {
+      $http.post(apiURL+'/login', {
         username: $scope.user.username,
         password: $scope.user.password,
       })
