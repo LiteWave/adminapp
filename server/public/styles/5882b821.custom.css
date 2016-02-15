@@ -1,0 +1,16 @@
+html,
+body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+.gridStyle {
+    border: 1px solid rgb(212,212,212);
+  
+    height: 300px;
+}
+
+/* this is to space out the items in a form -- default was 20, I think, which is too much */
+.form-horizontal .form-group {
+    margin-bottom: 8px;
+}

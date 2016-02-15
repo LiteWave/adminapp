@@ -1,0 +1,183 @@
+<div class="row">
+                <div class="col-md-12">
+                    <h4 class="heading-inline">Event Controller</h4>
+                    <div class="btn-group">
+                        <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                            <i class="fa fa-clock-o"></i>  &nbsp;
+                            Select Event <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li data-ng-repeat="event in events"><a ng-click="changeEvent(event)" href="javascript:;">{{event.name}}</a></li>
+                        </ul>
+                        <button type="button" ng-click="deleteEvent()">Delete Event</button>
+                    </div>
+                </div>
+			</div>
+			<div class="row">
+				<div class="col-md-3 col-sm-6">
+					<a href="javascript:;" class="dashboard-stat primary">
+						<div class="visual">
+							<i class="fa fa-star"></i>
+						</div> <!-- /.visual -->
+						<div class="details">
+							<span class="content">Event</span>
+							<span class="eventvalue">{{currentEvent.name}}</span>
+						</div> <!-- /.details -->
+						<i class="fa fa-play-circle more"></i>
+					</a> <!-- /.dashboard-stat -->
+				</div> <!-- /.col-md-3 -->
+				<div class="col-md-3 col-sm-6">
+					<a href="javascript:;" class="dashboard-stat secondary">
+						<div class="visual">
+							<i class="fa fa-shopping-cart"></i>
+						</div> <!-- /.visual -->
+						<div class="details">
+							<span class="content">Event Date</span>
+							<span class="value">{{currentEvent.date | date : 'shortDate' }}</span>
+						</div> <!-- /.details -->
+						<i class="fa fa-play-circle more"></i>
+					</a> <!-- /.dashboard-stat -->
+				</div> <!-- /.col-md-3 -->
+
+				<div class="col-md-3 col-sm-6">
+					<a href="javascript:;" class="dashboard-stat tertiary">
+						<div class="visual">
+							<i class="fa fa-clock-o"></i>
+						</div> <!-- /.visual -->
+						<div class="details">
+							<span class="content">Active Users</span>
+							<span class="value">{{activeUsers}}</span>
+						</div> <!-- /.details -->
+						<i class="fa fa-play-circle more"></i>
+					</a> <!-- /.dashboard-stat -->
+				</div> <!-- /.col-md-3 -->
+			</div> <!-- /.row -->
+			<div class="row">
+				<div class="col-md-9">
+					<div class="portlet">
+						<div class="portlet-header">
+							<h3>
+								<i class="fa fa-bar-chart-o"></i>
+								Lite Show Control Panel
+							</h3>
+						</div>
+                        <div class="portlet-content">
+                            <div>
+                                <h5>NOTE: You must create a Show before you can start one.</h5>
+                                <form name="contestUrlForm" class="form-inline" role="form" ng-submit="loadLayouts()">
+                                    <div class="ctrl-lbl">
+                                        <label class="control-label" for="contesturl">Prize Url for Winning User</label>
+                                        <input type="url" class="form-control" ng-model="currentShow.winnerUrl" id="contesturl" ng-minlength="10"> <!-- required -->
+                                    </div>
+                                    <div class="ctrl-lbl">
+                                        <label class="control-label" for="contestimageurl">Prize Url for Winning Image</label>
+                                        <input type="url" class="form-control" ng-model="currentShow.winnerImageUrl" id="contestimageurl" ng-minlength="10"> <!-- required -->
+                                    </div>
+                                    <div class="btn-group showtype pull-left">
+                                        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <span>Type of show</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="javascript:;" ng-click="setShowType(0)">Show</a></li>
+                                            <li><a href="javascript:;" ng-click="setShowType(1)">Show + Contest</a></li>
+                                            <li><a href="javascript:;" ng-click="setShowType(2)">Pick a Winning Section</a></li>
+                                            <li><a href="javascript:;" ng-click="setShowType(3)">Pick a Winner</a></li>
+                                            <li><a href="javascript:;" ng-click="setShowType(4)">Contest</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="pull-left">
+                                        <span>Length of Show </span><input ng-model="lengthOfShow" size="2" value="15"><span> seconds.</span>
+                                    </div>
+                                    <div class="pull-right">
+                                        <button class="btn btn-primary" type="submit" ng-disabled="contestUrlForm.$invalid">Create Show</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="separator">
+                                <div class="btn-group pull-left">
+                                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                        Start LiteShow in Seconds
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu col-md-5">
+                                        <li><a href="javascript:;" ng-click="startShow(10)">10 seconds</a></li>
+                                        <li><a href="javascript:;" ng-click="startShow(30)">30 seconds</a></li>
+                                        <li><a href="javascript:;" ng-click="startShow(60)">60 seconds</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <hr>
+                            <div class="progress-stat">
+                                <div class="stat-header">
+                                    <!--<div class="stat-label">
+                    <span ng-show="percentTimeToStart < 1">Time to Start</span>
+                    <span ng-show="percentTimeToStart > 1 && percentTimeToStart < 100">Lite Show In Progress</span>
+                </div>-->
+                                    <div class="stat-value">Current Time: {{currentTimeDisplay | date:'HH:mm:ss'}} (Show Start: {{showStartTimeDisplay | date:'HH:mm:ss'}} - Show Stop: {{showStopTimeDisplay | date:'HH:mm:ss'}})</div>
+                                </div>
+                                <div class="progress progress-striped active">
+                                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="{{percentTimeToStart}}" aria-valuemin="0" aria-valuemax="100" style="width: {{percentTimeToStart}}%">
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 ng-show="winnerSeat != ''">Winning Section for Show: {{winnerSeat}}</h3>
+                                <div class="logcols">
+                                <img src="http://www.seating-chart.org/maps/nba/rose-garden-arena-portland-trail-blazers-seating-chart.jpg">
+                                    <div id="lcol0">1</div>
+                                    <div id="lcol1">2</div>
+                                    <div id="lcol2">3</div>
+                                    <div id="lcol3">4</div>
+                                    <div id="lcol4">5</div>
+            <div id="lcol5">6</div>
+            <div id="lcol6">7</div>
+            <div id="lcol7">8</div>
+            <div id="lcol8">9</div>
+            <div id="lcol9">10</div>
+            <div id="lcol10">11</div>
+            <div id="lcol11">12</div>
+            <div id="lcol12">13</div>
+            <div id="lcol13">14</div>
+            <div id="lcol14">15</div>
+            <div id="lcol15">16</div>
+            <div id="lcol16">17</div>
+            <div id="lcol17">18</div>
+            <div id="lcol18">19</div>
+            <div id="lcol19">20</div>
+            <div id="lcol20">21</div>
+            <div id="lcol21">22</div>
+                                    <!--<button class="btn btn-primary" ng-click="testCommands()">Test Show</button>-->
+                                </div>
+                        </div> <!-- /.portlet-content -->
+					</div> <!-- /.portlet -->
+				</div> <!-- /.col-md-9 -->
+				<div class="col-md-3">
+					<div class="portlet">
+						<div class="portlet-header">
+							<h3>
+								<i class="fa fa-compass"></i>
+								Traffic Overview
+							</h3>
+						</div> <!-- /.portlet-header -->
+						<div class="portlet-content">
+							<div class="progress-stat">
+								<div class="stat-header">
+									<div class="stat-label">
+										% Stadium Coverage
+									</div> <!-- /.stat-label -->
+									<div class="stat-value">
+										{{stadiumCoverage}}%
+									</div> <!-- /.stat-value -->
+								</div> <!-- /stat-header -->
+								<div class="progress progress-striped active">
+								  <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="77" aria-valuemin="0" aria-valuemax="100" style="width: {{stadiumCoverage}}%">
+								    <span class="sr-only">77.74% Visit Rate</span>
+								  </div>
+								</div> <!-- /.progress -->
+							</div> <!-- /.progress-stat -->
+						</div> <!-- /.portlet-content -->
+					</div> <!-- /.portlet -->
+				</div> <!-- /.col -->
+			</div> <!-- /.row -->
