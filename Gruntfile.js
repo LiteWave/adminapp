@@ -309,7 +309,13 @@ module.exports = function (grunt) {
         //cwd: '<%= yeoman.app %>/scripts',
         src: '<%= yeoman.app %>/scripts/config/prod.js',
         dest: '<%= yeoman.dist %>/scripts/config.js',
-      }              
+      },
+      localConfig:{
+        //expand: true,
+        //cwd: '<%= yeoman.app %>/scripts',
+        src: '<%= yeoman.app %>/scripts/config/local.js',
+        dest: '<%= yeoman.dist %>/scripts/config.js',
+      }                            
     },
     concurrent: {
       nodemon: {
