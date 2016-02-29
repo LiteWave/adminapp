@@ -22,6 +22,7 @@ var app = angular.module('liteWaveApp', [
       // Initialize a new promise
       var deferred = $q.defer();
 
+      $http.defaults.withCredentials = true;
       // Make an AJAX call to check if the user is logged in
       $http.get(apiURL+'/loggedin').success(function(user){
 
