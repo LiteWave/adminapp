@@ -305,14 +305,10 @@ module.exports = function (grunt) {
         src: '{,*/}*.css'
       },
       prodConfig:{
-        //expand: true,
-        //cwd: '<%= yeoman.app %>/scripts',
         src: '<%= yeoman.app %>/scripts/config/prod.js',
         dest: '<%= yeoman.dist %>/scripts/config.js',
       },
       localConfig:{
-        //expand: true,
-        //cwd: '<%= yeoman.app %>/scripts',
         src: '<%= yeoman.app %>/scripts/config/local.js',
         dest: '<%= yeoman.dist %>/scripts/config.js',
       }                            
