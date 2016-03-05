@@ -61,6 +61,20 @@ services.factory('UserLocations', ['$resource', function ($resource) {
     });
 }]);
 
+// UserLocations service used for client REST endpoint.
+services.factory('UserLocationsCount', ['$resource', function ($resource) {
+    return $resource(apiURL+'/events/:eventId/user_locations/count', {
+        eventId: '@_id'
+    }, { });
+}]);
+
+// UserLocations service used for client REST endpoint.
+services.factory('UserLocationsWinner', ['$resource', function ($resource) {
+    return $resource(apiURL+'/events/:eventId/user_locations/pickwinningsection/:showType', {
+        eventId: '@_eventId', showType: '@_id'
+    }, { });
+}]);
+
 // service used for Stadiums REST endpoint
 services.factory("Stadiums", ['$resource', function ($resource)
 {

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liteWaveApp')
-.controller('MainCtrl', ['$rootScope', '$scope', '$timeout', '$interval', 'Clients', 'Events', 'Shows', 'UserLocations', 'ShowCommands', 'LogicalLayout',
-function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserLocations, ShowCommands, LogicalLayout)
+.controller('MainCtrl', ['$rootScope', '$scope', '$timeout', '$interval', 'Clients', 'Events', 'Shows', 'UserLocationsCount', 'UserLocationsWinner', 'ShowCommands', 'LogicalLayout',
+function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserLocationsCount, UserLocationsWinner, ShowCommands, LogicalLayout)
 {
   $rootScope.currentArea = "main";
   $scope.showStartTime = null;
@@ -10,14 +10,13 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.winnerSeat = "";
   $scope.winnerSection = [];
   $scope.winner = null;
-  $scope.winningSectionCounter = 0;
   $scope.activeUsers = 0;
   $scope.iPhoneUsers = 0;
   $scope.androidUsers = 0;
   $scope.stadiumCoverage = 0;
-  $scope.stadiumSize = 10000;
+  $scope.stadiumSize = 19145;
   $scope.userCheckPromise = null;
-  $scope.userPollTime = 5000;
+  $scope.userPollTime = 7000;
   $scope.currentShowType = 0;
   $scope.currentLayout;
   $scope.lengthOfShow = 15;
@@ -39,6 +38,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     return Math.floor(Math.random() * userCount);
   }
 
+  // called by Create Show button to load a layout.
   $scope.loadLayouts = function ()
   {
     if (!$scope.currentEvent || !$scope.currentEvent._logicalLayoutId)
@@ -47,42 +47,33 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       return;
     }
 
+    $scope.resetWinners();
+
     LogicalLayout.query({ eventId: $scope.currentEvent._id, logicallayoutId: $scope.currentEvent._logicalLayoutId }, function (layout)
     {
-        $scope.currentLayout = layout;
-        $scope.createShow();
+      $scope.currentLayout = layout;
+
+      // Find the winning section for UI.
+      $scope.findWinningSection();
     });
   }
 
-  $scope.findWinner = function ()
+  $scope.findWinningSection = function ()
   {
-    var userCount = $scope.userLocations.length;
-    var randomNum;
-    var retries = 0;
-    do
+    // call new method, get and set winner
+    if ($scope.currentEvent)
     {
-      randomNum = $scope.getRandomNumber(userCount);
-      $scope.winner = $scope.userLocations[randomNum];
-      retries++;
-    } while (!$scope.winner && retries < 10)
-
-    if (!$scope.winner)
-    {
-      $scope.winner = $scope.userLocations[0];
-    }
-
-    $scope.winningSectionCounter = 0;
-    var counter = 0;
-    do
-    {
-      if ($scope.userLocations[counter].userSeat.section == $scope.winner.userSeat.section)
+      UserLocationsWinner.query({ eventId: $scope.currentEvent._id, showType: $scope.currentShowType }, function (winningSectionData)
       {
-        $scope.winningSectionCounter++;
-      }
-      counter++;
-    } while (counter < userCount)
+        if (winningSectionData && winningSectionData.length)
+        {
+          $scope.winnerSection.push(winningSectionData[0].winningsections);
+        }
 
-    $scope.winnerSection.push($scope.winner.userSeat.section);
+        // Actually create the show now.
+        $scope.createShow();
+      });
+    }
   }
 
   $scope.createShow = function ()
@@ -116,15 +107,11 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       }
     }
 
-    if (!$scope.userLocations || $scope.userLocations.length < 1)
+    if ($scope.activeUsers < 1)
     {
       alert("Sorry, not enough users have joined this event. Cancelling show.");
       return;
     }
-
-    $scope.resetWinners();
-
-    $scope.findWinner();
 
     var black = "0,0,0";
     var red = "216,19,37";
@@ -435,12 +422,14 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   {
     if ($scope.currentEvent)
     {
-      UserLocations.query({ eventId: $scope.currentEvent._id }, function (userLocations)
+      UserLocationsCount.query({ eventId: $scope.currentEvent._id }, function (countData)
       {
-        $scope.userLocations = userLocations;
-        $scope.activeUsers = userLocations.length;
-        $scope.stadiumCoverage = Math.round($scope.activeUsers / $scope.stadiumSize * 100);
-        $scope.iPhoneUsers = Math.round($scope.activeUsers / $scope.stadiumSize * 100);
+        if (countData && countData.length)
+        {
+          $scope.activeUsers = countData[0].usercount;
+          $scope.stadiumCoverage = Math.round($scope.activeUsers / $scope.stadiumSize * 100);
+          $scope.iPhoneUsers = Math.round($scope.activeUsers / $scope.stadiumSize * 100);
+        }
       });
     }
   }
@@ -499,7 +488,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
   $scope.startShow = function (seconds)
   {
-    if ($scope.userLocations == null || $scope.userLocations.length < 1)
+    if ($scope.activeUsers == null || $scope.activeUsers < 1)
     {
       alert("Sorry, not enough users have joined this event. Cancelling show.");
       return;
@@ -513,11 +502,6 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     }
 
     $timeout.cancel($scope.promise_clock);
-
-    if (!$scope.winner)
-    {
-      $scope.findWinner();
-    }
 
     $timeout($scope.showIsOver, 100);
 
@@ -593,11 +577,12 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
   $scope.showIsOver = function ()
   {
-    if ($scope.winner == null)
+    // Query new UJ method to find winner.
+    /*if ($scope.winner == null)
     {
       alert("Sorry!  Couldn't pick a winning seat. Please pick a random seat.");
       return;
-    }
+    }*/
 
     if (!$scope.winnerSeat)
     {
@@ -608,9 +593,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.cleanUpAfterShow = function ()
   {
     $scope.percentTimeToStart = 0;
-    $scope.winnerSeat = "";
-    $scope.winner = null;
-    $scope.winnerSection = [];
+    $scope.resetWinners();
   }
 
   $scope.$on('$locationChangeStart', function ()
