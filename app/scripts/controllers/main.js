@@ -250,7 +250,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     var show = new Shows({
       _eventId: $scope.currentEvent._id,
       _winnerId: null,
-      type: $scope.currentShowType,      
+      type: $scope.currentShowType,
+      startShowOffset: 0,
       startAt: null,
       winnerSections: $scope.winnerSection,
       winnerImageUrl: !!($scope.currentShow.winnerImageUrl) ? $scope.currentShow.winnerImageUrl.trim() : null,
@@ -512,7 +513,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     // Set showStartTime for UI. Different format than just getting Date.now()
     var startTimeDate = new Date(startTime);
     var stopTimeDate = new Date(stopTime);
-    $scope.currentShow.startAt = $scope.showStartTime = startTimeDate.toISOString();
+    $scope.currentShow.startShowOffset = seconds;
+    //$scope.currentShow.startAt = $scope.showStartTime = startTimeDate.toISOString();
     $scope.showStartTimeDisplay = startTimeDate.toLocaleTimeString();
     $scope.stopTime = stopTimeDate.toUTCString();
     $scope.showStopTimeDisplay = stopTimeDate.toLocaleTimeString();
@@ -520,7 +522,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     console.log($scope.currentShow.startAt);
     console.log($scope.stopTime);
 
-    // Set the start time. Already have a winner.
+    // Set the start time.
     $scope.currentShow.$update();
 
     $scope.percentTimeToStart = 0;
