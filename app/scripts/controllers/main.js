@@ -512,7 +512,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     // Set showStartTime for UI. Different format than just getting Date.now()
     var startTimeDate = new Date(startTime);
     var stopTimeDate = new Date(stopTime);
-    $scope.currentShow.startAt = $scope.showStartTime = startTimeDate.toUTCString();
+    $scope.currentShow.startAt = $scope.showStartTime = startTimeDate.toISOString();
     $scope.showStartTimeDisplay = startTimeDate.toLocaleTimeString();
     $scope.stopTime = stopTimeDate.toUTCString();
     $scope.showStopTimeDisplay = stopTimeDate.toLocaleTimeString();
@@ -531,7 +531,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.updateClock = function ()
   {
     var currDate = new Date(Date.now());
-    $scope.current_time = currDate.toUTCString();
+    $scope.current_time = currDate.toISOString();
     $scope.currentTimeDisplay = currDate.toLocaleTimeString();
 
     console.log('UpdateCLock: current time = ' + $scope.current_time.toString() + '. showStartTime' + $scope.showStartTimeDisplay.toString());
@@ -570,9 +570,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
   $scope.formatWinnerString = function ()
   {
-    // stupid. Need to add string.format
-    //return "Section " + $scope.winner.userSeat.section + ", Row " + $scope.winner.userSeat.row + ", Seat " + $scope.winner.userSeat.seat;
-    return $scope.winner.userSeat.section;
+    return $scope.winnerSection[0];
   }
 
   $scope.showIsOver = function ()
