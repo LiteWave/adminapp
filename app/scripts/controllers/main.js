@@ -53,43 +53,27 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     {
       $scope.currentLayout = layout;
 
-      // Find the winning section for UI.
-      $scope.findWinningSection();
+      // Now create the show.
+      $scope.createShow();
     });
   }
 
-  $scope.findWinningSection = function ()
+  /*$scope.findWinningSection = function ()
   {
-    // call new method, get and set winner
-    if ($scope.currentEvent)
+    UserLocationsWinner.query({ eventId: $scope.currentEvent._id, showType: $scope.currentShowType }, function (winningSectionData)
     {
-      UserLocationsWinner.query({ eventId: $scope.currentEvent._id, showType: $scope.currentShowType }, function (winningSectionData)
+      if (winningSectionData && winningSectionData.length)
       {
-        if (winningSectionData && winningSectionData.length)
-        {
-          $scope.winnerSection.push(winningSectionData[0].winningsections);
-        }
+        $scope.winnerSection.push(winningSectionData[0].winningsections);
+      }
 
-        // Actually create the show now.
-        $scope.createShow();
-      });
-    }
-  }
+      // Actually create the show now.
+      $scope.createShow();
+    });
+  }*/
 
   $scope.createShow = function ()
   {
-    /*if ($scope.lengthOfShow < 15)
-    {
-      alert("Sorry, the Show must run for at least 15 seconds.");
-      return;
-    }*/
-
-    if (!$scope.currentEvent)
-    {
-      alert("Please select an Event");
-      return;
-    }
-
     if (!$scope.currentLayout.columns || !$scope.currentLayout.columns.length)
     {
       console.log("CurrentLayout.columns is null. $scope.currentLayout:" + $scope.currentLayout);
@@ -107,11 +91,11 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       }
     }
 
-    if ($scope.activeUsers < 1)
-    {
-      alert("Sorry, not enough users have joined this event. Cancelling show.");
-      return;
-    }
+    // First, pick a random layout, then pick a section from $scope.currentLayout.columns[logicalCol - 1].sectionList.
+    var columnLength = $scope.currentLayout.columns.length;
+    var randomLayout = $scope.getRandomNumber(columnLength);
+    var randomSectionList = $scope.currentLayout.columns[randomLayout - 1].sectionList;
+    $scope.winnerSection.push(randomSectionList[$scope.getRandomNumber(randomSectionList.length)]);
 
     var black = "0,0,0";
     var red = "216,19,37";
@@ -120,7 +104,6 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     // for each logical column, create commands
     // NOTE:this is simple logic. Need to account for logical rows and seats.  22
     var logicalCol = 1;
-    var columnLength = $scope.currentLayout.columns.length;
     var currentSection;
     var cmdList = [];
     var cmds = [];
