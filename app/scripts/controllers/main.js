@@ -487,7 +487,11 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     $timeout.cancel($scope.promise_clock);
 
-    $timeout($scope.showIsOver, 100);
+    // $timeout($scope.showIsOver, 100);
+
+    // Set the start offset. The API will figure out the start time based on server time.
+    $scope.currentShow.startShowOffset = seconds;
+    $scope.currentShow.$update();
 
     var now = new Date();
     var startTime = Math.floor(now.getTime() + (1000 * seconds));
@@ -496,17 +500,14 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     // Set showStartTime for UI. Different format than just getting Date.now()
     var startTimeDate = new Date(startTime);
     var stopTimeDate = new Date(stopTime);
-    $scope.currentShow.startShowOffset = seconds;
-    //$scope.currentShow.startAt = $scope.showStartTime = startTimeDate.toISOString();
+    
+    $scope.showStartTime = startTimeDate.toISOString();
     $scope.showStartTimeDisplay = startTimeDate.toLocaleTimeString();
     $scope.stopTime = stopTimeDate.toUTCString();
     $scope.showStopTimeDisplay = stopTimeDate.toLocaleTimeString();
 
     console.log($scope.currentShow.startAt);
     console.log($scope.stopTime);
-
-    // Set the start time.
-    $scope.currentShow.$update();
 
     $scope.percentTimeToStart = 0;
     $scope.updateTime = seconds * 10;
