@@ -1,3 +1,5 @@
+release/
+build/
 env/
 .tmp/
 node_modules/
