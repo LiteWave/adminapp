@@ -1,6 +1,9 @@
 // Generated on 2013-12-06 using generator-angularexpress 0.0.5
 'use strict';
 var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
+var terminal = require('child_process').spawn('bash');
+var exec = require('child_process').exec;
+
 
 // # Globbing
 // for performance reasons we're only matching one level down:
@@ -17,12 +20,11 @@ module.exports = function (grunt) {
       'README.md',
       'Gruntfile.js',
       'node-inspector.js',
-      'karma.conf.js',
       '/.git/',
       '/node_modules/',
       '/app/',
       '/dist/',
-      '/server/public/',
+      '/build/public/',
       '/test/',
       '/coverage/',
       '/.tmp',
@@ -35,7 +37,7 @@ module.exports = function (grunt) {
     yeoman: {
       // configurable paths
       app: require('./bower.json').appPath || 'app',
-      dist: './server/public'
+      dist: './build/public'
     },
     watch: {
       coffee: {
@@ -150,11 +152,12 @@ module.exports = function (grunt) {
           ]
         }]
       },
-      server: '.tmp'
+      server: '.tmp',
+      build: ['build/'],
+      release: ['release/'],
     },
     jshint: {
       options: {
-        jshintrc: '.jshintrc',
         reporter: require('jshint-stylish')
       },
       all: [
@@ -313,6 +316,22 @@ module.exports = function (grunt) {
         dest: '<%= yeoman.dist %>/scripts/config.js',
       }                            
     },
+    compress: {
+      all: {
+        options: {
+          archive: 'release/app.zip'
+        },
+        files: [
+          {
+            mode: 'zip',
+            expand: true,
+            cwd: 'build',
+            src: ['**'],
+            dest: 'app'
+          }
+        ]
+      }
+    },
     concurrent: {
       nodemon: {
           options: {
@@ -340,12 +359,6 @@ module.exports = function (grunt) {
         'htmlmin'
       ]
     },
-    karma: {
-      unit: {
-        configFile: 'karma.conf.js',
-        singleRun: true
-      }
-    },
     cdnify: {
       dist: {
         html: ['<%= yeoman.dist %>/*.html']
@@ -371,7 +384,7 @@ module.exports = function (grunt) {
     nodemon: {
         dev: {
             options: {
-                file: './server/server.js',
+                file: './build/server.js',
                 args: ['development'],
                 watchedExtensions: [
                     'js',
@@ -405,7 +418,7 @@ module.exports = function (grunt) {
         options: {
           hostname: 'localhost',
           port: 9002,
-          server: require('path').resolve('./server/server')
+          server: require('path').resolve('./build/server')
         }
       }
     }
@@ -438,8 +451,7 @@ module.exports = function (grunt) {
     'clean:server',
     'concurrent:test',
     'autoprefixer',
-    'connect:test',
-    'karma'
+    'connect:test'
   ]);
   
   grunt.registerTask('config',function(environment){
@@ -447,9 +459,70 @@ module.exports = function (grunt) {
     grunt.task.run("copy:" + environment + "Config");
 
   });
+  
+  grunt.registerTask('zip',function(withConfig){
+    grunt.task.run("clean:release");
+    grunt.task.run("compress");
+  });  
+  
+  grunt.registerTask('scp_deploy', '', function(serverHost) {
+    
+    var done = grunt.task.current.async();
+    var execStr = 'scp release/app.zip ubuntu@' + serverHost + ':~ubuntu/tmp/adminapp.zip\n';
+    grunt.log.writeln(execStr);    
+    var child = exec(execStr,
+      function(error, stdout, stderr) {
+        if (error !== null) {
+          grunt.log.writeln(error);
+        } else {
+          grunt.log.writeln(stdout);  
+        }        
+        done(error);
+      });
+  });
+  
+  grunt.registerTask('ssh_deploy','', function(serverHost) {
+    
+    var done = grunt.task.current.async();
+    var execStr = 'ssh ubuntu@' + serverHost + ' sudo unzip -o ~ubuntu/tmp/adminapp.zip -d ~ubuntu/apps/adminapp/ \n';
+
+    grunt.log.writeln(execStr);
+    var child = exec(execStr,
+      function(error, stdout, stderr) {        
+        grunt.log.writeln(stderr);
+        if (error !== null) {
+          grunt.log.writeln(error);
+        } else {
+          grunt.log.writeln(stdout);  
+        }        
+        done(error);
+      });
+
+  });
+
+
+  grunt.registerTask('deploy','', function(serverHost) {
+    grunt.task.run('build');
+    grunt.task.run('zip');
+
+    //shortcuts so so that we don't have to type in the fully qualified domain name but still can if we want
+    var serverHosts = [
+      '52.35.158.241'
+    ];
+
+    for (var i in serverHosts)
+    {
+      var serverHost = serverHosts[i];
+      var task = ['scp_deploy:' + serverHost, 'ssh_deploy:' + serverHost];  
+      grunt.log.writeln("Deploy task: " + task);
+      grunt.task.run(task);
+    }
+
+  });
 
   grunt.registerTask('build', [
     'clean:dist',
+    'clean:build',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
@@ -465,7 +538,6 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'jshint',
     'test',
     'build'
   ]);
