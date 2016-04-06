@@ -468,7 +468,7 @@ module.exports = function (grunt) {
   grunt.registerTask('scp_deploy', '', function(serverHost) {
     
     var done = grunt.task.current.async();
-    var execStr = 'scp release/app.zip ubuntu@' + serverHost + ':~ubuntu/tmp/adminapp.zip\n';
+    var execStr = 'scp release/app.zip ubuntu@' + serverHost + ':/home/ubuntu/adminapp.zip\n';
     grunt.log.writeln(execStr);    
     var child = exec(execStr,
       function(error, stdout, stderr) {
@@ -484,7 +484,7 @@ module.exports = function (grunt) {
   grunt.registerTask('ssh_deploy','', function(serverHost) {
     
     var done = grunt.task.current.async();
-    var execStr = 'ssh ubuntu@' + serverHost + ' sudo unzip -o ~ubuntu/tmp/adminapp.zip -d ~ubuntu/apps/adminapp/ \n';
+    var execStr = 'ssh ubuntu@' + serverHost + ' sudo unzip -o /home/ubuntu/adminapp.zip -d /home/ubuntu/apps/adminapp/ \n';
 
     grunt.log.writeln(execStr);
     var child = exec(execStr,
