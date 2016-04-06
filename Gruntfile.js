@@ -507,7 +507,9 @@ module.exports = function (grunt) {
 
     //shortcuts so so that we don't have to type in the fully qualified domain name but still can if we want
     var serverHosts = [
-      '52.35.158.241'
+      '52.35.158.241', // webmini,
+      '52.10.194.211', // web1,
+      '52.35.105.39' // web2
     ];
 
     for (var i in serverHosts)
