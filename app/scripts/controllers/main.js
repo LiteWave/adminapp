@@ -95,9 +95,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     var columnLength = $scope.currentLayout.columns.length;
     var randomLayout = $scope.getRandomNumber(columnLength);
     var randomSectionList = $scope.currentLayout.columns[randomLayout - 1].sectionList;
-    //$scope.winnerSection.push(randomSectionList[$scope.getRandomNumber(randomSectionList.length)]);
-    var fakeWinningList = ["101", "103", "105"];
-    $scope.winnerSection.push(fakeWinningList[$scope.getRandomNumber(fakeWinningList.length)]);
+    $scope.winnerSection.push(randomSectionList[$scope.getRandomNumber(randomSectionList.length)]);
 
     var black = "0,0,0";
     var red = "216,19,37";
