@@ -33,13 +33,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     $scope.currentShowType = type;
   };
 
-  $scope.getRandomNumber = function (userCount)
-  {
-    return Math.floor(Math.random() * userCount);
-  }
-
   // called by Create Show button to load a layout.
-  $scope.loadLayouts = function ()
+  $scope.createShow = function ()
   {
     if (!$scope.currentEvent || !$scope.currentEvent._logicalLayoutId)
     {
@@ -49,232 +44,42 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     $scope.resetWinners();
 
-    LogicalLayout.query({ eventId: $scope.currentEvent._id, logicallayoutId: $scope.currentEvent._logicalLayoutId }, function (layout)
-    {
-      $scope.currentLayout = layout;
-
-      // Now create the show.
-      $scope.createShow();
-    });
-  }
-
-  /*$scope.findWinningSection = function ()
-  {
-    UserLocationsWinner.query({ eventId: $scope.currentEvent._id, showType: $scope.currentShowType }, function (winningSectionData)
-    {
-      if (winningSectionData && winningSectionData.length)
-      {
-        $scope.winnerSection.push(winningSectionData[0].winningsections);
-      }
-
-      // Actually create the show now.
-      $scope.createShow();
-    });
-  }*/
-
-  $scope.createShow = function ()
-  {
-    if (!$scope.currentLayout.columns || !$scope.currentLayout.columns.length)
-    {
-      console.log("CurrentLayout.columns is null. $scope.currentLayout:" + $scope.currentLayout);
-      if ($scope.currentLayout.logicalLayout.columns)
-      {
-        console.log("Should be updating CurrentLayout.columns.");
-        $scope.currentLayout.columns = $scope.currentLayout.logicalLayout.columns;
-        $scope.currentLayout.logicalLayout.columns = null;
-        $scope.currentLayout.$update();
-      }
-      else
-      {
-        alert("Current Event has no logical columns. Please create an Event with logical columns.");
-        return;
-      }
-    }
-
-    // First, pick a random layout, then pick a section from $scope.currentLayout.columns[logicalCol - 1].sectionList.
-    var columnLength = $scope.currentLayout.columns.length;
-    var randomLayout = $scope.getRandomNumber(columnLength);
-    var randomSectionList = $scope.currentLayout.columns[randomLayout - 1].sectionList;
-    $scope.winnerSection.push(randomSectionList[$scope.getRandomNumber(randomSectionList.length)]);
-
-    var black = "0,0,0";
-    var red = "216,19,37";
-    var white = "162,157,176";
-
-    // for each logical column, create commands
-    // NOTE:this is simple logic. Need to account for logical rows and seats.  22
-    var logicalCol = 1;
-    var currentSection;
-    var cmdList = [];
-    var cmds = [];
-    var onWinnerSection = false;
-    var randomDelay;
-
-    // TODO: remove the hardcoding of subtracting 6 seconds for the contest. If this was a litewave only, don't subtract.
-    // See later TODO about putting command creation in a loop for more easily setting the # of commands.
-    var first_length = Math.ceil((($scope.lengthOfShow - 6) * 1000) / columnLength);  //  first was 350 ms
-    if (first_length < 350)
-    {
-      first_length = 350;
-    }
-
-    var second_length = 250;  // 250 ms
-    var third_length = 250;  // 250 ms
-    var fourth_length = 250;  // 250 ms
-    var firstColLengthMS = columnLength * first_length;  // 11sec
-    var secondColLengthMS = columnLength * second_length;  // 5.5sec
-
-    while (logicalCol <= columnLength)
-    {
-      currentSection = $scope.currentLayout.columns[logicalCol - 1].sectionList;
-
-      // If a contest is involved set winner.
-      if ($scope.currentShowType >= 1)
-      {
-        // TODO Need to handle multiple winning sections with a loop.
-        onWinnerSection = (currentSection.indexOf($scope.winnerSection.toString()) > -1);
-      }
-
-      // If a LiteShow
-      if ($scope.currentShowType === 0 || $scope.currentShowType === 1)
-      {
-        // Wave 1.
-        if (logicalCol > 1) {
-          // first section doesn't need to wait.
-          cmdList.push({ "ct": "w", "cl": first_length * (logicalCol - 1) });
-        }
-        cmdList.push({ "bg": red, "cl": first_length, "sv": true });             // display 500 ms and vibrate
-        cmdList.push({ "ct": "w", "cl": firstColLengthMS - (first_length * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
-
-        // Wave 2.
-        if (logicalCol > 1) {
-          // first section doesn't need to wait.
-          cmdList.push({ "ct": "w", "cl": second_length * (logicalCol - 1) });
-        }
-        cmdList.push({ "bg": red, "cl": second_length, "sv": true }); // display and vibrate.
-        cmdList.push({ "ct": "w", "cl": secondColLengthMS - (second_length * logicalCol) }); // pause 21.750 seconds, 21.5. 21.25, 21
-      }
-
-      // If a contest.
-      if ($scope.currentShowType >= 1)
-      {
-        // Common Contest Commands
-        // Generate random delay time between 0 and 100 ms for each logical column.
-        // NOTE: must be small to prevent winning phone to go off too soon.
-        // TODO: put in a loop of X number so we easily know how many commands we are adding.
-        randomDelay = $scope.getRandomNumber(100);
-        cmdList.push({ "ct": "w", "cl": randomDelay });  // wait X ms, max delay 250ms        
-        cmdList.push({ "bg": black, "cl": first_length });
-        cmdList.push({ "bg": white, "cl": first_length });
-        cmdList.push({ "bg": red, "cl": first_length });
-        cmdList.push({ "bg": black, "cl": first_length });
-        cmdList.push({ "bg": white, "cl": first_length });
-        cmdList.push({ "bg": red, "cl": first_length, "sv": true });
-
-        cmdList.push({ "bg": black, "cl": second_length });
-        cmdList.push({ "bg": white, "cl": second_length });
-
-        // Take out a few commands from non-winner sections
-        if (onWinnerSection) {
-          cmdList.push({ "bg": red, "cl": second_length });
-        }
-        cmdList.push({ "bg": black, "cl": second_length });
-
-        if (onWinnerSection) {
-          cmdList.push({ "bg": white, "cl": second_length });
-        }
-        cmdList.push({ "bg": red, "cl": second_length, "sv": true });
-
-        cmdList.push({ "bg": black, "cl": second_length });
-        cmdList.push({ "bg": white, "cl": second_length });
-
-        if (onWinnerSection) {
-          cmdList.push({ "bg": red, "cl": second_length });
-        }
-        cmdList.push({ "bg": black, "cl": second_length });
-
-        if (onWinnerSection) {
-          cmdList.push({ "bg": white, "cl": second_length });
-        }
-        cmdList.push({ "bg": red, "cl": second_length });
-
-        // Commands for winning section
-        if (onWinnerSection) {
-          cmdList.push({ "pif": "w", "bg": black, "cl": second_length });
-          cmdList.push({ "bg": white, "cl": second_length });
-          cmdList.push({ "pif": "w", "bg": red, "cl": second_length });
-          cmdList.push({ "bg": black, "cl": second_length });
-          cmdList.push({ "bg": white, "cl": second_length });
-          cmdList.push({ "pif": "w", "bg": red, "cl": second_length, "sv": true });
-
-          // push winning command to winner inside of winning section.
-          cmdList.push({ "pif": "w", "ct": "win", "bg": red, "cl": second_length });
-          cmdList.push({ "pif": "w", "bg": black, "cl": second_length, "sv": true });
-          cmdList.push({ "pif": "w", "bg": white, "cl": second_length });
-          cmdList.push({ "pif": "w", "bg": red, "cl": second_length, "sv": true });
-          cmdList.push({ "pif": "w", "bg": black, "cl": second_length });
-          cmdList.push({ "pif": "w", "bg": white, "cl": second_length });
-        }
-      }
-
-      // Add this set of commands to the overall list
-      cmds.push({ "id": logicalCol - 1, "commandList": cmdList.slice(0) });
-
-      // clear out commands.
-      cmdList = [];
-
-      logicalCol++;
-    }
-
-    $scope.cmds = cmds;
-
-    // TODO move some or all of this to the server
-
+    // Create the default show object with the data that we currently have. 
     var show = new Shows({
-      _eventId: $scope.currentEvent._id,
-      _winnerId: null,
-      type: $scope.currentShowType,
-      startShowOffset: 0,
-      startAt: null,
-      winnerSections: $scope.winnerSection,
-      winnerImageUrl: !!($scope.currentShow.winnerImageUrl) ? $scope.currentShow.winnerImageUrl.trim() : null,
-      winnerUrl: !!($scope.currentShow.winnerUrl) ? $scope.currentShow.winnerUrl.trim() : null
+          _eventId: $scope.currentEvent._id,
+          _winnerId: null,
+          length: $scope.lengthOfShow,
+          type: $scope.currentShowType,
+          startShowOffset: 0,
+          startAt: null,
+          winnerSections: null,
+          winnerImageUrl: !!($scope.currentShow.winnerImageUrl) ? $scope.currentShow.winnerImageUrl.trim() : null,
+          winnerUrl: !!($scope.currentShow.winnerUrl) ? $scope.currentShow.winnerUrl.trim() : null
     });
 
-    $scope.currentShow = show;
-
-    // First, save the Show.
+    // Now save the Show. Everything else we need (except startAt) will get set server side.
     show.$save(function (response)
     {
       console.log(response);
-
       if (response._id)
       {
-        var showCommands = new ShowCommands({
-          _showId: response._id,
-          commands: cmds,
-          type: $scope.currentShowType
-        });
+        // Update the current show with the updated show.
+        $scope.currentShow = show;
 
-        // Second, save the ShowCommands.
-        showCommands.$save(function (response2)
+        // Fetch the winning section.
+        $scope.winnerSection = show.winnerSections;
+
+        // Display winner to Admin so they can prepare cameras.
+        $scope.winnerSeat = $scope.formatWinnerString() + "(Seat Info):" + show.winnerSeat;
+
+        ShowCommands.query({ showId: show._id, showCommandId: show._showCommandId }, function (commands)
         {
-          console.log(response2);
-
-          if (response2._id)
-          {
-            // Lastly, save the ShowCommandId on the Show.
-            show._showCommandId = response2._id;
-            show.$update();
-
-            //alert("Show successfully created.");
-          }
+          $scope.cmds = commands;
         });
+
+        //alert("Show successfully created.");
       }
     });
-
-    // Display winner to Admin so they can prepare cameras.
-    $scope.winnerSeat = $scope.formatWinnerString();
   };
 
   $scope.executeCmdA = function(logicalCol, cmd)
@@ -561,7 +366,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
   $scope.showIsOver = function ()
   {
-    // Query new UJ method to find winner.
+    // TODO Query new UJ method to find winner?
     /*if ($scope.winner == null)
     {
       alert("Sorry!  Couldn't pick a winning seat. Please pick a random seat.");
