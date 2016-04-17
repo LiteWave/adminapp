@@ -16,7 +16,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.stadiumCoverage = 0;
   $scope.stadiumSize = 19145;
   $scope.userCheckPromise = null;
-  $scope.userPollTime = 7000;
+  $scope.userPollTime = 5000;
   $scope.currentShowType = 0;
   $scope.currentLayout;
   $scope.lengthOfShow = 15;
