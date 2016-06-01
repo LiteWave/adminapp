@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('liteWaveApp')
-.controller('StadiumsController', ['$rootScope', '$scope', '$routeParams', '$location', 'Clients', 'Stadiums', 'Levels',
+var app = angular.module('liteWaveApp');
+app.controller('StadiumsController', ['$rootScope', '$scope', '$routeParams', '$location', 'Clients', 'Stadiums', 'Levels',
   function ($rootScope, $scope, $routeParams, $location, Clients, Stadiums, Levels)
   {
     $rootScope.currentArea = "stadiums";

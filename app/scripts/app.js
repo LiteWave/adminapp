@@ -99,6 +99,30 @@ var app = angular.module('liteWaveApp', [
           loggedin: checkLoggedin
         }
       })
+      .when('/clients', {
+        controller: 'ClientListCtrl',
+        resolve: {
+          loggedin: checkLoggedin,
+          users: ["MultiClientLoader", function(MultiClientLoader) {
+           return MultiClientLoader();
+          }]
+        },
+        templateUrl:'/views/clients/list.html'
+      })
+      .when('/clients/:clientId/edit', {
+        controller: 'ClientEditCtrl',
+        resolve: {
+          loggedin: checkLoggedin,
+          user: ["ClientLoader", function(ClientLoader) {
+            return ClientLoader();
+          }]
+        },
+        templateUrl:'/views/clients/clientForm.html'
+      })
+      .when('/clients/create', {
+        controller: 'ClientNewCtrl',
+        templateUrl: '/views/clients/clientForm.html'
+      })
       .when('/stadiums', {
         templateUrl: 'views/stadiums/stadiums.html',
         controller: 'StadiumsController',
