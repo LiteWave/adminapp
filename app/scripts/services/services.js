@@ -50,6 +50,32 @@ services.factory("Clients", ['$resource', function($resource) {
     });
 }]);
 
+services.factory('MultiClientLoader', ['Clients', '$q',
+    function(Clients, $q) {
+  return function() {
+    var delay = $q.defer();
+    Clients.query(function(clients) {
+      delay.resolve(clients);
+    }, function() {
+      delay.reject('Unable to fetch clients');
+    });
+    return delay.promise;
+  };
+}]);
+
+services.factory('ClientLoader', ['Clients', '$route', '$q',
+    function(Clients, $route, $q) {
+  return function() {
+    var delay = $q.defer();
+    Clients.get({_id: $route.current.params._id}, function(client) {
+      delay.resolve(client);
+    }, function() {
+      delay.reject('Unable to fetch client ' + $route.current.params._id);
+    });
+    return delay.promise;
+  };
+}]);
+
 // UserLocations service used for client REST endpoint.
 services.factory('UserLocations', ['$resource', function ($resource) {
     return $resource(apiURL+'/events/:eventId/user_locations', {

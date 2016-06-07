@@ -1,0 +1,24 @@
+<section>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="widget stacked">
+        <div class="widget-header"><i class="icon-tasks"></i><h3>Edit Client</h3></div> <!-- /.widget-header -->
+  				<div class="widget-content">
+          	<form name="clientForm" class="form-horizontal" role="form" ng-submit="save()">
+              <div class="form-group">
+                <label class="col-md-2 control-label" for="name">Name</label>
+                <div class="col-md-3">
+                  <input type="text" class="form-control" ng-model="client.name" id="name" ng-minlength="3" required>
+                </div>
+              </div>
+		          <div class="form-group">
+			          <div class="col-sm-offset-2 col-sm-10">
+				          <button type="submit" class="btn btn-primary" ng-disabled="clientForm.$invalid">Save</button>
+			          </div>
+		          </div>
+	        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
