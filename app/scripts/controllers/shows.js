@@ -1,120 +1,126 @@
+'use strict';
+var app = angular.module('liteWaveApp');
 angular.module('liteWaveApp').controller('ShowsController',
-        ['$scope', '$routeParams', '$location', '$timeout', 'Shows', 'Events', 'LiteShows', 'EventJoins',
-  function ($scope, $routeParams, $location, $timeout, Shows, Events, LiteShows, EventJoins)
+        ['$rootScope', '$scope', '$routeParams', 'Clients', 'Stadiums', 'LogicalLayout',
+  function ($rootScope, $scope, $routeParams, Clients, Stadiums, LogicalLayout)
   {
     $rootScope.currentArea = "shows";
-
-    $scope.create = function ()
-    {
-      var show = new Shows({
-        name: this.name
-      });
-      show.$save(function (response)
-      {
-        $location.path("show/" + response._id);
-      });
-
-      this.name = "";
+    $scope.stadiumMap = $("#MapContainer");
+    $scope.currentSections;
+    $scope.currentGroupNumber = 0;
+    $scope.myData = [];
+    $scope.gridGroupOptions = {
+                              data: 'myData',
+                              multiSelect: false,
+                              columnDefs: [
+                              { field: 'id', displayName: 'Group' },
+                              { field: 'sectionList', displayName: 'Sections' }
+                              ]
     };
 
-    $scope.remove = function (show)
+    $scope.createGroup = function ()
     {
-      show.$remove();
+      $scope.currentSections = $scope.stadiumMap.tuMap("GetSelectedSections", {});
+      $scope.myData.push({ "id": $scope.currentGroupNumber, "sectionList" : $scope.currentSections });
+      $scope.currentGroupNumber++;
 
-      for (var i in $scope.shows)
+      // Unset the current sections
+      var length = $scope.currentSections.length;
+      for (var i = 0; i < length; i++)
       {
-        if ($scope.shows[i] == show)
-        {
-          $scope.shows.splice(i, 1);
-        }
+        $scope.stadiumMap.tuMap("ToggleSelection", $scope.currentSections[i]);
       }
     };
 
-    $scope.update = function ()
+    $scope.changeLayout = function (stadiumLayout)
     {
-      var show = $scope.show;
-      if (!show.updated)
+      $scope.myData = stadiumLayout.columns;
+    };
+
+    Stadiums.query({ clientId: $rootScope.currentClient._id }, function (stadium)
+    {
+      if (stadium && stadium.length)
       {
-        show.updated = [];
+        $rootScope.currentStadium = stadium[0];
+
+        LogicalLayout.query({ stadiumId: $rootScope.currentStadium._id }, function (layouts)
+        {
+          $scope.stadiumLayouts = layouts;
+        });
       }
-
-      show.$update(function ()
-      {
-        $location.path('/events/' + show._eventId + '/shows/' + show._id);
-      });
-    };
-
-
-    $scope.find = function (query)
-    {
-      if (!query)
-      {
-        query = { _eventId: $routeParams._eventId };
-      }
-      EventLiteShows.query(query, function (shows)
-      {
-        $scope.shows = shows;
-      });
-    };
-
-    $scope.findOne = function ()
-    {
-      EventLiteShows.get({
-        _eventId: $routeParams._eventId,
-        showId: $routeParams.showId
-      }, function (show)
-      {
-        if (!show.startAt)
-        {
-          show.startAt = new Date(Date.now()); //.format('yyyy-MM-dd HH:mm:ss Z');
-        }
-        $scope.show = show;
-        Events.get({
-          _eventId: show._eventId
-        }, function (event)
-        {
-          $scope.show.event = event;
-        });
-        LiteShows.get({
-          liteshowId: show._liteshowId
-        }, function (liteshow)
-        {
-          $scope.show.liteshow = liteshow;
-        });
-        EventJoins.query({
-          showId: show._id
-        }, function (event_joins)
-        {
-          $scope.event_joins = event_joins;
-        });
-      });
-      // $scope.offset_seconds = 20;
-      $scope.promise_clock = $timeout($scope.updateClock, 100);
-
-    };
-
-
-
-    $scope.updateClock = function ()
-    {
-      $scope.current_time = new Date(Date.now());
-      EventJoins.query({
-        showId: $routeParams.showId
-      }, function (event_joins)
-      {
-        $scope.event_joins = event_joins;
-      });
-      $scope.promise_clock = $timeout($scope.updateClock, 100);
-    };
-
-    $scope.setStartTime = function ()
-    {
-      $scope.show.startAt = new Date((Math.ceil(Date.now() / 1000) * 1000) + ($scope.offset_seconds * 1000));
-    };
-
-    $scope.$on('$locationChangeStart', function ()
-    {
-      $timeout.cancel($scope.promise_clock);
     });
+
+    if ($rootScope.currentClient.externalStadiumId)
+    {
+      /************************************************************
+      Initialize Ticket Utils Interactive Map
+      ************************************************************/
+      $scope.stadiumMap.tuMap({
+        //MapId: "24d98d09-37e1-437f-87c5-eae845692e6c"
+        MapId: $rootScope.currentClient.externalStadiumId
+            , MapType: "Interactive"
+            , ControlsPosition: "Inside"
+        /*Failover Map: Replace this with a URL of the static chart from alternate datasource(when available)*/
+			      , FailoverMapUrl: "http://static.ticketutils.com/Charts/No-Seating-Chart.jpg"
+			      , Tickets: Data.Tickets
+			      , AutoSwitchToStatic: false
+			      , PreferredFirst: false
+			      , TicketsListContainer: "#InventoryContainer"
+			      , GroupsContainer: "#GroupsContainer"
+			      , OnError: function (e, Error)
+			      {
+			        if (Error.Code == 0)
+			        {
+			          var Message = "<div style=\"padding:10px;\">";
+			          Message += "<span style=\"color:red;font-weight:bold;\">This Sample is Configured to run under host 'localhost'</span>";
+			          Message += "<br />";
+			          Message += "Please configure IIS/Apache or Compatible Web Server to point 'demo' folder in order to view the Sample. If you intend to Run it under different Domain, please contact TicketUtils Support for Activation";
+			          Message += "</div>";
+			          $("#MapContainer").html(Message);
+			        }
+			      },
+        OnBeforeListRender: function ()
+        {
+          var Height = $("#TuMap").outerHeight();
+          $("#InventoryContainer").height(Height);
+        },
+        OnInit: function (e, MapType)
+        {
+        },
+        OnClick: function (e, Section)
+        {
+        },
+        OnGroupClick: function (e, Group)
+        {
+        }
+      });
+    }
+
+    $scope.saveLayout = function ()
+    {
+      var layout = new LogicalLayout({
+                                      _stadiumId: $rootScope.currentStadium._id,
+                                      name: $scope.name,
+                                      columns: $scope.myData
+                                    });
+
+      // Save the layout.
+      layout.$save(function (response)
+      {
+        if (response._id)
+        {
+          alert("Layout successfully created.");
+        }            
+      });
+    };
+
+    // update stadiums, layouts, etc. when the client changes
+    /*$scope.$watch('currentClient', function (newVal, oldVal)
+    {
+      if (newVal)
+      {
+
+      }
+    });*/
 
   }]);

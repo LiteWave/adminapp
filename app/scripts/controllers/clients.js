@@ -1,18 +1,12 @@
 'use strict';
 
 var app = angular.module('liteWaveApp');
-app.controller('ClientListCtrl', ['$rootScope', '$scope', '$location', '$routeParams', 'Clients',
-  function ($rootScope, $scope, $location, $routeParams, Clients)
+app.controller('ClientListCtrl', ['$rootScope', '$scope', 'clients',
+  function ($rootScope, $scope, clients)
   {
-    $rootScope.currentArea = "admin";
-    var editClientTemplate = '<div style="text-align:center"><a ng-href="/#/clients/{{row.entity._id}}/edit"><i class="icon-edit"></i></a></div>';
-
-    Clients.query({}, function (clients)
-    {
-      $rootScope.clients = clients;
-      $rootScope.currentClient = clients[0];
-      $rootScope.setClient($rootScope.currentClient);
-    });
+    $rootScope.currentArea = "clients";
+    $scope.clients = clients;
+    var editClientTemplate = '<div style="text-align:center"><a ng-href="/#/clients/{{row.entity._id}}/edit">Edit</a></div>';
 
     $scope.gridOptions = {
       data: 'clients',
@@ -31,17 +25,26 @@ app.controller('ClientEditCtrl', ['$scope', '$location', 'client',
 
     $scope.save = function ()
     {
-      $scope.user.$update(function (client)
+      $scope.client.$update(function (client)
       {
         $location.path('/clients/');
       });
     };
 
-    $scope.remove = function ()
+    $scope.deleteClient = function ()
+    {
+      if ($scope.client)
+      {
+        $scope.client.$delete();
+        $location.path('/clients/');
+      }
+    };
+
+    /*$scope.remove = function ()
     {
       delete $scope.client;
       $location.path('/clients/');
-    };
+    };*/
 }]);
 
 app.controller('ClientNewCtrl', ['$scope', '$location', 'Clients',

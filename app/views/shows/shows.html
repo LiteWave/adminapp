@@ -1,0 +1,72 @@
+﻿<section>
+  <div class="row">
+    <div class="col-md-12">
+      <h4 class="heading-inline">Use this page to create a list of groups for a stadium</h4>
+      <div>
+        <h5>To create a layout, follow these steps</h5>
+        <ul>
+          <li>In the Stadium map click on all the sections to include in this group.</li>
+          <li>Once you have all the sections selected, press the Create Group button. The new group will appear below the Stadium map.</li>
+          <li>Click Save Layout after you have all of the sections included in groups.</li>
+        </ul>
+      </div>      
+    </div>
+  </div>
+  <div class="row">
+    <div class="pull-left">
+      <div class="portlet">
+        <div class="portlet-header">
+          <h3>Stadium Logical Layout Creation Panel</h3>
+        </div>
+        <div class="portlet-content">
+          <div style="width:750px;">
+            <!-- List Container -->
+            <div id="TuMap">
+              <!-- Required Container to load Interactive Map -->
+              <div id="MapContainer" class="MapContainer">
+              </div>
+              <!-- Required Container to Interactive Map's Section Groups/Legends List -->
+              <div id="GroupsContainer" class="GroupsContainer">
+              </div>
+            </div>
+            <div class="flC"></div>
+          </div>
+        </div> <!-- /.portlet-content -->
+      </div> <!-- /.portlet -->
+    </div>
+    <div class="pull-right" style="width:800px;" >
+      <h3>Groups</h3>
+      <div class="btn-group">
+        <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+          <i class="fa fa-clock-o"></i>  &nbsp;
+          Select Layout or create a new one<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li data-ng-repeat="stadiumLayout in stadiumLayouts"><a ng-click="changeLayout(event)" href="javascript:;">{{stadiumLayout.name}}</a></li>
+        </ul>
+        <button type="button" ng-click="deleteLayout()">Delete Layout</button>
+      </div>
+      <form name="layoutForm" class="form-horizontal" role="form">
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="layoutForm">Name of Layout (e.g. Basketball, Generic Concert, etc.)</label>
+          <div class="col-md-3">
+            <input type="text" class="form-control" ng-model="name" id="layoutname" ng-minlength="3" required>
+          </div>
+        </div>
+        <button ng-click="createGroup()" class="btn btn-primary">Create Group</button>
+        <button ng-click="saveLayout()" class="btn btn-primary">Save Layout</button>
+      </form>      
+      <br />
+      <div class="gridStyle" ng-grid="gridGroupOptions"></div>
+    </div>
+  </div>
+  <!--<div class="row">
+    <div class="col-md-12">
+      <h3>Groups</h3>
+      <button ng-click="createGroup()" class="btn btn-primary">Create Group</button>
+      <button ng-click="saveGroup()" class="btn btn-primary">Save Show</button>
+      <br />
+      <div class="gridStyle" ng-grid="gridGroupOptions"></div>
+    </div>
+  </div>-->
+</section>

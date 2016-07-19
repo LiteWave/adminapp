@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('liteWaveApp')
-.controller('MainCtrl', ['$rootScope', '$scope', '$timeout', '$interval', 'Clients', 'Events', 'Shows', 'UserLocationsCount', 'UserLocationsWinner', 'ShowCommands', 'LogicalLayout',
+var app = angular.module('liteWaveApp');
+app.controller('MainCtrl', ['$rootScope', '$scope', '$timeout', '$interval', 'Clients', 'Events', 'Shows', 'UserLocationsCount', 'UserLocationsWinner', 'ShowCommands', 'LogicalLayout',
 function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserLocationsCount, UserLocationsWinner, ShowCommands, LogicalLayout)
 {
   $rootScope.currentArea = "main";
@@ -20,13 +20,75 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.currentShowType = 0;
   $scope.currentLayout;
   $scope.lengthOfShow = 15;
+  $scope.stadiumMap = $("#MapContainer");
 
   Clients.query({}, function (clients)
   {
     $rootScope.clients = clients;
-    $rootScope.currentClient = clients[0];
-    $rootScope.setClient($rootScope.currentClient);
-  });
+
+    if (!$rootScope.currentClient)
+    {
+      // $rootScope.currentClient = clients[0];
+      $rootScope.setClient(clients[0]);
+    }    
+
+    if ($rootScope.currentClient.externalStadiumId)
+    {
+      /************************************************************
+      Initialize Ticket Utils Interactive Map
+      ************************************************************/
+      $scope.stadiumMap.tuMap({
+        // MapId: "24d98d09-37e1-437f-87c5-eae845692e6c"
+        MapId: $rootScope.currentClient.externalStadiumId
+            , MapType: "Interactive"
+            , ControlsPosition: "Inside"
+        /*Failover Map: Replace this with a URL of the static chart from alternate datasource(when available)*/
+			      , FailoverMapUrl: "http://static.ticketutils.com/Charts/No-Seating-Chart.jpg"
+			      , Tickets: Data.Tickets
+			      , AutoSwitchToStatic: false
+			      , PreferredFirst: false
+			      , TicketsListContainer: "#InventoryContainer"
+			      , GroupsContainer: "#GroupsContainer"
+			      , OnError: function (e, Error)
+			      {
+			        if (Error.Code == 0)
+			        {
+			          var Message = "<div style=\"padding:10px;\">";
+			          Message += "<span style=\"color:red;font-weight:bold;\">This Sample is Configured to run under host 'localhost'</span>";
+			          Message += "<br />";
+			          Message += "Please configure IIS/Apache or Compatible Web Server to point 'demo' folder in order to view the Sample. If you intend to Run it under different Domain, please contact TicketUtils Support for Activation";
+			          Message += "</div>";
+			          $("#MapContainer").html(Message);
+			        }
+			      },
+        OnBeforeListRender: function ()
+        {
+          var Height = $("#TuMap").outerHeight();
+          $("#InventoryContainer").height(Height);
+        },
+        OnInit: function (e, MapType)
+        {
+        },
+        OnClick: function (e, Section)
+        {
+          if (Section.Active && Section.Selected)
+          {
+            alert("Selected Section "
+                            + Section.Name
+                            + " in Group "
+                            + Section.Group.Name);
+          }
+        },
+        OnGroupClick: function (e, Group)
+        {
+          if (Group.Selected)
+          {
+            alert("Selected Group " + Group.Name);
+          }
+        }
+      });
+    }
+  }); // end Client.query
 
   $scope.setShowType = function (type)
   {
@@ -81,6 +143,16 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       }
     });
   };
+
+  $scope.executeCmd = function ()
+  {
+      // Unset the current sections
+      var length = $scope.currentSections.length;
+      for (var i = 0; i < length; i++)
+      {
+        $scope.stadiumMap.tuMap("ToggleSelection", $scope.currentSections[i]);
+      }
+  }
 
   $scope.executeCmdA = function(logicalCol, cmd)
   {

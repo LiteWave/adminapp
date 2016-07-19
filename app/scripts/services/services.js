@@ -67,10 +67,10 @@ services.factory('ClientLoader', ['Clients', '$route', '$q',
     function(Clients, $route, $q) {
   return function() {
     var delay = $q.defer();
-    Clients.get({_id: $route.current.params._id}, function(client) {
+    Clients.get({ clientId: $route.current.params.clientId }, function(client) {
       delay.resolve(client);
     }, function() {
-      delay.reject('Unable to fetch client ' + $route.current.params._id);
+      delay.reject('Unable to fetch client ' + $route.current.params.clientId);
     });
     return delay.promise;
   };
@@ -102,20 +102,40 @@ services.factory('UserLocationsWinner', ['$resource', function ($resource) {
 }]);
 
 // service used for Stadiums REST endpoint
-services.factory("Stadiums", ['$resource', function ($resource)
-{
-  return $resource(apiURL+'/stadiums', {
-    clientId: '@_clientId', stadiumId: '@_id'
+services.factory("Stadiums", ['$resource', function ($resource) {
+  return $resource(apiURL+'/stadiums/:stadiumId', {
+    stadiumId: '@_id'
   }, {
     update: {
-      method: 'PUT',
-      url: apiURL+'/stadiums/:stadiumId'
-    },
-    get: {
-      method: 'GET',
-      url: apiURL+'/stadiums/client/:clientId'
+      method: 'PUT'
     }
   });
+}]);
+
+services.factory('MultiStadiumLoader', ['Stadiums', '$q',
+    function(Stadiums, $q) {
+  return function() {
+    var delay = $q.defer();
+    Stadiums.query(function(stadiums) {
+      delay.resolve(stadiums);
+    }, function() {
+      delay.reject('Unable to fetch stadiums');
+    });
+    return delay.promise;
+  };
+}]);
+
+services.factory('StadiumLoader', ['Stadiums', '$route', '$q',
+    function(Stadiums, $route, $q) {
+  return function() {
+    var delay = $q.defer();
+    Stadiums.get({stadiumId: $route.current.params.stadiumId}, function(stadium) {
+      delay.resolve(stadium);
+    }, function() {
+      delay.reject('Unable to fetch Stadium ' + $route.current.params.stadiumId);
+    });
+    return delay.promise;
+  };
 }]);
 
 // service used for Levels REST endpoint
@@ -160,8 +180,8 @@ services.factory("Shows", ['$resource', function($resource) {
 // service used for Logical Layout REST endpoint
 services.factory("LogicalLayout", ['$resource', function ($resource)
 {
-  return $resource(apiURL+'/events/:eventId/logicallayouts/:logicallayoutId', {
-    eventId: '@_eventId', logicallayoutId: '@_id'
+  return $resource(apiURL+'/stadiums/:stadiumId/logicallayouts/:logicallayoutId', {
+    stadiumId: '@_stadiumId', logicallayoutId: '@_id'
   }, {
     update: {
       method: 'PUT'
