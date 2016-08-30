@@ -177,18 +177,29 @@ services.factory("Shows", ['$resource', function($resource) {
     });
 }]);
 
+// service used for Shows REST endpoint
+services.factory("Shows2", ['$resource', function($resource) {
+    return $resource(apiURL+'/shows/:showId', {
+        showId: '@_id'
+    }, {
+        update: {
+          method: 'PUT'
+        }
+    });
+}]);
+
 // service used for Logical Layout REST endpoint
 services.factory("LogicalLayout", ['$resource', function ($resource)
 {
-  return $resource(apiURL+'/stadiums/:stadiumId/logicallayouts/:logicallayoutId', {
-    stadiumId: '@_stadiumId', logicallayoutId: '@_id'
+  return $resource(apiURL+'/logicallayouts/:logicallayoutId', {
+    logicallayoutId: '@_logicallayoutId'
   }, {
     update: {
       method: 'PUT'
     },
     query: {
       method: 'GET',
-      isArray: false
+      isArray: true
     }
   });
 }]);

@@ -1,12 +1,21 @@
 'use strict';
 
 var app = angular.module('liteWaveApp');
-app.controller('StadiumListCtrl', ['$rootScope', '$scope', 'stadiums',
-  function ($rootScope, $scope, stadiums)
+app.controller('StadiumListCtrl', ['$rootScope', '$scope', 'stadiums', 'Clients',
+  function ($rootScope, $scope, stadiums, Clients)
   {
     $rootScope.currentArea = "stadiums";
     $scope.stadiums = stadiums;
     var editStadiumTemplate = '<div style="text-align:center"><a ng-href="/#/stadiums/{{row.entity._id}}/edit">Edit</a></div>';
+
+    Clients.query({}, function (clients)
+    {
+      $rootScope.clients = clients;
+      if (!$rootScope.currentClient)
+      {
+        $rootScope.setClient(clients[0]);
+      }
+    });
 
     $scope.gridOptions = {
       data: 'stadiums',
@@ -31,10 +40,13 @@ app.controller('StadiumEditCtrl', ['$scope', '$location', 'stadium',
       });
     };
 
-    $scope.remove = function ()
+    $scope.deleteStadium = function ()
     {
-      delete $scope.stadium;
-      $location.path('/stadiums/');
+      if ($scope.stadium)
+      {
+        $scope.stadium.$delete();
+        $location.path('/stadiums/');
+      }
     };
 }]);
 

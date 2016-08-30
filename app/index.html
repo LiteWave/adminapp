@@ -96,7 +96,7 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a href="/admin/#/logout">
+                                <a href="/#/logout">
                                     <i class="fa fa-sign-out"></i>
                                     &nbsp;&nbsp;Logout
                                 </a>
@@ -116,13 +116,13 @@
                                 Game Day
                             </a>
                         </li>
-                        <li>
+                        <li ng-model="loggedInUser" ng-show=loggedInUser.userType === 'Admin'>
                           <a href="./#/clients">
                             <i class="fa fa-file-text"></i>
                             Clients
                           </a>
                         </li>
-                        <li>
+                        <li ng-model="loggedInUser" ng-show=loggedInUser.userType === 'Admin'>
                           <a href="./#/stadiums">
                             <i class="fa fa-file-text"></i>
                             Stadiums
@@ -134,13 +134,13 @@
                                 Events
                             </a>
                         </li>
-                        <li>
+                        <li ng-model="loggedInUser" ng-show=loggedInUser.userType === 'Admin'>
                           <a href="./#/shows">
                             <i class="fa fa-file-text"></i>
                             Layout Creation
                           </a>
                         </li>
-                        <li>
+                        <li ng-model="loggedInUser" ng-show=loggedInUser.userType === 'Admin'>
                           <a href="./#/users">
                             <i class="fa fa-file-text"></i>
                             Users

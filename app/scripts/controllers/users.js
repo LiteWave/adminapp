@@ -1,11 +1,21 @@
 'use strict';
 var app = angular.module('liteWaveApp');
 
-app.controller('UserListCtrl', ['$rootScope', '$scope', '$location', '$routeParams', 'users',
-  function ($rootScope, $scope, $location, $routeParams, users)
+app.controller('UserListCtrl', ['$rootScope', '$scope', '$location', '$routeParams', 'users', 'Clients',
+  function ($rootScope, $scope, $location, $routeParams, users, Clients)
   {
     $rootScope.currentArea = "users";
     var editUserTemplate = '<div style="text-align:center"><a ng-href="/#/users/{{row.entity._id}}/edit">Edit</a></div>';
+
+    Clients.query({}, function (clients)
+    {
+      $rootScope.clients = clients;
+      if (!$rootScope.currentClient)
+      {
+        $rootScope.setClient(clients[0]);
+      }
+    });
+
     $scope.users = users;
     $scope.gridOptions = {
       data: 'users',

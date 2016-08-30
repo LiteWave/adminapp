@@ -18,7 +18,13 @@ var app = angular.module('liteWaveApp', [
     //================================================
     // Check if the user is connected
     //================================================
-    var checkLoggedin = ['$q', '$timeout', '$http', '$location', '$rootScope', function($q, $timeout, $http, $location, $rootScope){
+    var checkLoggedin = ['$q', '$timeout', '$http', '$location', '$rootScope', function ($q, $timeout, $http, $location, $rootScope)
+    {
+      if ($rootScope.loggedInUser)
+      {
+        return;
+      }
+
       // Initialize a new promise
       var deferred = $q.defer();
 
@@ -191,8 +197,11 @@ app.run(function ($rootScope) {
   $rootScope.message = '';
   $rootScope.currentClient = null;
   $rootScope.clients = null;
+  $rootScope.isAdminUser = false;
+  $rootScope.stadiumLayouts = [];
   
-  $rootScope.setClient = function(client) {
+  $rootScope.setClient = function (client)
+  {
     $rootScope.currentClient = client;
   };
 

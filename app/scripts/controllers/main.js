@@ -28,9 +28,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
 
     if (!$rootScope.currentClient)
     {
-      // $rootScope.currentClient = clients[0];
       $rootScope.setClient(clients[0]);
-    }    
+    }
 
     if ($rootScope.currentClient.externalStadiumId)
     {

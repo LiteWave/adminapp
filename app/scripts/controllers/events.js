@@ -6,6 +6,15 @@ function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalL
   {
     $rootScope.currentArea = "events";
 
+    Clients.query({}, function (clients)
+    {
+      $rootScope.clients = clients;
+      if (!$rootScope.currentClient)
+      {
+        $rootScope.setClient(clients[0]);
+      }
+    });
+
     $scope.saveEvent = function ()
     {
       console.log("current Client Id" + $rootScope.currentClient._id + ": Current Stadium Id" + $rootScope.currentStadium._id);
