@@ -26,6 +26,14 @@ Install grunt:
 
 `grunt server`
 
+Server available at:
+
+`http://localhost:9000/`
+
 ## Deployment
 
 `grunt deploy`
+
+Server available at:
+
+`www.litewaveinc.com/admin`
