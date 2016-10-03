@@ -506,12 +506,22 @@ module.exports = function (grunt) {
     grunt.task.run('zip');
 
     //shortcuts so so that we don't have to type in the fully qualified domain name but still can if we want
-    var serverHosts = [
-      //'52.35.158.241' // webmini,
-      '52.10.194.211', // web1,
-      '52.35.105.39', // web2
-      '52.24.246.109' // web3
-    ];
+    switch (serverHost) {
+      case 'stage':
+        var serverHosts = [
+          '52.35.158.241' // webmini,
+        ];
+        break;
+      case 'prod':
+        var serverHosts = [
+          '52.10.194.211' // web1,
+          //'52.35.105.39', // web2
+          //'52.24.246.109' // web3
+        ];
+        break;
+      default:
+        break;
+    }
 
     for (var i in serverHosts)
     {

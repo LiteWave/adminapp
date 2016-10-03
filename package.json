@@ -11,7 +11,8 @@
     "view-helpers": "~0.1.3",
     "async": "~0.2.9",
     "soap": "~0.4.4",
-    "connect-flash": "~0.1.1"
+    "connect-flash": "~0.1.1",
+    "gifsicle": "0.1.3"
   },
   "devDependencies": {
     "cdnify": "^0.1.4",
