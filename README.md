@@ -32,7 +32,7 @@ Server available at:
 
 ## Deployment
 
-`grunt deploy`
+`grunt deploy:prod`
 
 Server available at:
 

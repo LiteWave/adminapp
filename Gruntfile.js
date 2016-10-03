@@ -514,9 +514,9 @@ module.exports = function (grunt) {
         break;
       case 'prod':
         var serverHosts = [
-          '52.10.194.211' // web1,
-          //'52.35.105.39', // web2
-          //'52.24.246.109' // web3
+          '52.10.194.211', // web1,
+          '52.35.105.39', // web2
+          '52.24.246.109' // web3
         ];
         break;
       default:
