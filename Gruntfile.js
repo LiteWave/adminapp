@@ -509,7 +509,7 @@ module.exports = function (grunt) {
     grunt.task.run('build');
     grunt.task.run('copy:'+serverHost+'Config');
     grunt.task.run('zip');
-    return
+    
     //shortcuts so so that we don't have to type in the fully qualified domain name but still can if we want
     switch (serverHost) {
       case 'stage':
