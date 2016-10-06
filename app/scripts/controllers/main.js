@@ -5,6 +5,7 @@ angular.module('liteWaveApp')
 function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserLocationsCount, UserLocationsWinner, ShowCommands, LogicalLayout)
 {
   $rootScope.currentArea = "main";
+  $scope.currentEvent;
   $scope.showStartTime = null;
   $scope.stopTime = null;
   $scope.winnerSeat = "";
@@ -17,6 +18,9 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.stadiumSize = 19145;
   $scope.userCheckPromise = null;
   $scope.userPollTime = 5000;
+  $scope.checkForWinnerPromise = null;
+  $scope.checkForWinnerPollTime = 3000;
+  $scope.currentShow;
   $scope.currentShowType = 0;
   $scope.currentLayout;
   $scope.lengthOfShow = 15;
@@ -67,10 +71,10 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         $scope.currentShow = show;
 
         // Fetch the winning section.
-        $scope.winnerSection = show.winnerSections;
+        //$scope.winnerSection = show.winnerSections;
 
         // Display winner to Admin so they can prepare cameras.
-        $scope.winnerSeat = $scope.formatWinnerString() + "(Seat Info):" + show.winnerSeat;
+        //$scope.winnerSeat = $scope.formatWinnerString() + "(Seat Info):" + show.winnerSeat;
 
         ShowCommands.query({ showId: show._id, showCommandId: show._showCommandId }, function (commands)
         {
@@ -228,6 +232,47 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     $scope.userCheckPromise = $interval($scope.checkUsers, $scope.userPollTime);
   }
 
+  // check for new users every second.
+  $scope.checkForWinner = function ()
+  {
+    if ($scope.currentShow)
+    {
+      //Shows.query({ eventId: $scope.currentEvent._id, showId: $scope.currentShow._id }, function (show)
+      Shows.query({ eventId: $scope.currentEvent._id }, function (show)
+      {
+        if (show && show.length)
+        {
+          var showLength = show.length;
+          var index = 0;
+          var matchingShow;
+          while (index < showLength)
+          {
+            if (show[index]._id == $scope.currentShow._id)
+            {
+              matchingShow = show[index];
+              break;
+            }
+            index++;
+          }
+
+          if (matchingShow._winnerId)
+          {
+            // Display the winning section.
+            $scope.winnerSection = matchingShow.winnerSections;
+            $scope.winnerSeat = "(Seat Info):" + matchingShow.winnerSeat;
+
+            // Stop polling for winner.
+            if ($scope.checkForWinnerPromise != null)
+            {
+              $interval.cancel($scope.checkForWinnerPromise);
+              $scope.checkForWinnerPromise = null;
+            }
+          }
+        }
+      });
+    }
+  }
+
   // update list of events when the client changes
   $scope.$watch('currentClient', function (newVal, oldVal)
   {
@@ -250,13 +295,18 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   {
     if (newVal)
     {
+      if ($scope.userCheckPromise == null)
+      {
+        $scope.userCheckPromise = $interval($scope.checkUsers, $scope.userPollTime);
+      }
+
       $scope.cleanUpAfterShow();
       Shows.query({ eventId: newVal._id }, function (show)
       {
         if (show && show.length)
         {
           $scope.liteshows = show;
-          $scope.currentShow = show[show.length - 1];
+          //$scope.currentShow = show[show.length - 1];
 
           // Start checking for new users
           if ($scope.userCheckPromise == null)
@@ -288,6 +338,11 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     {
       $interval.cancel($scope.userCheckPromise);
       $scope.userCheckPromise = null;
+    }
+
+    if ($scope.checkForWinnerPromise == null)
+    {
+      $scope.checkForWinnerPromise = $interval($scope.checkForWinner, $scope.checkForWinnerPollTime);
     }
 
     $timeout.cancel($scope.promise_clock);
