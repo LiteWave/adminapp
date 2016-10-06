@@ -15,6 +15,21 @@ function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalL
       }
     });
 
+    LogicalLayout.query({}, function (layouts)
+    {
+      if (layouts && layouts.length)
+      {
+        var layoutsLength = layouts.length;
+        for (var i = 0; i < layoutsLength; i++)
+        {
+          if (layouts[i]._stadiumId === $rootScope.currentStadium._id)
+          {
+            $rootScope.stadiumLayouts.push(layouts[i]);
+          }
+        }
+      }
+    });
+
     $scope.saveEvent = function ()
     {
       console.log("current Client Id" + $rootScope.currentClient._id + ": Current Stadium Id" + $rootScope.currentStadium._id);

@@ -192,7 +192,7 @@ services.factory("Shows2", ['$resource', function($resource) {
 services.factory("LogicalLayout", ['$resource', function ($resource)
 {
   return $resource(apiURL+'/logicallayouts/:logicallayoutId', {
-    logicallayoutId: '@_logicallayoutId'
+    logicallayoutId: '@_id'
   }, {
     update: {
       method: 'PUT'

@@ -5,6 +5,7 @@ angular.module('liteWaveApp').controller('ShowsController',
   function ($rootScope, $scope, $timeout, $routeParams, Clients, Stadiums, LogicalLayout, Shows2)
   {
     $rootScope.currentArea = "shows";
+    $scope.currentLayout;
     $scope.cmds = [];
     $scope.existingLayout = false;
     $scope.currentShowType = 0;
@@ -25,7 +26,7 @@ angular.module('liteWaveApp').controller('ShowsController',
                               { field: 'sectionList', displayName: 'Sections' },
                               { field: 'bg', displayName: 'Active Color' },
                               { field: 'cl', displayName: 'Active Color Length' },
-                              { field: 'sv', displayName: 'Vibrate Phone' }
+                              { field: 'sv', displayName: 'Vibrate Phone', cellTemplate: '<input type="checkbox" ng-model="row.entity.sv" ng-click="toggle(row.entity.name,row.entity.sv)">', enableCellEdit: false }
                               ]
     };
 
@@ -96,11 +97,6 @@ angular.module('liteWaveApp').controller('ShowsController',
 
     $scope.testLayout = function ()
     {
-      // $$$ Need to read colors from database
-      var black = "0,0,0";  // $scope.myData.columns.bg;  // "0,0,0";
-      var red = "216,19,37";
-      var white = "162,157,176";
-
       // UI testing only.
       var columnLength = $scope.myData.length;
       var msShowLength = $scope.lengthOfShow * 1000;
@@ -330,11 +326,18 @@ angular.module('liteWaveApp').controller('ShowsController',
           // Set this to 0 as we don't want to add any extra commands.
           msLeftOverTime = 0;
         }
-      }      
+      }
+
+      // var red = "216,19,37"; for Portland
+      var primaryColor;
+      var firstColor = "0,0,0";  // black
+      var secondColor = "162,157,176";  // white
 
       while (logicalCol <= columnLength)
       {
+        // UI testing. Need to read layout value.
         currentSection = $scope.myData[logicalCol - 1].sectionList;
+        primaryColor = $scope.myData.columns.bg;
 
         // If a contest is involved set winner.
         if (showType >= 1)
@@ -357,7 +360,7 @@ angular.module('liteWaveApp').controller('ShowsController',
               // first section doesn't need to wait.
               cmdList.push({ "ct": "w", "cl": msIndividualLength * (logicalCol - 1) });
             }
-            cmdList.push({ "bg": red, "cl": msIndividualLength, "sv": true });             // display 500 ms and vibrate
+            cmdList.push({ "bg": primaryColor, "cl": msIndividualLength, "sv": true });             // display 500 ms and vibrate
             cmdList.push({ "ct": "w", "cl": msWaveLength - (msIndividualLength * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
           }
 
@@ -371,7 +374,7 @@ angular.module('liteWaveApp').controller('ShowsController',
               // first section doesn't need to wait.
               cmdList.push({ "ct": "w", "cl": msIndividualLength * (logicalCol - 1) });
             }
-            cmdList.push({ "bg": red, "cl": msIndividualLength, "sv": true });             // display 500 ms and vibrate
+            cmdList.push({ "bg": primaryColor, "cl": msIndividualLength, "sv": true });             // display 500 ms and vibrate
             cmdList.push({ "ct": "w", "cl": msWaveLength - (msIndividualLength * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
           }
 
@@ -385,7 +388,7 @@ angular.module('liteWaveApp').controller('ShowsController',
               // first section doesn't need to wait.
               cmdList.push({ "ct": "w", "cl": msIndividualLength * (logicalCol - 1) });
             }
-            cmdList.push({ "bg": red, "cl": msIndividualLength, "sv": true });             // display 500 ms and vibrate
+            cmdList.push({ "bg": primaryColor, "cl": msIndividualLength, "sv": true });             // display 500 ms and vibrate
             cmdList.push({ "ct": "w", "cl": msWaveLength - (msIndividualLength * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
           }
           
@@ -397,7 +400,7 @@ angular.module('liteWaveApp').controller('ShowsController',
             // first section doesn't need to wait.
             cmdList.push({ "ct": "w", "cl": msIndividualLength * (logicalCol - 1) });
           }
-          cmdList.push({ "bg": red, "cl": msIndividualLength, "sv": true });             // display 500 ms and vibrate
+          cmdList.push({ "bg": primaryColor, "cl": msIndividualLength, "sv": true });             // display 500 ms and vibrate
           cmdList.push({ "ct": "w", "cl": msWaveLength - (msIndividualLength * logicalCol) }); // pause 21.5 seconds, 21 sec, 20.5 sec
 
           // Wave 1.
@@ -408,7 +411,7 @@ angular.module('liteWaveApp').controller('ShowsController',
             // first section doesn't need to wait.
             cmdList.push({ "ct": "w", "cl": msIndividualLength * (logicalCol - 1) });
           }
-          cmdList.push({ "bg": red, "cl": msIndividualLength, "sv": true }); // display and vibrate.
+          cmdList.push({ "bg": primaryColor, "cl": msIndividualLength, "sv": true }); // display and vibrate.
           cmdList.push({ "ct": "w", "cl": msWaveLength - (msIndividualLength * logicalCol) }); // pause 21.750 seconds, 21.5. 21.25, 21
         }
 
@@ -424,29 +427,29 @@ angular.module('liteWaveApp').controller('ShowsController',
           cmdList.push({ "ct": "w", "cl": randomDelay });  // wait X ms, max delay 100ms
 
           // Add at least 4 commands for minimum time.
-          cmdList.push({ "bg": black, "cl": msMinimumLength });
-          cmdList.push({ "bg": white, "cl": msMinimumLength });
-          cmdList.push({ "bg": red, "cl": msMinimumLength });
-          cmdList.push({ "bg": black, "cl": msMinimumLength });
+          cmdList.push({ "bg": firstColor, "cl": msMinimumLength });
+          cmdList.push({ "bg": secondColor, "cl": msMinimumLength });
+          cmdList.push({ "bg": primaryColor, "cl": msMinimumLength });
+          cmdList.push({ "bg": firstColor, "cl": msMinimumLength });
 
           if (numberOfCommandsPerLeg >= 5)
           {
-            cmdList.push({ "bg": white, "cl": msMinimumLength });
+            cmdList.push({ "bg": secondColor, "cl": msMinimumLength });
           }
 
           if (numberOfCommandsPerLeg >= 6)
           {
-            cmdList.push({ "bg": red, "cl": msMinimumLength, "sv": true });
+            cmdList.push({ "bg": primaryColor, "cl": msMinimumLength, "sv": true });
           }
 
           if (numberOfCommandsPerLeg >= 7)
           {
-            cmdList.push({ "bg": black, "cl": msMinimumLength });
+            cmdList.push({ "bg": firstColor, "cl": msMinimumLength });
           }
 
           if (numberOfCommandsPerLeg >= 8)
           {
-            cmdList.push({ "bg": white, "cl": msMinimumLength });
+            cmdList.push({ "bg": secondColor, "cl": msMinimumLength });
           }
 
           // If we are only doing a contest we likely have time left over. Let's add more commands to fill up time.
@@ -455,33 +458,33 @@ angular.module('liteWaveApp').controller('ShowsController',
             // Take out a few commands from non-winner sections
             if (onWinnerSection)
             {
-              cmdList.push({ "bg": red, "cl": msMinimumLength });
+              cmdList.push({ "bg": primaryColor, "cl": msMinimumLength });
             }
 
             // Have winner still display
-            cmdList.push({ "bg": black, "cl": msMinimumLength });
+            cmdList.push({ "bg": firstColor, "cl": msMinimumLength });
           }
 
           if (extraCommands >= 2)
           {
             if (onWinnerSection)
             {
-              cmdList.push({ "bg": white, "cl": msMinimumLength });
+              cmdList.push({ "bg": secondColor, "cl": msMinimumLength });
             }
 
-            cmdList.push({ "bg": red, "cl": msMinimumLength, "sv": true });
+            cmdList.push({ "bg": primaryColor, "cl": msMinimumLength, "sv": true });
           }
 
           if (extraCommands >= 3)
           {
-            cmdList.push({ "bg": black, "cl": msMinimumLength });
+            cmdList.push({ "bg": firstColor, "cl": msMinimumLength });
 
             msLeftOverTime = msLeftOverTime - msMinimumLength;
           }
 
           if (extraCommands >= 4)
           {
-            cmdList.push({ "bg": white, "cl": msMinimumLength });
+            cmdList.push({ "bg": secondColor, "cl": msMinimumLength });
 
             msLeftOverTime = msLeftOverTime - msMinimumLength;
           }
@@ -490,10 +493,10 @@ angular.module('liteWaveApp').controller('ShowsController',
           {
             if (onWinnerSection)
             {
-              cmdList.push({ "bg": red, "cl": msMinimumLength });
+              cmdList.push({ "bg": primaryColor, "cl": msMinimumLength });
             }
 
-            cmdList.push({ "bg": black, "cl": msMinimumLength });
+            cmdList.push({ "bg": firstColor, "cl": msMinimumLength });
 
             msLeftOverTime = msLeftOverTime - msMinimumLength;
           }
@@ -502,10 +505,10 @@ angular.module('liteWaveApp').controller('ShowsController',
           {
             if (onWinnerSection)
             {
-              cmdList.push({ "bg": white, "cl": msMinimumLength });
+              cmdList.push({ "bg": secondColor, "cl": msMinimumLength });
             }
 
-            cmdList.push({ "bg": red, "cl": msMinimumLength });
+            cmdList.push({ "bg": primaryColor, "cl": msMinimumLength });
 
             msLeftOverTime = msLeftOverTime - msMinimumLength;
           }
@@ -514,37 +517,37 @@ angular.module('liteWaveApp').controller('ShowsController',
           // Commands for winning section.
           if (onWinnerSection)
           {
-            cmdList.push({ "pif": "w", "bg": black, "cl": msMinimumLength });
-            cmdList.push({ "bg": white, "cl": msMinimumLength });
-            cmdList.push({ "pif": "w", "bg": red, "cl": msMinimumLength });
-            cmdList.push({ "bg": black, "cl": msMinimumLength });
+            cmdList.push({ "pif": "w", "bg": firstColor, "cl": msMinimumLength });
+            cmdList.push({ "bg": secondColor, "cl": msMinimumLength });
+            cmdList.push({ "pif": "w", "bg": primaryColor, "cl": msMinimumLength });
+            cmdList.push({ "bg": firstColor, "cl": msMinimumLength });
 
             if (numberOfCommandsPerLeg >= 5)
             {
-              cmdList.push({ "bg": white, "cl": msMinimumLength });
+              cmdList.push({ "bg": secondColor, "cl": msMinimumLength });
             }
 
             if (numberOfCommandsPerLeg >= 6)
             {
-              cmdList.push({ "pif": "w", "bg": red, "cl": msMinimumLength, "sv": true });
+              cmdList.push({ "pif": "w", "bg": primaryColor, "cl": msMinimumLength, "sv": true });
             }
 
             if (numberOfCommandsPerLeg >= 7)
             {
-              cmdList.push({ "pif": "w", "ct": "win", "bg": red, "cl": msMinimumLength });
+              cmdList.push({ "pif": "w", "ct": "win", "bg": primaryColor, "cl": msMinimumLength });
             }
 
             if (numberOfCommandsPerLeg >= 8)
             {
-              cmdList.push({ "pif": "w", "bg": black, "cl": msMinimumLength, "sv": true });
+              cmdList.push({ "pif": "w", "bg": firstColor, "cl": msMinimumLength, "sv": true });
             }
 
             // =============  Leg 3 =======================
             // Default set of commands for winner! Winner always gets these commands, so no need to check numberOfCommandsPerLeg.
-            cmdList.push({ "pif": "w", "bg": white, "cl": msMinimumLength });
-            cmdList.push({ "pif": "w", "bg": red, "cl": msMinimumLength, "sv": true });
-            cmdList.push({ "pif": "w", "bg": black, "cl": msMinimumLength });
-            cmdList.push({ "pif": "w", "bg": white, "cl": msMinimumLength });
+            cmdList.push({ "pif": "w", "bg": secondColor, "cl": msMinimumLength });
+            cmdList.push({ "pif": "w", "bg": primaryColor, "cl": msMinimumLength, "sv": true });
+            cmdList.push({ "pif": "w", "bg": firstColor, "cl": msMinimumLength });
+            cmdList.push({ "pif": "w", "bg": secondColor, "cl": msMinimumLength });
           }
         }
 
@@ -634,8 +637,7 @@ angular.module('liteWaveApp').controller('ShowsController',
     $scope.createGroup = function ()
     {
       $scope.currentSections = $scope.stadiumMap.tuMap("GetSelectedSections", {});
-      //$scope.myData.push({ "id": $scope.currentGroupNumber, "sectionList" : $scope.currentSections, "cl" : $scope.currentSections, "bg" : $scope.currentSections, "vb" : $scope.currentSections });
-      $scope.myData.push({ "id": $scope.currentGroupNumber, "sectionList" : $scope.currentSections, "cl" : $scope.currentSections, "bg" : $scope.currentSections, "vb" : $scope.currentSections });
+      $scope.myData.push({ "id": $scope.currentGroupNumber, "sectionList" : $scope.currentSections });
       $scope.currentGroupNumber++;
 
       // Unset the current sections
@@ -753,7 +755,16 @@ angular.module('liteWaveApp').controller('ShowsController',
       }
       else
       {
-        // call update layout
+        $rootScope.currentStadiumLayout.columns = $scope.myData;
+
+        // Update the layout.
+        $rootScope.currentStadiumLayout.$update(function (response)
+        {
+          if (response._id)
+          {
+            alert("Layout successfully updated.");
+          }
+        });
       }
     };
 
