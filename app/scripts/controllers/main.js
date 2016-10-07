@@ -334,11 +334,11 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     }
 
     // stop checking for any new users:
-    if ($scope.userCheckPromise != null)
+    /*if ($scope.userCheckPromise != null)
     {
       $interval.cancel($scope.userCheckPromise);
       $scope.userCheckPromise = null;
-    }
+    }*/
 
     if ($scope.checkForWinnerPromise == null)
     {
