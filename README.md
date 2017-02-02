@@ -8,7 +8,7 @@ Install Node Virtual Environment
 
 `sudo pip install nodeenv`
 
-`nodeenv env`
+`nodeenv env --node 0.12.7`
 
 Activate your nodeenv:
 
