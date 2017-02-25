@@ -94,8 +94,9 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     }
 
     var black = "0,0,0";
-    var red = "216,19,37";
+    var red = "255,0,0";  // "216,19,37";
     var white = "162,157,176";
+    var grey = "222,218,213";
     var col = "#lcol" + logicalCol.toString();
     var currentCmd = cmd[0];
     //console.log('{0}', currentCmd);
@@ -108,6 +109,10 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       else if (currentCmd.bg == red)
       {
         $(col).css("background", "red");
+      }
+      else if (currentCmd.bg == grey)
+      {
+        $(col).css("background", "grey");
       }
       else
       {
