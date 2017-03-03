@@ -24,6 +24,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.currentShowType = 0;
   $scope.currentLayout;
   $scope.lengthOfShow = 15;
+  $scope.lengthOfPulse = 15;
 
   Clients.query({}, function (clients)
   {
@@ -53,6 +54,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
           _eventId: $scope.currentEvent._id,
           _winnerId: null,
           length: $scope.lengthOfShow,
+          pulseLength: $scope.lengthOfPulse,
           type: $scope.currentShowType,
           startShowOffset: 0,
           startAt: null,
@@ -81,7 +83,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
           $scope.cmds = commands;
         });
 
-        //alert("Show successfully created.");
+        alert("Show successfully created.");
       }
     });
   };
