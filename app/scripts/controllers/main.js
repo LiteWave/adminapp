@@ -361,8 +361,9 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     $scope.currentShow.$update();
 
     var now = new Date();
+    var showLength = $scope.lengthOfShow + $scope.lengthOfPulse;
     var startTime = Math.floor(now.getTime() + (1000 * seconds));
-    var stopTime = Math.floor(startTime + (1000 * $scope.lengthOfShow));
+    var stopTime = Math.floor(startTime + (1000 * showLength));
 
     // Set showStartTime for UI. Different format than just getting Date.now()
     var startTimeDate = new Date(startTime);
@@ -373,8 +374,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     $scope.stopTime = stopTimeDate.toUTCString();
     $scope.showStopTimeDisplay = stopTimeDate.toLocaleTimeString();
 
-    console.log($scope.currentShow.startAt);
-    console.log($scope.stopTime);
+    //console.log($scope.currentShow.startAt);
+    //console.log($scope.stopTime);
 
     $scope.percentTimeToStart = 0;
     $scope.updateTime = seconds * 10;
