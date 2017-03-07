@@ -5,6 +5,7 @@ app.controller('MainCtrl', ['$rootScope', '$scope', '$timeout', '$interval', 'Cl
 function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserLocationsCount, UserLocationsWinner, ShowCommands, LogicalLayout)
 {
   $rootScope.currentArea = "main";
+  $scope.currentEvent;
   $scope.showStartTime = null;
   $scope.stopTime = null;
   $scope.winnerSeat = "";
@@ -17,10 +18,13 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   $scope.stadiumSize = 19145;
   $scope.userCheckPromise = null;
   $scope.userPollTime = 5000;
+  $scope.checkForWinnerPromise = null;
+  $scope.checkForWinnerPollTime = 3000;
+  $scope.currentShow;
   $scope.currentShowType = 0;
   $scope.currentLayout;
   $scope.lengthOfShow = 15;
-  $scope.stadiumMap = $("#MapContainer");
+  $scope.lengthOfPulse = 15;
 
   Clients.query({}, function (clients)
   {
@@ -85,7 +89,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
             alert("Selected Group " + Group.Name);
           }
         }
-      });
+  });
     }
   }); // end Client.query
 
@@ -110,6 +114,7 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
           _eventId: $scope.currentEvent._id,
           _winnerId: null,
           length: $scope.lengthOfShow,
+          pulseLength: $scope.lengthOfPulse,
           type: $scope.currentShowType,
           startShowOffset: 0,
           startAt: null,
@@ -128,17 +133,17 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
         $scope.currentShow = show;
 
         // Fetch the winning section.
-        $scope.winnerSection = show.winnerSections;
+        //$scope.winnerSection = show.winnerSections;
 
         // Display winner to Admin so they can prepare cameras.
-        $scope.winnerSeat = $scope.formatWinnerString() + "(Seat Info):" + show.winnerSeat;
+        //$scope.winnerSeat = $scope.formatWinnerString() + "(Seat Info):" + show.winnerSeat;
 
         ShowCommands.query({ showId: show._id, showCommandId: show._showCommandId }, function (commands)
         {
           $scope.cmds = commands;
         });
 
-        //alert("Show successfully created.");
+        alert("Show successfully created.");
       }
     });
   };
@@ -161,8 +166,9 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     }
 
     var black = "0,0,0";
-    var red = "216,19,37";
+    var red = "255,0,0";  // "216,19,37";
     var white = "162,157,176";
+    var grey = "222,218,213";
     var col = "#lcol" + logicalCol.toString();
     var currentCmd = cmd[0];
     //console.log('{0}', currentCmd);
@@ -175,6 +181,10 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
       else if (currentCmd.bg == red)
       {
         $(col).css("background", "red");
+      }
+      else if (currentCmd.bg == grey)
+      {
+        $(col).css("background", "grey");
       }
       else
       {
@@ -299,6 +309,47 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     $scope.userCheckPromise = $interval($scope.checkUsers, $scope.userPollTime);
   }
 
+  // check for new users every second.
+  $scope.checkForWinner = function ()
+  {
+    if ($scope.currentShow)
+    {
+      //Shows.query({ eventId: $scope.currentEvent._id, showId: $scope.currentShow._id }, function (show)
+      Shows.query({ eventId: $scope.currentEvent._id }, function (show)
+      {
+        if (show && show.length)
+        {
+          var showLength = show.length;
+          var index = 0;
+          var matchingShow;
+          while (index < showLength)
+          {
+            if (show[index]._id == $scope.currentShow._id)
+            {
+              matchingShow = show[index];
+              break;
+            }
+            index++;
+          }
+
+          if (matchingShow._winnerId)
+          {
+            // Display the winning section.
+            $scope.winnerSection = matchingShow.winnerSections;
+            $scope.winnerSeat = "(Seat Info):" + matchingShow.winnerSeat;
+
+            // Stop polling for winner.
+            if ($scope.checkForWinnerPromise != null)
+            {
+              $interval.cancel($scope.checkForWinnerPromise);
+              $scope.checkForWinnerPromise = null;
+            }
+          }
+        }
+      });
+    }
+  }
+
   // update list of events when the client changes
   $scope.$watch('currentClient', function (newVal, oldVal)
   {
@@ -321,13 +372,18 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   {
     if (newVal)
     {
+      if ($scope.userCheckPromise == null)
+      {
+        $scope.userCheckPromise = $interval($scope.checkUsers, $scope.userPollTime);
+      }
+
       $scope.cleanUpAfterShow();
       Shows.query({ eventId: newVal._id }, function (show)
       {
         if (show && show.length)
         {
           $scope.liteshows = show;
-          $scope.currentShow = show[show.length - 1];
+          //$scope.currentShow = show[show.length - 1];
 
           // Start checking for new users
           if ($scope.userCheckPromise == null)
@@ -355,10 +411,15 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     }
 
     // stop checking for any new users:
-    if ($scope.userCheckPromise != null)
+    /*if ($scope.userCheckPromise != null)
     {
       $interval.cancel($scope.userCheckPromise);
       $scope.userCheckPromise = null;
+    }*/
+
+    if ($scope.checkForWinnerPromise == null)
+    {
+      $scope.checkForWinnerPromise = $interval($scope.checkForWinner, $scope.checkForWinnerPollTime);
     }
 
     $timeout.cancel($scope.promise_clock);
@@ -370,8 +431,9 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     $scope.currentShow.$update();
 
     var now = new Date();
+    var showLength = $scope.lengthOfShow + $scope.lengthOfPulse;
     var startTime = Math.floor(now.getTime() + (1000 * seconds));
-    var stopTime = Math.floor(startTime + (1000 * $scope.lengthOfShow));
+    var stopTime = Math.floor(startTime + (1000 * showLength));
 
     // Set showStartTime for UI. Different format than just getting Date.now()
     var startTimeDate = new Date(startTime);
@@ -382,8 +444,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
     $scope.stopTime = stopTimeDate.toUTCString();
     $scope.showStopTimeDisplay = stopTimeDate.toLocaleTimeString();
 
-    console.log($scope.currentShow.startAt);
-    console.log($scope.stopTime);
+    //console.log($scope.currentShow.startAt);
+    //console.log($scope.stopTime);
 
     $scope.percentTimeToStart = 0;
     $scope.updateTime = seconds * 10;
