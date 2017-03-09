@@ -11,9 +11,16 @@
                   <input type="text" class="form-control" ng-model="client.name" id="name" ng-minlength="3" required>
                 </div>
               </div>
+              <div class="form-group">
+                <label class="col-md-2 control-label" for="externalStadiumid">External Stadium Id (from partner site)</label>
+                <div class="col-md-3">
+                  <input type="text" class="form-control" ng-model="client.externalStadiumId" id="externalStadiumid" ng-minlength="10">
+                </div>
+              </div>
 		          <div class="form-group">
 			          <div class="col-sm-offset-2 col-sm-10">
 				          <button type="submit" class="btn btn-primary" ng-disabled="clientForm.$invalid">Save</button>
+                  <button type="button" class="btn" ng-click="deleteClient()">Delete Client</button>
 			          </div>
 		          </div>
 	        </form>

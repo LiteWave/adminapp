@@ -18,7 +18,13 @@ var app = angular.module('liteWaveApp', [
     //================================================
     // Check if the user is connected
     //================================================
-    var checkLoggedin = ['$q', '$timeout', '$http', '$location', '$rootScope', function($q, $timeout, $http, $location, $rootScope){
+    var checkLoggedin = ['$q', '$timeout', '$http', '$location', '$rootScope', function ($q, $timeout, $http, $location, $rootScope)
+    {
+      if ($rootScope.loggedInUser)
+      {
+        return;
+      }
+
       // Initialize a new promise
       var deferred = $q.defer();
 
@@ -99,36 +105,60 @@ var app = angular.module('liteWaveApp', [
           loggedin: checkLoggedin
         }
       })
-      .when('/clients', {
-        controller: 'ClientListCtrl',
+      .when('/shows', {
+        templateUrl: 'views/shows/shows.html',
+        controller: 'ShowsController',
         resolve: {
-          loggedin: checkLoggedin,
-          users: ["MultiClientLoader", function(MultiClientLoader) {
-           return MultiClientLoader();
-          }]
-        },
-        templateUrl:'/views/clients/list.html'
+          loggedin: checkLoggedin
+        }
       })
       .when('/clients/:clientId/edit', {
         controller: 'ClientEditCtrl',
         resolve: {
           loggedin: checkLoggedin,
-          user: ["ClientLoader", function(ClientLoader) {
+          client: ["ClientLoader", function(ClientLoader) {
             return ClientLoader();
           }]
         },
         templateUrl:'/views/clients/clientForm.html'
+      })
+      .when('/clients', {
+        controller: 'ClientListCtrl',
+        resolve: {
+          loggedin: checkLoggedin,
+          clients: ["MultiClientLoader", function(MultiClientLoader) {
+           return MultiClientLoader();
+          }]
+        },
+        templateUrl:'/views/clients/list.html'
       })
       .when('/clients/create', {
         controller: 'ClientNewCtrl',
         templateUrl: '/views/clients/clientForm.html'
       })
       .when('/stadiums', {
-        templateUrl: 'views/stadiums/stadiums.html',
-        controller: 'StadiumsController',
+        controller: 'StadiumListCtrl',
         resolve: {
-          loggedin: checkLoggedin
-        }
+          loggedin: checkLoggedin,
+          stadiums: ["MultiStadiumLoader", function(MultiStadiumLoader) {
+           return MultiStadiumLoader();
+          }]
+        },
+        templateUrl:'/views/stadiums/list.html'
+      })
+      .when('/stadiums/:stadiumId/edit', {
+        controller: 'StadiumEditCtrl',
+        resolve: {
+          loggedin: checkLoggedin,
+          stadium: ["StadiumLoader", function(StadiumLoader) {
+            return StadiumLoader();
+          }]
+        },
+        templateUrl:'/views/stadiums/stadiums.html'
+      })
+      .when('/stadiums/create', {
+        controller: 'StadiumNewCtrl',
+        templateUrl: '/views/stadiums/stadiums.html'
       })
       .when('/login', {
         templateUrl: 'views/login.html',
@@ -163,12 +193,18 @@ var app = angular.module('liteWaveApp', [
       });
   }]);
   
-app.run(['$rootScope', function ($rootScope) {
+app.run(function ($rootScope) {
   $rootScope.message = '';
+  $rootScope.currentClient = null;
+  $rootScope.clients = null;
+  $rootScope.isAdminUser = false;
+  $rootScope.stadiumLayouts = [];
   
-  $rootScope.setClient = function(client) {
+  $rootScope.setClient = function (client)
+  {
     $rootScope.currentClient = client;
   };
+
   // Logout function is available in any pages
   $rootScope.logout = function(){
     $rootScope.message = 'Logged out.';
@@ -186,4 +222,4 @@ app.run(['$rootScope', function ($rootScope) {
     return( monthAbbrevs[date.getMonth()]);
   };
   
-}]);
+});

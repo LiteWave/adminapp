@@ -99,6 +99,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "users", "users", "{275C1478
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "stadiums", "stadiums", "{C8464FF6-1853-4A63-8B4A-9087B1409082}"
 	ProjectSection(SolutionItems) = preProject
+		app\views\stadiums\list.html = app\views\stadiums\list.html
 		app\views\stadiums\stadiums.html = app\views\stadiums\stadiums.html
 	EndProjectSection
 EndProject
@@ -111,6 +112,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "clients", "clients", "{64A3
 	ProjectSection(SolutionItems) = preProject
 		app\views\clients\clientForm.html = app\views\clients\clientForm.html
 		app\views\clients\list.html = app\views\clients\list.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shows", "shows", "{868FC90F-DBD2-4109-8D88-CFABA729AEB6}"
+	ProjectSection(SolutionItems) = preProject
+		app\views\shows\shows.html = app\views\shows\shows.html
 	EndProjectSection
 EndProject
 Global
@@ -132,5 +138,6 @@ Global
 		{C8464FF6-1853-4A63-8B4A-9087B1409082} = {BD3212E6-9B55-42CE-8307-C6000535E1FF}
 		{F3D8AC24-C7C2-4312-B9C0-73F89B4DB6FA} = {BD3212E6-9B55-42CE-8307-C6000535E1FF}
 		{64A32438-8180-4352-8EC8-ACF857BCA71A} = {BD3212E6-9B55-42CE-8307-C6000535E1FF}
+		{868FC90F-DBD2-4109-8D88-CFABA729AEB6} = {BD3212E6-9B55-42CE-8307-C6000535E1FF}
 	EndGlobalSection
 EndGlobal

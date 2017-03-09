@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('liteWaveApp')
-.controller('MainCtrl', ['$rootScope', '$scope', '$timeout', '$interval', 'Clients', 'Events', 'Shows', 'UserLocationsCount', 'UserLocationsWinner', 'ShowCommands', 'LogicalLayout',
+var app = angular.module('liteWaveApp');
+app.controller('MainCtrl', ['$rootScope', '$scope', '$timeout', '$interval', 'Clients', 'Events', 'Shows', 'UserLocationsCount', 'UserLocationsWinner', 'ShowCommands', 'LogicalLayout',
 function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserLocationsCount, UserLocationsWinner, ShowCommands, LogicalLayout)
 {
   $rootScope.currentArea = "main";
@@ -29,9 +29,16 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
   Clients.query({}, function (clients)
   {
     $rootScope.clients = clients;
-    $rootScope.currentClient = clients[0];
-    $rootScope.setClient($rootScope.currentClient);
-  });
+
+    if (!$rootScope.currentClient)
+    {
+      $rootScope.setClient(clients[0]);
+    }
+
+    if ($rootScope.currentClient.externalStadiumId)
+    {
+    }
+  }); // end Client.query
 
   $scope.setShowType = function (type)
   {

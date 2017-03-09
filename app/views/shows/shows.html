@@ -1,0 +1,108 @@
+﻿<section>
+  <div class="row">
+    <div class="col-md-12">
+      <h4 class="heading-inline">Use this page to create a list of groups for a stadium</h4>
+      <div>
+        <h5>To create a layout, follow these steps</h5>
+        <ul>
+          <li>In the Stadium map click on all the sections to include in this group.</li>
+          <li>Once you have all the sections selected, press the Create Group button. The new group will appear below the Stadium map.</li>
+          <li>Click Save Layout after you have all of the sections included in groups.</li>
+        </ul>
+      </div>      
+    </div>
+  </div>
+  <div class="row">
+    <div class="pull-left">
+      <div class="portlet">
+        <div class="portlet-header">
+          <h3>Stadium Logical Layout Creation Panel</h3>
+        </div>
+        <div class="portlet-content">
+          <div style="width:750px;">
+            <!-- List Container -->
+            <div id="TuMap">
+              <!-- Required Container to load Interactive Map -->
+              <div id="MapContainer" class="MapContainer">
+              </div>
+              <!-- Required Container to Interactive Map's Section Groups/Legends List -->
+              <div id="GroupsContainer" class="GroupsContainer">
+              </div>
+            </div>
+            <div class="flC"></div>
+          </div>
+        </div> <!-- /.portlet-content -->
+      </div> <!-- /.portlet -->
+    </div>
+    <div class="pull-right" style="width:800px;" >
+      <h3>Groups</h3>
+      <div class="btn-group">
+        <div class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">Layout ({{currentStadiumLayout.name}})<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu" data-toggle="dropdown">
+            <li data-ng-repeat="stadiumLayout in stadiumLayouts">
+              <a ng-click="changeLayout(stadiumLayout)">{{stadiumLayout.name}}</a>
+            </li>
+          </ul>
+          <button type="button" ng-click="deleteLayout()">Delete Layout</button>
+        </div>
+      </div>
+      <form name="layoutForm" class="form-horizontal" role="form">
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="layoutForm">Name of Layout (e.g. Basketball, Generic Concert, etc.)</label>
+          <div class="col-md-3">
+            <input type="text" class="form-control" ng-model="layoutname" id="layoutname" ng-minlength="3" required>
+          </div>
+          <div class="btn-group showtype pull-left">
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+              <span>Type of show</span>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="javascript:;" ng-click="setShowType(0)">Show</a></li>
+              <li><a href="javascript:;" ng-click="setShowType(1)">Show + Contest</a></li>
+              <li><a href="javascript:;" ng-click="setShowType(2)">Pick a Winning Section</a></li>
+              <li><a href="javascript:;" ng-click="setShowType(3)">Pick a Winner</a></li>
+              <li><a href="javascript:;" ng-click="setShowType(4)">Contest</a></li>
+              <li><a href="javascript:;" ng-click="setShowType(5)">Custom Show</a></li>
+            </ul>
+          </div>
+          <div class="pull-left">
+            <span>Length of Show </span><input ng-model="lengthOfShow" size="2" value=15 /><span> seconds.</span>
+          </div>
+        </div>
+        <button ng-click="createGroup()" class="btn btn-primary">Create Group</button>
+        <button ng-click="saveLayout()" class="btn btn-primary">Save Layout</button>
+      </form>
+      <br />
+      <div class="gridStyle" ng-grid="gridGroupOptions"></div>
+      <!--<label class="col-md-6 control-label" for="showForm">Fill in the values for this grouping</label>
+      <form name="showForm" class="form-horizontal" role="form">
+        <div class="form-group">          
+          <div class="col-md-6">
+            <label class="col-md-6 control-label" for="groupcolor">Active Color</label>
+            <input type="text" class="form-control" ng-model="activecolor" id="activecolor" ng-minlength="3" required>
+          </div>
+          <div class="col-md-6">
+            <label class="col-md-3 control-label" for="groupcolor">Inactive Color</label>
+            <input type="text" class="form-control" ng-model="inactivecolor" id="inactivecolor" ng-minlength="3" required>
+          </div>
+          <div class="col-md-6">
+            <label class="col-md-3 control-label" for="displaytime">Active Color Display Length</label>
+            <input type="text" class="form-control" ng-model="displaytime" id="displaytime" ng-minlength="3" required>
+          </div>
+          <div class="col-md-6">
+            <label class="col-md-3 control-label" for="vibrate">Vibrate Phone With Active Color</label>
+            <input type="checkbox" class="form-control" ng-model="vibrate" id="vibrate" ng-minlength="3" required>
+          </div>
+          <button ng-click="testLayout()" class="btn btn-primary">Test Layout</button>
+        </div>
+      </form>      -->
+      <form name="showForm" class="form-horizontal" role="form">
+        <div class="form-group">
+          <button ng-click="testLayout()" class="btn btn-primary">Test Layout</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
