@@ -102,13 +102,13 @@
                                 Game Day
                             </a>
                         </li>
-                        <li ng-model="loggedInUser" ng-show=loggedInUser.userType === 'Admin'>
+                        <li ng-model="loggedInUser" ng-show="loggedInUser.userType == 'Admin'">
                           <a href="./#/clients">
                             <i class="fa fa-file-text"></i>
                             Clients
                           </a>
                         </li>
-                        <li ng-model="loggedInUser" ng-show=loggedInUser.userType === 'Admin'>
+                        <li ng-model="loggedInUser" ng-show="loggedInUser.userType == 'Admin'">
                           <a href="./#/stadiums">
                             <i class="fa fa-file-text"></i>
                             Stadiums
@@ -120,13 +120,13 @@
                                 Events
                             </a>
                         </li>
-                        <li ng-model="loggedInUser" ng-show=loggedInUser.userType === 'Admin'>
+                        <li ng-model="loggedInUser" ng-show="loggedInUser.userType === 'Admin'">
                           <a href="./#/shows">
                             <i class="fa fa-file-text"></i>
                             Layout Creation
                           </a>
                         </li>
-                        <li ng-model="loggedInUser" ng-show=loggedInUser.userType === 'Admin'>
+                        <li ng-model="loggedInUser" ng-show="loggedInUser.userType === 'Admin'">
                           <a href="./#/users">
                             <i class="fa fa-file-text"></i>
                             Users

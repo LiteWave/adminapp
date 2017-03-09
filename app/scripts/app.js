@@ -193,7 +193,7 @@ var app = angular.module('liteWaveApp', [
       });
   }]);
   
-app.run(function ($rootScope) {
+app.run(['$rootScope',  function ($rootScope) {
   $rootScope.message = '';
   $rootScope.currentClient = null;
   $rootScope.clients = null;
@@ -222,4 +222,4 @@ app.run(function ($rootScope) {
     return( monthAbbrevs[date.getMonth()]);
   };
   
-});
+}]);
