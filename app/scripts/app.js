@@ -20,10 +20,10 @@ var app = angular.module('liteWaveApp', [
     //================================================
     var checkLoggedin = ['$q', '$timeout', '$http', '$location', '$rootScope', function ($q, $timeout, $http, $location, $rootScope)
     {
-      if ($rootScope.loggedInUser)
+      /*if ($rootScope.loggedInUser)
       {
         return;
-      }
+      }*/
 
       // Initialize a new promise
       var deferred = $q.defer();
@@ -112,6 +112,16 @@ var app = angular.module('liteWaveApp', [
           loggedin: checkLoggedin
         }
       })
+      .when('/clients', {
+        controller: 'ClientListCtrl',
+        templateUrl:'/views/clients/list.html',
+        resolve: {
+          loggedin: checkLoggedin,
+          clients: ["MultiClientLoader", function(MultiClientLoader) {
+           return MultiClientLoader();
+          }]
+        }        
+      })
       .when('/clients/:clientId/edit', {
         controller: 'ClientEditCtrl',
         resolve: {
@@ -121,16 +131,6 @@ var app = angular.module('liteWaveApp', [
           }]
         },
         templateUrl:'/views/clients/clientForm.html'
-      })
-      .when('/clients', {
-        controller: 'ClientListCtrl',
-        resolve: {
-          loggedin: checkLoggedin,
-          clients: ["MultiClientLoader", function(MultiClientLoader) {
-           return MultiClientLoader();
-          }]
-        },
-        templateUrl:'/views/clients/list.html'
       })
       .when('/clients/create', {
         controller: 'ClientNewCtrl',
