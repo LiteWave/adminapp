@@ -5,7 +5,7 @@ app.controller('UserListCtrl', ['$rootScope', '$scope', '$location', '$routePara
   function ($rootScope, $scope, $location, $routeParams, users, Clients)
   {
     $rootScope.currentArea = "users";
-    var editUserTemplate = '<div style="text-align:center"><a ng-href="/#/users/{{row.entity._id}}/edit">Edit</a></div>';
+    var editUserTemplate = '<div style="text-align:center"><a ng-href="#/users/{{row.entity._id}}/edit">Edit</a></div>';
 
     Clients.query({}, function (clients)
     {

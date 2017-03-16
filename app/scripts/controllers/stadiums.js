@@ -6,7 +6,7 @@ app.controller('StadiumListCtrl', ['$rootScope', '$scope', 'stadiums', 'Clients'
   {
     $rootScope.currentArea = "stadiums";
     $scope.stadiums = stadiums;
-    var editStadiumTemplate = '<div style="text-align:center"><a ng-href="/#/stadiums/{{row.entity._id}}/edit">Edit</a></div>';
+    var editStadiumTemplate = '<div style="text-align:center"><a ng-href="#/stadiums/{{row.entity._id}}/edit">Edit</a></div>';
 
     Clients.query({}, function (clients)
     {

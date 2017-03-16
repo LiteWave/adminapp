@@ -13,7 +13,7 @@ app.controller('ClientListCtrl', ['$rootScope', '$scope', 'clients',
       $rootScope.setClient(clients[0]);
     }
 
-    var editClientTemplate = '<div style="text-align:center"><a ng-href="/#/clients/{{row.entity._id}}/edit">Edit</a></div>';
+    var editClientTemplate = '<div style="text-align:center"><a ng-href="#/clients/{{row.entity._id}}/edit">Edit</a></div>';
 
     $scope.gridOptions = {
       data: 'clients',
