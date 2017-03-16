@@ -116,10 +116,10 @@ var app = angular.module('liteWaveApp', [
         controller: 'ClientListCtrl',
         templateUrl:'/views/clients/list.html',
         resolve: {
-          loggedin: checkLoggedin,
+          loggedin: checkLoggedin /*,
           clients: ["MultiClientLoader", function(MultiClientLoader) {
            return MultiClientLoader();
-          }]
+          }]*/
         }        
       })
       .when('/clients/:clientId/edit', {
