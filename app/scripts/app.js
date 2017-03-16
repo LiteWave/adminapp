@@ -113,13 +113,13 @@ var app = angular.module('liteWaveApp', [
         }
       })
       .when('/clients', {
+        templateUrl:'views/clients/list.html',
         controller: 'ClientListCtrl',
-        templateUrl:'/views/clients/list.html',
         resolve: {
-          loggedin: checkLoggedin /*,
+          loggedin: checkLoggedin,
           clients: ["MultiClientLoader", function(MultiClientLoader) {
            return MultiClientLoader();
-          }]*/
+          }]
         }        
       })
       .when('/clients/:clientId/edit', {
@@ -130,11 +130,11 @@ var app = angular.module('liteWaveApp', [
             return ClientLoader();
           }]
         },
-        templateUrl:'/views/clients/clientForm.html'
+        templateUrl:'views/clients/clientForm.html'
       })
       .when('/clients/create', {
         controller: 'ClientNewCtrl',
-        templateUrl: '/views/clients/clientForm.html'
+        templateUrl: 'views/clients/clientForm.html'
       })
       .when('/stadiums', {
         controller: 'StadiumListCtrl',
@@ -144,7 +144,7 @@ var app = angular.module('liteWaveApp', [
            return MultiStadiumLoader();
           }]
         },
-        templateUrl:'/views/stadiums/list.html'
+        templateUrl:'views/stadiums/list.html'
       })
       .when('/stadiums/:stadiumId/edit', {
         controller: 'StadiumEditCtrl',
@@ -154,11 +154,11 @@ var app = angular.module('liteWaveApp', [
             return StadiumLoader();
           }]
         },
-        templateUrl:'/views/stadiums/stadiums.html'
+        templateUrl:'views/stadiums/stadiums.html'
       })
       .when('/stadiums/create', {
         controller: 'StadiumNewCtrl',
-        templateUrl: '/views/stadiums/stadiums.html'
+        templateUrl: 'views/stadiums/stadiums.html'
       })
       .when('/login', {
         templateUrl: 'views/login.html',
@@ -172,7 +172,7 @@ var app = angular.module('liteWaveApp', [
             return UserLoader();
           }]
         },
-        templateUrl:'/views/users/userForm.html'
+        templateUrl:'views/users/userForm.html'
       })
       .when('/users', {
         controller: 'UserListCtrl',
@@ -182,11 +182,11 @@ var app = angular.module('liteWaveApp', [
            return MultiUserLoader();
           }]
         },
-        templateUrl:'/views/users/list.html'
+        templateUrl:'views/users/list.html'
       })
       .when('/users/create', {
         controller: 'UserNewCtrl',
-        templateUrl: '/views/users/userForm.html'
+        templateUrl: 'views/users/userForm.html'
       })
       .otherwise({
         redirectTo: '/'
