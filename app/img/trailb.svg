@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="700px" height="710px" viewBox="0 0  700 710" preserveAspectRatio="xMidYMid meet" >
+  <defs id="svgEditorDefs">
+    <polygon id="svgEditorShapeDefs" fill="khaki" stroke="black" style="vector-effect: non-scaling-stroke; stroke-width: 1px;"/>
+  </defs>
+  <rect id="svgEditorBackground" x="0" y="0" width="700" height="710" style="fill: none; stroke: none;" ng-click="createGroup()" />
+  <path d="M-17.998352034209734,-9.824287690359602l-2,8h8l-2,-8Z" stroke="black" id="e177_shape" style="vector-effect: non-scaling-stroke; stroke-width: 1px; fill: none;" transform="matrix(-10.7046 3.8334 -3.8334 -10.7046 89.019 123.367)"/>
+  <path d="M-26.885586030341376,-9.950992062844119l-2,8h8l-2,-8Z" stroke="black" id="e190_shape" style="vector-effect: non-scaling-stroke; stroke-width: 1px; fill: none;" transform="matrix(-11.1843 2.04795 -2.04795 -11.1843 76.7057 85.0801)"/>
+  <path d="M-36.75830442114669,-11.337879786353529l-2,8h8l-2,-8Z" stroke="black" id="e481_shape" style="vector-effect: non-scaling-stroke; stroke-width: 1px; fill: none;" transform="matrix(-11.2983 1.27739 -1.27739 -11.2983 56.1385 49.1678)"/>
+  <path d="M-10.338661655449005,-11.737084061743186l-2,8h8l-2,-8Z" stroke="black" id="e494_shape" style="vector-effect: non-scaling-stroke; stroke-width: 1px; fill: none;" transform="matrix(-8.69236 7.32982 -7.32982 -8.69236 74.6477 164.829)"/>
+  <path d="M-6.544015498144152,-16.199762887977798l-2,8h8l-2,-8Z" stroke="black" id="e507_shape" style="vector-effect: non-scaling-stroke; stroke-width: 1px; fill: none;" transform="matrix(-6.69082 9.19328 -9.19328 -6.69082 1.90277 200.398)"/>
+  <path d="M1.1242373783670985,-17.77329232016922l-2,8h8l-2,-8Z" stroke="black" id="e587_shape" style="vector-effect: non-scaling-stroke; stroke-width: 1px; fill: none;" transform="matrix(-3.3595 10.8627 -10.8627 -3.3595 -31.4978 241.066)"/>
+  <path d="M10.143162037840149,-21.526359587886567l-2,8h8l-2,-8Z" stroke="black" id="e600_shape" style="vector-effect: non-scaling-stroke; stroke-width: 1px; fill: none;" transform="matrix(-0.303954 11.3662 -11.3662 -0.303954 -99.7378 265.95)"/>
+</svg>

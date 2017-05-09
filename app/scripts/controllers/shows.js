@@ -1,8 +1,8 @@
 'use strict';
 var app = angular.module('liteWaveApp');
 angular.module('liteWaveApp').controller('ShowsController',
-        ['$rootScope', '$scope', '$timeout', '$routeParams', 'Clients', 'Stadiums', 'LogicalLayout', 'Shows2',
-  function ($rootScope, $scope, $timeout, $routeParams, Clients, Stadiums, LogicalLayout, Shows2)
+        ['$rootScope', '$scope', '$timeout', '$routeParams', 'Clients', 'Stadiums', 'LogicalLayout2', 'Shows2',
+  function ($rootScope, $scope, $timeout, $routeParams, Clients, Stadiums, LogicalLayout2, Shows2)
   {
     $rootScope.currentArea = "shows";
     $scope.currentLayout;
@@ -626,18 +626,42 @@ angular.module('liteWaveApp').controller('ShowsController',
       }*/
     }
 
-    $scope.createGroup = function ()
+    $scope.updateSectionList = function (event)
     {
-      /*$scope.currentSections = $scope.stadiumMap.tuMap("GetSelectedSections", {});
-      $scope.myData.push({ "id": $scope.currentGroupNumber, "sectionList" : $scope.currentSections });
-      $scope.currentGroupNumber++;
+      //alert("pl");
+      // Need another function that keeps track of the selected sections.  Would be nice to update mydata as you click.
+
+      if (!$scope.currentSections)
+      {
+        $scope.currentSections = event.currentTarget.id;
+      }
+      else
+      {
+        // If the current target is already in the list, remove it.
+        if ($scope.currentSections.indexOf(event.currentTarget.id) > -1)
+        {
+          return;
+        }
+
+        $scope.currentSections += ", " + event.currentTarget.id;
+      }
+
+      //$scope.myData[$scope.currentGroupNumber] = { "id": $scope.currentGroupNumber, "sectionList" : $scope.currentSections };
+      //$scope.currentGroupNumber++;
 
       // Unset the current sections
-      var length = $scope.currentSections.length;
-      for (var i = 0; i < length; i++)
-      {
-        $scope.stadiumMap.tuMap("ToggleSelection", $scope.currentSections[i]);
-      }*/
+    };
+
+    $scope.createGroup = function (event)
+    {
+      //alert("pl");
+      // Need another function that keeps track of the selected sections.  Would be nice to update mydata as you click.
+
+      $scope.myData.push({ "id": $scope.currentGroupNumber, "sectionList" : $scope.currentSections });
+      $scope.currentGroupNumber++;
+      $scope.currentSections = null;
+
+      // Unset the current sections
     };
 
     $scope.changeLayout = function (stadiumLayout)
@@ -688,7 +712,7 @@ angular.module('liteWaveApp').controller('ShowsController',
     {
       if (!$scope.existingLayout)
       {
-        var layout = new LogicalLayout({
+        var layout = new LogicalLayout2({
           _stadiumId: $rootScope.currentStadium._id,
           name: $scope.layoutname,
           columns: $scope.myData
