@@ -14,6 +14,9 @@ angular.module('liteWaveApp').controller('ShowsController',
     $scope.myData = [];
     $scope.lengthOfShow = 15;
     $scope.currentShowType = 1;
+    $scope.defaultStyle = "stroke: black; stroke-width: 1px; fill-opacity: 0;";
+    $scope.selectedStyle = "stroke: red; stroke-width: 5px; fill-opacity: 0;";
+    $scope.showStyle = "stroke: yellow; stroke-width: 15px; fill-opacity: 0;";
     $scope.gridGroupOptions = {
                               data: 'myData',
                               multiSelect: false,
@@ -336,7 +339,7 @@ angular.module('liteWaveApp').controller('ShowsController',
       {
         // UI testing. Need to read layout value.
         currentSection = $scope.myData[logicalCol - 1].sectionList;
-        primaryColor = $scope.myData.columns.bg;
+        primaryColor = $scope.myData[logicalCol - 1].bg;
 
         // If a contest is involved set winner.
         if (showType >= 1)
@@ -619,18 +622,28 @@ angular.module('liteWaveApp').controller('ShowsController',
 
     $scope.toggleSections = function (command, sectionList)
     {
-      /*var length = sectionList.length;
+      var sections = sectionList.split(",");
+      var length = sections.length;
+      var section;
       for (var i = 0; i < length; i++)
       {
-        $scope.stadiumMap.tuMap(command, sectionList[i]);  //"ToggleSelection"
-      }*/
+        section = document.getElementById(sections[i].trim());
+        if (section)
+        {
+          if (command === "HighlightSection")
+          {
+            section.style = $scope.showStyle;
+          }
+          else
+          {
+            section.style = $scope.defaultStyle;
+          }
+        }
+      }
     }
 
     $scope.updateSectionList = function (event)
     {
-      //alert("pl");
-      // Need another function that keeps track of the selected sections.  Would be nice to update mydata as you click.
-
       if (!$scope.currentSections)
       {
         $scope.currentSections = event.currentTarget.id;
@@ -640,11 +653,14 @@ angular.module('liteWaveApp').controller('ShowsController',
         // If the current target is already in the list, remove it.
         if ($scope.currentSections.indexOf(event.currentTarget.id) > -1)
         {
+          event.currentTarget.style = $scope.defaultStyle;
           return;
         }
 
         $scope.currentSections += ", " + event.currentTarget.id;
       }
+
+      event.currentTarget.style = $scope.selectedStyle;
 
       //$scope.myData[$scope.currentGroupNumber] = { "id": $scope.currentGroupNumber, "sectionList" : $scope.currentSections };
       //$scope.currentGroupNumber++;
@@ -657,7 +673,7 @@ angular.module('liteWaveApp').controller('ShowsController',
       //alert("pl");
       // Need another function that keeps track of the selected sections.  Would be nice to update mydata as you click.
 
-      $scope.myData.push({ "id": $scope.currentGroupNumber, "sectionList" : $scope.currentSections });
+      $scope.myData.push({ "id": $scope.currentGroupNumber, "sectionList" : $scope.currentSections, "bg" : "162,157,176" });
       $scope.currentGroupNumber++;
       $scope.currentSections = null;
 
@@ -687,7 +703,7 @@ angular.module('liteWaveApp').controller('ShowsController',
           }
         }
 
-        LogicalLayout.query({}, function (layouts)
+        LogicalLayout2.query({}, function (layouts)
         {
           if (layouts && layouts.length)
           {
