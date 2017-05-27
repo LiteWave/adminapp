@@ -207,8 +207,8 @@ services.factory("LogicalLayout", ['$resource', function ($resource)
 // service used for Logical Layout REST endpoint
 services.factory("LogicalLayout2", ['$resource', function ($resource)
 {
-  return $resource(apiURL+'/stadiums/:stadiumId/logicallayouts/:logicallayoutId', {
-    stadiumId: '@_stadiumId', logicallayoutId: '@_id'
+  return $resource(apiURL+'/stadiums/:stadiumId/logicallayouts', {
+    stadiumId: '@_stadiumId'
   }, {
     update: {
       method: 'PUT'
