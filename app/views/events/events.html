@@ -24,12 +24,23 @@
                             </li>
                           </ul>
                         </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-primary" ng-disabled="eventForm.$invalid">Save</button>
-                            </div>
+                      <div class="form-group">
+                        <div class="dropdown">
+                          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">Layout ({{currentStadiumLayout.name}})<span class="caret"></span></a>
+                          <ul class="dropdown-menu" role="menu" data-toggle="dropdown">
+                            <li data-ng-repeat="stadiumLayout in stadiumLayouts">
+                              <a ng-click="changeLayout(stadiumLayout)">{{stadiumLayout.name}}</a>
+                            </li>
+                          </ul>
+                          <button type="button" ng-click="deleteLayout()">Delete Layout</button>
                         </div>
-                    </form>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                          <button type="submit" class="btn btn-primary" ng-disabled="eventForm.$invalid">Save</button>
+                        </div>
+                      </div>
+                  </form>
                 </div>
             </div>
         </div>

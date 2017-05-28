@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liteWaveApp')
-.controller('EventsController', ['$rootScope', '$scope', '$routeParams', '$location', 'Clients', 'Events', 'LogicalLayout', 'Stadiums',
-function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalLayout, Stadiums)
+.controller('EventsController', ['$rootScope', '$scope', '$routeParams', '$location', 'Clients', 'Events', 'LogicalLayout2', 'Stadiums',
+function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalLayout2, Stadiums)
   {
     $rootScope.currentArea = "events";
 
@@ -15,20 +15,45 @@ function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalL
       }
     });
 
-    LogicalLayout.query({}, function (layouts)
+    Stadiums.query({}, function (stadiums)
     {
-      if (layouts && layouts.length)
+      if (stadiums && stadiums.length)
       {
-        var layoutsLength = layouts.length;
-        for (var i = 0; i < layoutsLength; i++)
+        var stadiumLength = stadiums.length;
+        for (var i = 0; i < stadiumLength; i++)
         {
-          if (layouts[i]._stadiumId === $rootScope.currentStadium._id)
+          if (stadiums[i]._clientId === $rootScope.currentClient._id)
           {
-            $rootScope.stadiumLayouts.push(layouts[i]);
+            $rootScope.currentStadium = stadiums[i];
+            break;
           }
         }
+
+        LogicalLayout2.query({}, function (layouts)
+        {
+          if (layouts && layouts.length)
+          {
+            var layoutsLength = layouts.length;
+            for (var i = 0; i < layoutsLength; i++)
+            {
+              if (layouts[i]._stadiumId === $rootScope.currentStadium._id)
+              {
+                $rootScope.stadiumLayouts.push(layouts[i]);
+              }
+            }
+          }
+        });
       }
     });
+
+    $scope.changeLayout = function (stadiumLayout)
+    {
+      $rootScope.currentStadiumLayout = stadiumLayout;
+      $scope.myData = stadiumLayout.columns;
+      $scope.layoutname = stadiumLayout.name;      
+      $scope.currentGroupNumber = stadiumLayout.columns.length;
+      $scope.existingLayout = true;
+    };
 
     $scope.saveEvent = function ()
     {
@@ -44,6 +69,7 @@ function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalL
       var event = new Events({
         name: $scope.name,
         date: $scope.date,
+        _logicalLayoutId: $rootScope.currentStadiumLayout._id,
         _clientId: $rootScope.currentClient._id,
         _stadiumId: $rootScope.currentStadium._id,
         settings: settings
