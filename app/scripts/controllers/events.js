@@ -84,6 +84,22 @@ function ($rootScope, $scope, $routeParams, $location, Clients, Events, LogicalL
 
         if (response._id)
         {
+          // ugh. Find the layout via it's id and update it with the Event Id.?
+          var layout = new LogicalLayout2({
+            _stadiumId: $rootScope.currentStadium._id,
+            name: $scope.layoutname,
+            columns: $scope.myData
+          });
+
+          // Save the layout.
+          layout.$save(function (response)
+          {
+            if (response._id)
+            {
+              alert("Layout successfully created.");
+            }
+          });
+
           alert("Event successfully created. Click the Game Day tab to see new event.");
         }
       });
