@@ -42,6 +42,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{0E28
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{0374B108-FA71-4E39-B80F-6AA4148C89BC}"
+	ProjectSection(SolutionItems) = preProject
+		app\img\trailb.svg = app\img\trailb.svg
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fonts", "fonts", "{79941F2B-D084-461F-B6AE-21135AA6B270}"
 	ProjectSection(SolutionItems) = preProject

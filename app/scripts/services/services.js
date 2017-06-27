@@ -204,6 +204,22 @@ services.factory("LogicalLayout", ['$resource', function ($resource)
   });
 }]);
 
+// service used for Logical Layout REST endpoint
+services.factory("LogicalLayout2", ['$resource', function ($resource)
+{
+  return $resource(apiURL+'/stadiums/:stadiumId/logicallayouts', {
+    stadiumId: '@_stadiumId'
+  }, {
+    update: {
+      method: 'PUT'
+    },
+    query: {
+      method: 'GET',
+      isArray: true
+    }
+  });
+}]);
+
 // ShowCommands service used for showcommands REST endpoint
 services.factory("ShowCommands", ['$resource', function ($resource) {
   return $resource(apiURL+'/shows/:showId/showcommands/:showCommandId', {
