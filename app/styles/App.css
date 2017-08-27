@@ -1309,7 +1309,6 @@ label {
   color: #666;
   font-size: 15px;
   font-weight: 600;
-  text-align: right;
   text-transform: uppercase;
 }
 .stat-label {
@@ -1331,7 +1330,7 @@ label {
 .dashboard-stat {
   position: relative;
   display: block;
-  padding: 30px 20px;
+  padding: 20px 20px;
   background-color: #eee;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
@@ -3444,6 +3443,23 @@ ul.support-list li {
 {
     margin-bottom: 1rem;
 }
+.btn-group.showtype input
+{
+  margin-left: 1rem;
+}
+.btn-group.showtype span
+{
+  margin-left: 0.5rem;
+}
+.btn-group.showtype .showtypelbl
+{
+  font-size: 1.5rem;
+  margin-left: 0;
+}
+.showlengthlbl, .pulselengthlbl, .showstartlbl
+{
+  font-size: 1.5rem;
+}
 .separator
 {
     border-top: 1px solid #d5d5d5;
@@ -3602,4 +3618,8 @@ ul.support-list li {
 .logcols div:nth-child(23)
 {
     left: 38rem;
+}
+.createshow
+{
+  margin-left: 1.5rem;
 }

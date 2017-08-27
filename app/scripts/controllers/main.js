@@ -66,8 +66,8 @@ function ($rootScope, $scope, $timeout, $interval, Clients, Events, Shows, UserL
           startShowOffset: 0,
           startAt: null,
           winnerSections: null,
-          winnerImageUrl: !!($scope.currentShow.winnerImageUrl) ? $scope.currentShow.winnerImageUrl.trim() : null,
-          winnerUrl: !!($scope.currentShow.winnerUrl) ? $scope.currentShow.winnerUrl.trim() : null
+          winnerImageUrl: !!$scope.currentShow && !!$scope.currentShow.winnerImageUrl ? $scope.currentShow.winnerImageUrl.trim() : null,
+          winnerUrl: !!$scope.currentShow && !!$scope.currentShow.winnerUrl ? $scope.currentShow.winnerUrl.trim() : null
     });
 
     // Now save the Show. Everything else we need (except startAt) will get set server side.
