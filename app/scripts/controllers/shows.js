@@ -18,19 +18,16 @@ angular.module('liteWaveApp').controller('ShowsController',
     $scope.selectedStyle = "stroke: red; stroke-width: 5px; fill-opacity: 0;";
     $scope.showStyle = "stroke: yellow; stroke-width: 15px; fill-opacity: 0;";
     $scope.gridGroupOptions = {
-                              data: 'myData',
-                              multiSelect: false,
-                              enableCellSelection: true,
-                              enableRowSelection: true,
-                              enableCellEditOnFocus: true,
-                              columnDefs: [
-                              { field: 'id', displayName: 'Group' },
-                              { field: 'sectionList', displayName: 'Sections' },
-                              { field: 'bg', displayName: 'Active Color' },
-                              { field: 'cl', displayName: 'Active Color Length' },
-                              { field: 'sv', displayName: 'Vibrate Phone', cellTemplate: '<input type="checkbox" ng-model="row.entity.sv" ng-click="toggle(row.entity.name,row.entity.sv)">', enableCellEdit: false }
-                              ]
-    };
+                                data: 'myData',
+                                multiSelect: false,
+                                enableCellSelection: true,
+                                enableRowSelection: true,
+                                enableCellEditOnFocus: true,
+                                columnDefs: [
+                                { field: 'id', displayName: 'Group' },
+                                { field: 'sectionList', displayName: 'Sections' }
+                                ]
+                              };
 
     Clients.query({}, function (clients)
     {
